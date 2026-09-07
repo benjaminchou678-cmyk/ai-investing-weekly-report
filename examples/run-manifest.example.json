@@ -1,0 +1,14 @@
+{
+    "week_start": "2026-08-31",
+    "week_end": "2026-09-06",
+    "timezone": "Asia/Shanghai",
+    "steps": {
+        "official_and_media": "completed",
+        "builder_feeds": "completed",
+        "supplemental_search": "completed",
+        "normalize": "completed",
+        "url_audit": "completed",
+        "dedup": "completed"
+    },
+    "failures": []
+}

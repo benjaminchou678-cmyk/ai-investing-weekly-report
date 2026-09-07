@@ -1,0 +1,147 @@
+{
+    "schema_version": "1.0",
+    "review_cycle": "quarterly",
+    "sources": [
+        {
+            "source_id": "openai-news",
+            "name": "OpenAI News",
+            "url": "https://openai.com/news/",
+            "required": true,
+            "company_tier": "C1",
+            "role": "primary_company",
+            "region": "global",
+            "independence_group": "openai"
+        },
+        {
+            "source_id": "google-ai-blog",
+            "name": "Google AI Blog",
+            "url": "https://blog.google/technology/ai/",
+            "required": true,
+            "company_tier": "C1",
+            "role": "primary_company",
+            "region": "global",
+            "independence_group": "alphabet"
+        },
+        {
+            "source_id": "deepmind-blog",
+            "name": "Google DeepMind Blog",
+            "url": "https://deepmind.google/blog/",
+            "required": true,
+            "company_tier": "C1",
+            "role": "primary_company",
+            "region": "global",
+            "independence_group": "alphabet"
+        },
+        {
+            "source_id": "anthropic-news",
+            "name": "Anthropic News",
+            "url": "https://www.anthropic.com/news",
+            "required": true,
+            "company_tier": "C1",
+            "role": "primary_company",
+            "region": "global",
+            "independence_group": "anthropic"
+        },
+        {
+            "source_id": "meta-ai-blog",
+            "name": "Meta AI Blog",
+            "url": "https://ai.meta.com/blog/",
+            "required": true,
+            "company_tier": "C1",
+            "role": "primary_company",
+            "region": "global",
+            "independence_group": "meta"
+        },
+        {
+            "source_id": "aws-news",
+            "name": "AWS News Blog",
+            "url": "https://aws.amazon.com/blogs/aws/",
+            "required": true,
+            "company_tier": "C1",
+            "role": "primary_company",
+            "region": "global",
+            "independence_group": "amazon"
+        },
+        {
+            "source_id": "reuters-tech",
+            "name": "Reuters Technology",
+            "url": "https://www.reuters.com/technology/",
+            "required": true,
+            "role": "independent_media",
+            "region": "global",
+            "independence_group": "reuters"
+        },
+        {
+            "source_id": "sec-edgar",
+            "name": "SEC EDGAR",
+            "url": "https://www.sec.gov/edgar/search/",
+            "required": true,
+            "role": "primary_regulatory",
+            "region": "us",
+            "independence_group": "sec"
+        },
+        {
+            "source_id": "hkex-news",
+            "name": "HKEXnews",
+            "url": "https://www1.hkexnews.hk/",
+            "required": false,
+            "role": "primary_regulatory",
+            "region": "china",
+            "independence_group": "hkex"
+        },
+        {
+            "source_id": "cninfo",
+            "name": "巨潮资讯",
+            "url": "https://www.cninfo.com.cn/",
+            "required": false,
+            "role": "primary_regulatory",
+            "region": "china",
+            "independence_group": "cninfo"
+        },
+        {
+            "source_id": "36kr-ai",
+            "name": "36Kr AI 与创投",
+            "url": "https://36kr.com/",
+            "required": true,
+            "role": "independent_media",
+            "region": "china",
+            "independence_group": "36kr"
+        },
+        {
+            "source_id": "geekpark",
+            "name": "极客公园",
+            "url": "https://www.geekpark.net/",
+            "required": true,
+            "role": "independent_media",
+            "region": "china",
+            "independence_group": "geekpark"
+        },
+        {
+            "source_id": "builder-x",
+            "name": "Builder X Feed",
+            "url": "https://raw.githubusercontent.com/zarazhangrui/follow-builders/main/feed-x.json",
+            "required": true,
+            "role": "builder",
+            "region": "global",
+            "independence_group": "follow-builders"
+        },
+        {
+            "source_id": "builder-podcasts",
+            "name": "Builder Podcasts Feed",
+            "url": "https://raw.githubusercontent.com/zarazhangrui/follow-builders/main/feed-podcasts.json",
+            "required": true,
+            "role": "builder",
+            "region": "global",
+            "independence_group": "follow-builders"
+        },
+        {
+            "source_id": "builder-blogs",
+            "name": "Builder Blogs Feed",
+            "url": "https://raw.githubusercontent.com/zarazhangrui/follow-builders/main/feed-blogs.json",
+            "required": true,
+            "role": "builder",
+            "region": "global",
+            "independence_group": "follow-builders"
+        }
+    ]
+}

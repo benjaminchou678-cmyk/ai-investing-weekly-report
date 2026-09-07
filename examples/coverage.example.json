@@ -1,0 +1,59 @@
+{
+    "week_start": "2026-08-31",
+    "week_end": "2026-09-06",
+    "timezone": "Asia/Shanghai",
+    "sources": [
+        {
+            "source_id": "openai-news",
+            "status": "no_update"
+        },
+        {
+            "source_id": "google-ai-blog",
+            "status": "ok"
+        },
+        {
+            "source_id": "deepmind-blog",
+            "status": "no_update"
+        },
+        {
+            "source_id": "anthropic-news",
+            "status": "ok"
+        },
+        {
+            "source_id": "meta-ai-blog",
+            "status": "no_update"
+        },
+        {
+            "source_id": "aws-news",
+            "status": "ok"
+        },
+        {
+            "source_id": "reuters-tech",
+            "status": "ok"
+        },
+        {
+            "source_id": "sec-edgar",
+            "status": "no_update"
+        },
+        {
+            "source_id": "36kr-ai",
+            "status": "ok"
+        },
+        {
+            "source_id": "geekpark",
+            "status": "ok"
+        },
+        {
+            "source_id": "builder-x",
+            "status": "ok"
+        },
+        {
+            "source_id": "builder-podcasts",
+            "status": "no_update"
+        },
+        {
+            "source_id": "builder-blogs",
+            "status": "ok"
+        }
+    ]
+}

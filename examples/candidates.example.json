@@ -1,0 +1,327 @@
+{
+    "schema_version": "2.0",
+    "week_start": "2026-08-31",
+    "week_end": "2026-09-06",
+    "timezone": "Asia/Shanghai",
+    "items": [
+        {
+            "id": "e1",
+            "event_id": "agent-workflow-1",
+            "title": "示例：企业 Agent 接入审批工作流",
+            "url": "https://example.com/company/agent-workflow",
+            "source": "示例公司公告",
+            "source_type": "official",
+            "published_at": "2026-09-01T09:00:00+08:00",
+            "event_date": "2026-09-01",
+            "companies": [
+                "示例公司甲"
+            ],
+            "entity_type": "public_company",
+            "tickers": [
+                "NASDAQ:EXA"
+            ],
+            "event_type": "产品",
+            "board": "大厂动向",
+            "summary": "占位示例，不代表真实新闻。",
+            "discovered_via": [
+                "official"
+            ],
+            "sources": [
+                {
+                    "source_id": "s1",
+                    "name": "示例公司公告",
+                    "url": "https://example.com/company/agent-workflow",
+                    "source_type": "official",
+                    "source_provenance": "company_primary",
+                    "independence_group": "exa"
+                }
+            ],
+            "verification_status": "company_disclosure",
+            "claim_confidence": "medium",
+            "business_signals": [
+                "企业工作流",
+                "渠道"
+            ],
+            "signal_level": "A",
+            "materiality": "medium",
+            "time_horizon": "1-4周",
+            "thesis": {
+                "thesis_id": "workflow-control",
+                "statement": "企业 Agent 竞争转向工作流入口",
+                "impact": "strengthen",
+                "rationale": "出现产品接入信号",
+                "counter_evidence": "无续费数据"
+            },
+            "catalyst": "披露生产客户",
+            "downside_risk": "交付成本高",
+            "claims": [
+                {
+                    "claim": "公司宣布产品接入审批流程",
+                    "claim_type": "company_disclosure",
+                    "source_ids": [
+                        "s1"
+                    ],
+                    "verified": true
+                }
+            ],
+            "editor_reviewed": true,
+            "reviewed_at": "2026-09-07T09:00:00+08:00",
+            "previous_issue_refs": []
+        },
+        {
+            "id": "e2",
+            "event_id": "startup-customer-1",
+            "title": "示例：AI 初创披露生产客户",
+            "url": "https://example.com/startup/customer",
+            "source": "示例初创博客",
+            "source_type": "official",
+            "published_at": "2026-09-02T09:00:00+08:00",
+            "event_date": "2026-09-02",
+            "companies": [
+                "示例公司乙"
+            ],
+            "entity_type": "private_company",
+            "tickers": [],
+            "event_type": "客户",
+            "board": "初创动向",
+            "summary": "占位示例，不代表真实新闻。",
+            "sources": [
+                {
+                    "source_id": "s2",
+                    "name": "示例初创博客",
+                    "url": "https://example.com/startup/customer",
+                    "source_type": "official",
+                    "source_provenance": "company_primary",
+                    "independence_group": "exb"
+                }
+            ],
+            "verification_status": "company_disclosure",
+            "claim_confidence": "medium",
+            "business_signals": [
+                "收入",
+                "客户"
+            ],
+            "signal_level": "A",
+            "materiality": "medium",
+            "time_horizon": "1季度",
+            "thesis": {
+                "statement": "垂直 Agent 开始进入生产环境",
+                "impact": "strengthen"
+            },
+            "catalyst": "披露续费",
+            "downside_risk": "客户集中",
+            "claims": [
+                {
+                    "claim": "公司披露生产客户",
+                    "source_ids": [
+                        "s2"
+                    ]
+                }
+            ],
+            "editor_reviewed": true
+        },
+        {
+            "id": "e3",
+            "event_id": "capex-1",
+            "title": "示例：云厂商提高 AI 资本开支指引",
+            "url": "https://example.com/ir/capex-guidance",
+            "source": "示例财报",
+            "source_type": "official",
+            "published_at": "2026-09-03T09:00:00+08:00",
+            "event_date": "2026-09-03",
+            "companies": [
+                "示例公司丙"
+            ],
+            "entity_type": "public_company",
+            "event_type": "财报",
+            "board": "大厂动向",
+            "summary": "占位示例，不代表真实新闻。",
+            "sources": [
+                {
+                    "source_id": "s3",
+                    "name": "示例财报",
+                    "url": "https://example.com/ir/capex-guidance",
+                    "source_type": "official",
+                    "source_provenance": "company_primary",
+                    "independence_group": "exc"
+                }
+            ],
+            "verification_status": "verified_primary",
+            "claim_confidence": "high",
+            "business_signals": [
+                "资本开支",
+                "供应链"
+            ],
+            "signal_level": "S",
+            "materiality": "high",
+            "time_horizon": "1年以上",
+            "thesis": {
+                "statement": "AI 基础设施投资周期延续",
+                "impact": "strengthen"
+            },
+            "catalyst": "下季指引",
+            "downside_risk": "利用率不足",
+            "claims": [
+                {
+                    "claim": "公司提高资本开支指引",
+                    "source_ids": [
+                        "s3"
+                    ]
+                }
+            ],
+            "editor_reviewed": true
+        },
+        {
+            "id": "e4",
+            "event_id": "pricing-1",
+            "title": "示例：模型 API 下调推理价格",
+            "url": "https://example.com/pricing/model-api",
+            "source": "示例定价页",
+            "source_type": "official",
+            "published_at": "2026-09-04T09:00:00+08:00",
+            "event_date": "2026-09-04",
+            "companies": [
+                "示例公司丁"
+            ],
+            "entity_type": "private_company",
+            "event_type": "定价",
+            "board": "生态动向",
+            "summary": "占位示例，不代表真实新闻。",
+            "sources": [
+                {
+                    "source_id": "s4",
+                    "name": "示例定价页",
+                    "url": "https://example.com/pricing/model-api",
+                    "source_type": "official",
+                    "source_provenance": "company_primary",
+                    "independence_group": "exd"
+                }
+            ],
+            "verification_status": "verified_primary",
+            "claim_confidence": "high",
+            "business_signals": [
+                "成本",
+                "定价"
+            ],
+            "signal_level": "A",
+            "materiality": "medium",
+            "time_horizon": "1-4周",
+            "thesis": {
+                "statement": "推理成本下降扩大应用空间",
+                "impact": "strengthen"
+            },
+            "catalyst": "客户用量变化",
+            "downside_risk": "价格战压低毛利",
+            "claims": [
+                {
+                    "claim": "API 价格下调",
+                    "source_ids": [
+                        "s4"
+                    ]
+                }
+            ],
+            "editor_reviewed": true
+        },
+        {
+            "id": "e5",
+            "event_id": "org-1",
+            "title": "示例：AI 部门调整组织负责人",
+            "url": "https://example.com/company/org-update",
+            "source": "示例组织公告",
+            "source_type": "official",
+            "published_at": "2026-09-05T09:00:00+08:00",
+            "event_date": "2026-09-05",
+            "companies": [
+                "示例公司戊"
+            ],
+            "entity_type": "public_company",
+            "event_type": "组织",
+            "board": "大厂动向",
+            "summary": "占位示例，不代表真实新闻。",
+            "sources": [
+                {
+                    "source_id": "s5",
+                    "name": "示例组织公告",
+                    "url": "https://example.com/company/org-update",
+                    "source_type": "official",
+                    "source_provenance": "company_primary",
+                    "independence_group": "exe"
+                }
+            ],
+            "verification_status": "company_disclosure",
+            "claim_confidence": "medium",
+            "business_signals": [
+                "组织执行"
+            ],
+            "signal_level": "B",
+            "materiality": "low",
+            "time_horizon": "1季度",
+            "thesis": {
+                "statement": "组织调整可能影响产品交付速度",
+                "impact": "neutral"
+            },
+            "catalyst": "后续产品节奏",
+            "downside_risk": "组织磨合",
+            "claims": [
+                {
+                    "claim": "公司调整部门负责人",
+                    "source_ids": [
+                        "s5"
+                    ]
+                }
+            ],
+            "editor_reviewed": true
+        },
+        {
+            "id": "e6",
+            "event_id": "security-1",
+            "title": "示例：Agent 权限漏洞得到修复",
+            "url": "https://example.com/security/advisory-2026",
+            "source": "示例安全公告",
+            "source_type": "research",
+            "published_at": "2026-09-06T09:00:00+08:00",
+            "event_date": "2026-09-06",
+            "companies": [
+                "示例公司己"
+            ],
+            "entity_type": "private_company",
+            "event_type": "安全",
+            "board": "技术博客&论文",
+            "summary": "占位示例，不代表真实新闻。",
+            "sources": [
+                {
+                    "source_id": "s6",
+                    "name": "示例安全公告",
+                    "url": "https://example.com/security/advisory-2026",
+                    "source_type": "research",
+                    "source_provenance": "independent_primary",
+                    "independence_group": "security-lab"
+                }
+            ],
+            "verification_status": "independently_verified",
+            "claim_confidence": "high",
+            "business_signals": [
+                "安全",
+                "企业采购"
+            ],
+            "signal_level": "A",
+            "materiality": "medium",
+            "time_horizon": "1-4周",
+            "thesis": {
+                "statement": "权限治理仍是 Agent 企业采用约束",
+                "impact": "strengthen"
+            },
+            "catalyst": "企业修复采用率",
+            "downside_risk": "同类漏洞复现",
+            "claims": [
+                {
+                    "claim": "安全公告披露并验证漏洞修复",
+                    "source_ids": [
+                        "s6"
+                    ]
+                }
+            ],
+            "editor_reviewed": true
+        }
+    ]
+}
