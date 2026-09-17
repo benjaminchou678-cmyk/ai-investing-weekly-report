@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "default_profile": "full_weekly",
+  "profiles": {
+    "full_weekly": {
+      "hard_required_success_ratio": 0.7,
+      "scheduled_c1_checked_ratio": 0.8,
+      "registry_max_age_days": {
+        "C1": 120,
+        "C2": 240,
+        "C3": 365
+      },
+      "dimension_requirements": {
+        "company_primary": {"min_checked": 4, "hard": true},
+        "capital": {"min_checked": 3, "hard": true},
+        "policy": {"min_checked": 2, "hard": true},
+        "infrastructure": {"min_checked": 2, "hard": false},
+        "customer_demand": {"min_checked": 1, "hard": false},
+        "counter_evidence": {"min_checked": 1, "hard": false}
+      },
+      "independence": {
+        "min_checked_groups": 6,
+        "max_checked_share_per_group": 0.35
+      }
+    }
+  }
+}

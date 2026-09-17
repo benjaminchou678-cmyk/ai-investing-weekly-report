@@ -15,7 +15,8 @@ from zoneinfo import ZoneInfo
 from _candidate_io import as_list, read_json_items, write_json
 from merge_candidates import canonical_url, title_similarity
 
-ALLOWED_BOARDS = {"大厂动向", "初创动向", "生态动向", "技术博客&论文", "海外建设者", "观点与深度"}
+ALLOWED_BOARDS = {"产品与模型", "组织与人事", "投融资"}
+EDITORIAL_TARGETS = {"产品与模型": "4-6", "组织与人事": "2-3", "投融资": "3-5"}
 ALLOWED_SIGNALS = {"S", "A", "B"}
 ALLOWED_THESIS_IMPACTS = {"new", "strengthen", "weaken", "invalidate", "neutral"}
 REQUIRED_STEPS = {"official_and_media", "builder_feeds", "supplemental_search", "normalize", "url_audit", "dedup"}
@@ -53,6 +54,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--timezone", default="Asia/Shanghai")
     parser.add_argument("--coverage")
     parser.add_argument("--source-registry")
+    parser.add_argument("--source-qa", help="audit_source_coverage.py 生成的 source-qa.json")
     parser.add_argument("--run-manifest")
     parser.add_argument("--strict", action="store_true")
     return parser.parse_args()
@@ -68,6 +70,7 @@ def main() -> int:
         items, _ = read_json_items(Path(args.input).expanduser())
         coverage = load_json(args.coverage)
         registry = load_json(args.source_registry)
+        source_qa = load_json(args.source_qa)
         manifest = load_json(args.run_manifest)
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         print(f"错误: {exc}", file=sys.stderr)
@@ -88,13 +91,28 @@ def main() -> int:
     gates["gate0_execution"] = gate("PASS" if not execution_issues else "FAIL", {"required_steps": len(REQUIRED_STEPS)}, execution_issues)
 
     source_issues: list[dict[str, Any]] = []
-    if not isinstance(registry, dict) or not isinstance(coverage, dict):
+    if isinstance(source_qa, dict):
+        source_status = str(source_qa.get("overall_status") or "FAIL")
+        if source_status not in {"PASS", "WARN", "FAIL"}:
+            source_status = "FAIL"
+            source_issues.append({"issue": "source-qa overall_status 不合法"})
+        source_issues.extend(source_qa.get("issues", []) if isinstance(source_qa.get("issues"), list) else [])
+        source_summary = {
+            "profile": source_qa.get("profile"),
+            "hard_required": source_qa.get("hard_required", {}),
+            "scheduled_c1": source_qa.get("scheduled_c1", {}),
+            "dimensions": source_qa.get("dimensions", {}),
+            "independence": source_qa.get("independence", {}),
+        }
+    elif not isinstance(registry, dict) or not isinstance(coverage, dict):
         source_issues.append({"issue": "必须同时提供 source-registry 与 coverage"})
         required_ids: set[str] = set()
         covered_ids: set[str] = set()
         succeeded_ids: set[str] = set()
+        source_status = "FAIL"
+        source_summary = {"hard_required_sources": 0, "covered_sources": 0, "success_ratio": 0.0}
     else:
-        registered = [s for s in registry.get("sources", []) if isinstance(s, dict) and s.get("required")]
+        registered = [s for s in registry.get("sources", []) if isinstance(s, dict) and (s.get("hard_required") or s.get("required"))]
         required_ids = {str(s.get("source_id")) for s in registered if s.get("source_id")}
         covered = [s for s in coverage.get("sources", []) if isinstance(s, dict)]
         covered_ids = {str(s.get("source_id")) for s in covered if s.get("source_id")}
@@ -104,9 +122,13 @@ def main() -> int:
         for source in covered:
             if source.get("source_id") in required_ids and source.get("status") not in SUCCESS_SOURCE_STATUSES:
                 source_issues.append({"source_id": source.get("source_id"), "status": source.get("status", "missing"), "reason": source.get("reason", "")})
-    ratio = len(required_ids & succeeded_ids) / len(required_ids) if required_ids else 0.0
-    source_status = "PASS" if required_ids and ratio >= 0.70 and not (required_ids - covered_ids) else "FAIL"
-    gates["gate1_source_health"] = gate(source_status, {"required_sources": len(required_ids), "covered_sources": len(required_ids & covered_ids), "success_ratio": round(ratio, 4)}, source_issues)
+        ratio = len(required_ids & succeeded_ids) / len(required_ids) if required_ids else 0.0
+        source_status = "PASS" if required_ids and ratio >= 0.70 and not (required_ids - covered_ids) else "FAIL"
+        source_summary = {"hard_required_sources": len(required_ids), "covered_sources": len(required_ids & covered_ids), "success_ratio": round(ratio, 4)}
+        if source_status == "PASS":
+            source_status = "WARN"
+            source_issues.append({"issue": "未提供 source-qa；Gate 1 仅执行兼容性检查，未检查维度、独立性与新鲜度"})
+    gates["gate1_source_health"] = gate(source_status, source_summary, source_issues)
 
     dedup_issues: list[dict[str, Any]] = []
     seen_urls: dict[str, int] = {}
@@ -166,11 +188,21 @@ def main() -> int:
     for index, item in enumerate(items):
         board = str(item.get("board") or "")
         boards[board or "未分类"] = boards.get(board or "未分类", 0) + 1
-        if board and board not in ALLOWED_BOARDS:
+        if args.phase == "release" and not board:
+            completeness_issues.append({"index": index, "issue": "Release 条目必须归入三个核心新闻板块之一"})
+        elif board and board not in ALLOWED_BOARDS:
             completeness_issues.append({"index": index, "board": board, "issue": "未知板块"})
-    if args.phase == "release" and not 6 <= len(items) <= 12:
-        completeness_issues.append({"issue": "核心条目不在默认 6-12 条范围；质量不足时需在正文解释", "count": len(items)})
-    gates["gate5_completeness"] = gate("PASS" if not completeness_issues else "WARN", {"phase": args.phase, "board_distribution": boards}, completeness_issues)
+    if args.phase == "release":
+        for board in sorted(ALLOWED_BOARDS):
+            if boards.get(board, 0) == 0:
+                completeness_issues.append({"board": board, "issue": "该核心板块没有入选条目；需确认是信息稀疏而非漏采"})
+        if not 5 <= len(items) <= 15:
+            completeness_issues.append({"issue": "核心新闻少于 5 条或超过 15 条；需在正文解释", "count": len(items)})
+    gates["gate5_completeness"] = gate(
+        "PASS" if not completeness_issues else "WARN",
+        {"phase": args.phase, "board_distribution": boards, "editorial_targets": EDITORIAL_TARGETS, "normal_total_target": "9-14"},
+        completeness_issues,
+    )
 
     statuses = [entry["status"] for entry in gates.values()]
     overall = "FAIL" if "FAIL" in statuses else "WARN" if "WARN" in statuses else "PASS"

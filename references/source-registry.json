@@ -1,147 +1,4747 @@
 {
-    "schema_version": "1.0",
-    "review_cycle": "quarterly",
-    "sources": [
-        {
-            "source_id": "openai-news",
-            "name": "OpenAI News",
-            "url": "https://openai.com/news/",
-            "required": true,
-            "company_tier": "C1",
-            "role": "primary_company",
-            "region": "global",
-            "independence_group": "openai"
-        },
-        {
-            "source_id": "google-ai-blog",
-            "name": "Google AI Blog",
-            "url": "https://blog.google/technology/ai/",
-            "required": true,
-            "company_tier": "C1",
-            "role": "primary_company",
-            "region": "global",
-            "independence_group": "alphabet"
-        },
-        {
-            "source_id": "deepmind-blog",
-            "name": "Google DeepMind Blog",
-            "url": "https://deepmind.google/blog/",
-            "required": true,
-            "company_tier": "C1",
-            "role": "primary_company",
-            "region": "global",
-            "independence_group": "alphabet"
-        },
-        {
-            "source_id": "anthropic-news",
-            "name": "Anthropic News",
-            "url": "https://www.anthropic.com/news",
-            "required": true,
-            "company_tier": "C1",
-            "role": "primary_company",
-            "region": "global",
-            "independence_group": "anthropic"
-        },
-        {
-            "source_id": "meta-ai-blog",
-            "name": "Meta AI Blog",
-            "url": "https://ai.meta.com/blog/",
-            "required": true,
-            "company_tier": "C1",
-            "role": "primary_company",
-            "region": "global",
-            "independence_group": "meta"
-        },
-        {
-            "source_id": "aws-news",
-            "name": "AWS News Blog",
-            "url": "https://aws.amazon.com/blogs/aws/",
-            "required": true,
-            "company_tier": "C1",
-            "role": "primary_company",
-            "region": "global",
-            "independence_group": "amazon"
-        },
-        {
-            "source_id": "reuters-tech",
-            "name": "Reuters Technology",
-            "url": "https://www.reuters.com/technology/",
-            "required": true,
-            "role": "independent_media",
-            "region": "global",
-            "independence_group": "reuters"
-        },
-        {
-            "source_id": "sec-edgar",
-            "name": "SEC EDGAR",
-            "url": "https://www.sec.gov/edgar/search/",
-            "required": true,
-            "role": "primary_regulatory",
-            "region": "us",
-            "independence_group": "sec"
-        },
-        {
-            "source_id": "hkex-news",
-            "name": "HKEXnews",
-            "url": "https://www1.hkexnews.hk/",
-            "required": false,
-            "role": "primary_regulatory",
-            "region": "china",
-            "independence_group": "hkex"
-        },
-        {
-            "source_id": "cninfo",
-            "name": "巨潮资讯",
-            "url": "https://www.cninfo.com.cn/",
-            "required": false,
-            "role": "primary_regulatory",
-            "region": "china",
-            "independence_group": "cninfo"
-        },
-        {
-            "source_id": "36kr-ai",
-            "name": "36Kr AI 与创投",
-            "url": "https://36kr.com/",
-            "required": true,
-            "role": "independent_media",
-            "region": "china",
-            "independence_group": "36kr"
-        },
-        {
-            "source_id": "geekpark",
-            "name": "极客公园",
-            "url": "https://www.geekpark.net/",
-            "required": true,
-            "role": "independent_media",
-            "region": "china",
-            "independence_group": "geekpark"
-        },
-        {
-            "source_id": "builder-x",
-            "name": "Builder X Feed",
-            "url": "https://raw.githubusercontent.com/zarazhangrui/follow-builders/main/feed-x.json",
-            "required": true,
-            "role": "builder",
-            "region": "global",
-            "independence_group": "follow-builders"
-        },
-        {
-            "source_id": "builder-podcasts",
-            "name": "Builder Podcasts Feed",
-            "url": "https://raw.githubusercontent.com/zarazhangrui/follow-builders/main/feed-podcasts.json",
-            "required": true,
-            "role": "builder",
-            "region": "global",
-            "independence_group": "follow-builders"
-        },
-        {
-            "source_id": "builder-blogs",
-            "name": "Builder Blogs Feed",
-            "url": "https://raw.githubusercontent.com/zarazhangrui/follow-builders/main/feed-blogs.json",
-            "required": true,
-            "role": "builder",
-            "region": "global",
-            "independence_group": "follow-builders"
-        }
-    ]
+  "schema_version": "2.0",
+  "review_cycle": "quarterly",
+  "sources": [
+    {
+      "source_id": "openai-news",
+      "name": "OpenAI News",
+      "channel": "web",
+      "url": "https://openai.com/news/",
+      "fallback_url": "",
+      "operator": "OpenAI",
+      "operator_verified": true,
+      "role": "primary_company",
+      "priority": "C1",
+      "hard_required": true,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution",
+        "global_context"
+      ],
+      "parent_group": "openai",
+      "independence_group": "openai",
+      "access": {
+        "mode": "web",
+        "paywall": false
+      },
+      "status": "active",
+      "last_verified_at": "2026-09-17",
+      "evidence_limit": "可确认公司主动披露；客户效果、市场份额和经营结果仍需独立来源验证。"
+    },
+    {
+      "source_id": "google-ai-blog",
+      "name": "Google AI Blog",
+      "channel": "web",
+      "url": "https://blog.google/technology/ai/",
+      "fallback_url": "",
+      "operator": "Google",
+      "operator_verified": true,
+      "role": "primary_company",
+      "priority": "C1",
+      "hard_required": true,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution",
+        "global_context"
+      ],
+      "parent_group": "alphabet",
+      "independence_group": "alphabet",
+      "access": {
+        "mode": "web",
+        "paywall": false
+      },
+      "status": "active",
+      "last_verified_at": "2026-09-17",
+      "evidence_limit": "可确认公司主动披露；客户效果、市场份额和经营结果仍需独立来源验证。"
+    },
+    {
+      "source_id": "deepmind-blog",
+      "name": "Google DeepMind Blog",
+      "channel": "web",
+      "url": "https://deepmind.google/blog/",
+      "fallback_url": "",
+      "operator": "Google DeepMind",
+      "operator_verified": true,
+      "role": "primary_company",
+      "priority": "C1",
+      "hard_required": true,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "research",
+        "global_context"
+      ],
+      "parent_group": "alphabet",
+      "independence_group": "alphabet",
+      "access": {
+        "mode": "web",
+        "paywall": false
+      },
+      "status": "active",
+      "last_verified_at": "2026-09-17",
+      "evidence_limit": "可确认公司主动披露；客户效果、市场份额和经营结果仍需独立来源验证。"
+    },
+    {
+      "source_id": "anthropic-news",
+      "name": "Anthropic News",
+      "channel": "web",
+      "url": "https://www.anthropic.com/news",
+      "fallback_url": "",
+      "operator": "Anthropic",
+      "operator_verified": true,
+      "role": "primary_company",
+      "priority": "C1",
+      "hard_required": true,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution",
+        "global_context"
+      ],
+      "parent_group": "anthropic",
+      "independence_group": "anthropic",
+      "access": {
+        "mode": "web",
+        "paywall": false
+      },
+      "status": "active",
+      "last_verified_at": "2026-09-17",
+      "evidence_limit": "可确认公司主动披露；客户效果、市场份额和经营结果仍需独立来源验证。"
+    },
+    {
+      "source_id": "meta-ai-blog",
+      "name": "Meta AI Blog",
+      "channel": "web",
+      "url": "https://ai.meta.com/blog/",
+      "fallback_url": "",
+      "operator": "Meta",
+      "operator_verified": true,
+      "role": "primary_company",
+      "priority": "C1",
+      "hard_required": true,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "infrastructure",
+        "research",
+        "global_context"
+      ],
+      "parent_group": "meta",
+      "independence_group": "meta",
+      "access": {
+        "mode": "web",
+        "paywall": false
+      },
+      "status": "active",
+      "last_verified_at": "2026-09-17",
+      "evidence_limit": "可确认公司主动披露；客户效果、市场份额和经营结果仍需独立来源验证。"
+    },
+    {
+      "source_id": "aws-news",
+      "name": "AWS News Blog",
+      "channel": "web",
+      "url": "https://aws.amazon.com/blogs/aws/",
+      "fallback_url": "",
+      "operator": "Amazon Web Services",
+      "operator_verified": true,
+      "role": "primary_company",
+      "priority": "C1",
+      "hard_required": true,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "infrastructure",
+        "product_distribution",
+        "global_context"
+      ],
+      "parent_group": "amazon",
+      "independence_group": "amazon",
+      "access": {
+        "mode": "web",
+        "paywall": false
+      },
+      "status": "active",
+      "last_verified_at": "2026-09-17",
+      "evidence_limit": "可确认公司主动披露；客户效果、市场份额和经营结果仍需独立来源验证。"
+    },
+    {
+      "source_id": "reuters-tech",
+      "name": "Reuters Technology",
+      "channel": "web",
+      "url": "https://www.reuters.com/technology/",
+      "fallback_url": "",
+      "operator": "Reuters",
+      "operator_verified": true,
+      "role": "independent_media",
+      "priority": "C1",
+      "hard_required": true,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "capital",
+        "policy",
+        "customer_demand",
+        "counter_evidence",
+        "global_context"
+      ],
+      "parent_group": "reuters",
+      "independence_group": "reuters",
+      "access": {
+        "mode": "web",
+        "paywall": true
+      },
+      "status": "active",
+      "last_verified_at": "2026-09-17",
+      "evidence_limit": "可用于发现和媒体核验；匿名信源、转述和付费墙摘要需标注证据状态。"
+    },
+    {
+      "source_id": "sec-edgar",
+      "name": "SEC EDGAR",
+      "channel": "database",
+      "url": "https://www.sec.gov/edgar/search/",
+      "fallback_url": "",
+      "operator": "U.S. Securities and Exchange Commission",
+      "operator_verified": true,
+      "role": "primary_regulatory",
+      "priority": "C1",
+      "hard_required": true,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "capital",
+        "policy",
+        "global_context"
+      ],
+      "parent_group": "sec",
+      "independence_group": "sec",
+      "access": {
+        "mode": "database",
+        "paywall": false
+      },
+      "status": "active",
+      "last_verified_at": "2026-09-17",
+      "evidence_limit": "可确认监管申报或公告内容；其中的公司陈述仍需与独立证据区分。"
+    },
+    {
+      "source_id": "hkex-news",
+      "name": "HKEXnews",
+      "channel": "database",
+      "url": "https://www1.hkexnews.hk/",
+      "fallback_url": "",
+      "operator": "Hong Kong Exchanges and Clearing",
+      "operator_verified": true,
+      "role": "primary_regulatory",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "company_primary",
+        "capital",
+        "policy"
+      ],
+      "parent_group": "hkex",
+      "independence_group": "hkex",
+      "access": {
+        "mode": "database",
+        "paywall": false
+      },
+      "status": "active",
+      "last_verified_at": "2026-09-17",
+      "evidence_limit": "可确认监管申报或公告内容；其中的公司陈述仍需与独立证据区分。"
+    },
+    {
+      "source_id": "cninfo",
+      "name": "巨潮资讯",
+      "channel": "database",
+      "url": "https://www.cninfo.com.cn/",
+      "fallback_url": "",
+      "operator": "深圳证券信息有限公司",
+      "operator_verified": true,
+      "role": "primary_regulatory",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "company_primary",
+        "capital",
+        "policy"
+      ],
+      "parent_group": "cninfo",
+      "independence_group": "cninfo",
+      "access": {
+        "mode": "database",
+        "paywall": false
+      },
+      "status": "active",
+      "last_verified_at": "2026-09-17",
+      "evidence_limit": "可确认监管申报或公告内容；其中的公司陈述仍需与独立证据区分。"
+    },
+    {
+      "source_id": "36kr-ai",
+      "name": "36Kr AI 与创投",
+      "channel": "web",
+      "url": "https://36kr.com/",
+      "fallback_url": "",
+      "operator": "36氪",
+      "operator_verified": true,
+      "role": "independent_media",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "capital",
+        "product_distribution"
+      ],
+      "parent_group": "36kr",
+      "independence_group": "36kr",
+      "access": {
+        "mode": "web",
+        "paywall": false
+      },
+      "status": "active",
+      "last_verified_at": "2026-09-17",
+      "evidence_limit": "可用于发现和媒体核验；匿名信源、转述和付费墙摘要需标注证据状态。"
+    },
+    {
+      "source_id": "geekpark",
+      "name": "极客公园",
+      "channel": "web",
+      "url": "https://www.geekpark.net/",
+      "fallback_url": "",
+      "operator": "极客公园",
+      "operator_verified": true,
+      "role": "independent_media",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "capital",
+        "product_distribution",
+        "customer_demand"
+      ],
+      "parent_group": "geekpark",
+      "independence_group": "geekpark",
+      "access": {
+        "mode": "web",
+        "paywall": false
+      },
+      "status": "active",
+      "last_verified_at": "2026-09-17",
+      "evidence_limit": "可用于发现和媒体核验；匿名信源、转述和付费墙摘要需标注证据状态。"
+    },
+    {
+      "source_id": "builder-x",
+      "name": "Builder X Feed",
+      "channel": "feed",
+      "url": "https://raw.githubusercontent.com/zarazhangrui/follow-builders/main/feed-x.json",
+      "fallback_url": "",
+      "operator": "follow-builders",
+      "operator_verified": true,
+      "role": "builder",
+      "priority": "C1",
+      "hard_required": true,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "research",
+        "product_distribution",
+        "global_context"
+      ],
+      "parent_group": "follow-builders",
+      "independence_group": "follow-builders",
+      "access": {
+        "mode": "feed",
+        "paywall": false
+      },
+      "status": "active",
+      "last_verified_at": "2026-09-17",
+      "evidence_limit": "聚合内容主要用于发现；必须回到原始内容核验关键事实。"
+    },
+    {
+      "source_id": "builder-podcasts",
+      "name": "Builder Podcasts Feed",
+      "channel": "feed",
+      "url": "https://raw.githubusercontent.com/zarazhangrui/follow-builders/main/feed-podcasts.json",
+      "fallback_url": "",
+      "operator": "follow-builders",
+      "operator_verified": true,
+      "role": "builder",
+      "priority": "C1",
+      "hard_required": true,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "research",
+        "product_distribution",
+        "global_context"
+      ],
+      "parent_group": "follow-builders",
+      "independence_group": "follow-builders",
+      "access": {
+        "mode": "feed",
+        "paywall": false
+      },
+      "status": "active",
+      "last_verified_at": "2026-09-17",
+      "evidence_limit": "聚合内容主要用于发现；必须回到原始内容核验关键事实。"
+    },
+    {
+      "source_id": "builder-blogs",
+      "name": "Builder Blogs Feed",
+      "channel": "feed",
+      "url": "https://raw.githubusercontent.com/zarazhangrui/follow-builders/main/feed-blogs.json",
+      "fallback_url": "",
+      "operator": "follow-builders",
+      "operator_verified": true,
+      "role": "builder",
+      "priority": "C1",
+      "hard_required": true,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "research",
+        "product_distribution",
+        "global_context"
+      ],
+      "parent_group": "follow-builders",
+      "independence_group": "follow-builders",
+      "access": {
+        "mode": "feed",
+        "paywall": false
+      },
+      "status": "active",
+      "last_verified_at": "2026-09-17",
+      "evidence_limit": "聚合内容主要用于发现；必须回到原始内容核验关键事实。"
+    },
+    {
+      "source_id": "wechat-6b999bbf",
+      "name": "量子位",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "industry_media",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "product_distribution",
+        "research"
+      ],
+      "parent_group": "6b999bbf",
+      "independence_group": "6b999bbf",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于发现与媒体核验；关键经营数字和投资结论需一手或独立来源支持。",
+      "catalog_section": "科技与 AI"
+    },
+    {
+      "source_id": "wechat-latepost-7bb572c0",
+      "name": "晚点Latepost",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "industry_media",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "product_distribution",
+        "research"
+      ],
+      "parent_group": "latepost-7bb572c0",
+      "independence_group": "latepost-7bb572c0",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于发现与媒体核验；关键经营数字和投资结论需一手或独立来源支持。",
+      "catalog_section": "科技与 AI"
+    },
+    {
+      "source_id": "wechat-1ab46c58",
+      "name": "新智元",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "industry_media",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "product_distribution",
+        "research"
+      ],
+      "parent_group": "1ab46c58",
+      "independence_group": "1ab46c58",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于发现与媒体核验；关键经营数字和投资结论需一手或独立来源支持。",
+      "catalog_section": "科技与 AI"
+    },
+    {
+      "source_id": "wechat-4323dfad",
+      "name": "极客公园",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "industry_media",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "product_distribution",
+        "research"
+      ],
+      "parent_group": "4323dfad",
+      "independence_group": "4323dfad",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于发现与媒体核验；关键经营数字和投资结论需一手或独立来源支持。",
+      "catalog_section": "科技与 AI"
+    },
+    {
+      "source_id": "wechat-2d6c7e79",
+      "name": "雷峰网",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "industry_media",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "product_distribution",
+        "research"
+      ],
+      "parent_group": "2d6c7e79",
+      "independence_group": "2d6c7e79",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于发现与媒体核验；关键经营数字和投资结论需一手或独立来源支持。",
+      "catalog_section": "科技与 AI"
+    },
+    {
+      "source_id": "wechat-5afaf213",
+      "name": "硬氪",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "industry_media",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "product_distribution",
+        "research"
+      ],
+      "parent_group": "36kr",
+      "independence_group": "36kr",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于发现与媒体核验；关键经营数字和投资结论需一手或独立来源支持。",
+      "catalog_section": "科技与 AI"
+    },
+    {
+      "source_id": "wechat-app-8c68b7a5",
+      "name": "虎嗅APP",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "industry_media",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "product_distribution",
+        "research"
+      ],
+      "parent_group": "app-8c68b7a5",
+      "independence_group": "app-8c68b7a5",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于发现与媒体核验；关键经营数字和投资结论需一手或独立来源支持。",
+      "catalog_section": "科技与 AI"
+    },
+    {
+      "source_id": "wechat-2552e692",
+      "name": "智能涌现",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "industry_media",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "product_distribution",
+        "research"
+      ],
+      "parent_group": "2552e692",
+      "independence_group": "2552e692",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于发现与媒体核验；关键经营数字和投资结论需一手或独立来源支持。",
+      "catalog_section": "科技与 AI"
+    },
+    {
+      "source_id": "wechat-one-d76cf95f",
+      "name": "定焦One",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "industry_media",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "product_distribution",
+        "research"
+      ],
+      "parent_group": "one-d76cf95f",
+      "independence_group": "one-d76cf95f",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于发现与媒体核验；关键经营数字和投资结论需一手或独立来源支持。",
+      "catalog_section": "科技与 AI"
+    },
+    {
+      "source_id": "wechat-ai-x-da914a74",
+      "name": "AI.X硬件社",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "industry_media",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "product_distribution",
+        "research"
+      ],
+      "parent_group": "ai-x-da914a74",
+      "independence_group": "ai-x-da914a74",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于发现与媒体核验；关键经营数字和投资结论需一手或独立来源支持。",
+      "catalog_section": "科技与 AI"
+    },
+    {
+      "source_id": "wechat-ai-8c20480a",
+      "name": "AI产品榜",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "industry_media",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "product_distribution",
+        "research"
+      ],
+      "parent_group": "ai-8c20480a",
+      "independence_group": "ai-8c20480a",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于发现与媒体核验；关键经营数字和投资结论需一手或独立来源支持。",
+      "catalog_section": "科技与 AI"
+    },
+    {
+      "source_id": "wechat-e0573539",
+      "name": "返朴",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "industry_media",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "product_distribution",
+        "research"
+      ],
+      "parent_group": "e0573539",
+      "independence_group": "e0573539",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于发现与媒体核验；关键经营数字和投资结论需一手或独立来源支持。",
+      "catalog_section": "科技与 AI"
+    },
+    {
+      "source_id": "wechat-3d-c9c59f0a",
+      "name": "南极熊3D打印",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "industry_media",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "product_distribution",
+        "research"
+      ],
+      "parent_group": "3d-c9c59f0a",
+      "independence_group": "3d-c9c59f0a",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于发现与媒体核验；关键经营数字和投资结论需一手或独立来源支持。",
+      "catalog_section": "科技与 AI"
+    },
+    {
+      "source_id": "wechat-b2c5899a",
+      "name": "芝能汽车",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "industry_media",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "product_distribution",
+        "research"
+      ],
+      "parent_group": "b2c5899a",
+      "independence_group": "b2c5899a",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于发现与媒体核验；关键经营数字和投资结论需一手或独立来源支持。",
+      "catalog_section": "科技与 AI"
+    },
+    {
+      "source_id": "wechat-vr-5211d970",
+      "name": "VR陀螺",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "industry_media",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "product_distribution",
+        "research"
+      ],
+      "parent_group": "vr-5211d970",
+      "independence_group": "vr-5211d970",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于发现与媒体核验；关键经营数字和投资结论需一手或独立来源支持。",
+      "catalog_section": "科技与 AI"
+    },
+    {
+      "source_id": "wechat-appso-4e318afe",
+      "name": "APPSO",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "industry_media",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "product_distribution",
+        "research"
+      ],
+      "parent_group": "appso-4e318afe",
+      "independence_group": "appso-4e318afe",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于发现与媒体核验；关键经营数字和投资结论需一手或独立来源支持。",
+      "catalog_section": "科技与 AI"
+    },
+    {
+      "source_id": "wechat-aing-8403e338",
+      "name": "AING硬迹",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "industry_media",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "product_distribution",
+        "research"
+      ],
+      "parent_group": "aing-8403e338",
+      "independence_group": "aing-8403e338",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于发现与媒体核验；关键经营数字和投资结论需一手或独立来源支持。",
+      "catalog_section": "科技与 AI"
+    },
+    {
+      "source_id": "wechat-ai-101b3aef",
+      "name": "AI无象限",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "industry_media",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "product_distribution",
+        "research"
+      ],
+      "parent_group": "ai-101b3aef",
+      "independence_group": "ai-101b3aef",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于发现与媒体核验；关键经营数字和投资结论需一手或独立来源支持。",
+      "catalog_section": "科技与 AI"
+    },
+    {
+      "source_id": "wechat-dt-9dc4f3df",
+      "name": "DT商业观察",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "industry_media",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "product_distribution",
+        "research"
+      ],
+      "parent_group": "dt-9dc4f3df",
+      "independence_group": "dt-9dc4f3df",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于发现与媒体核验；关键经营数字和投资结论需一手或独立来源支持。",
+      "catalog_section": "科技与 AI"
+    },
+    {
+      "source_id": "wechat-18169e0b",
+      "name": "大厂指南",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "industry_media",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "product_distribution",
+        "research"
+      ],
+      "parent_group": "18169e0b",
+      "independence_group": "18169e0b",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于发现与媒体核验；关键经营数字和投资结论需一手或独立来源支持。",
+      "catalog_section": "科技与 AI"
+    },
+    {
+      "source_id": "wechat-2c0332da",
+      "name": "数星星的星哥",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "industry_media",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "product_distribution",
+        "research"
+      ],
+      "parent_group": "2c0332da",
+      "independence_group": "2c0332da",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于发现与媒体核验；关键经营数字和投资结论需一手或独立来源支持。",
+      "catalog_section": "科技与 AI"
+    },
+    {
+      "source_id": "wechat-aea3d1aa",
+      "name": "深思圈",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "industry_media",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "product_distribution",
+        "research"
+      ],
+      "parent_group": "aea3d1aa",
+      "independence_group": "aea3d1aa",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于发现与媒体核验；关键经营数字和投资结论需一手或独立来源支持。",
+      "catalog_section": "科技与 AI"
+    },
+    {
+      "source_id": "wechat-top-7f2e24d3",
+      "name": "TOP创新区研究院",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "industry_media",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "product_distribution",
+        "research"
+      ],
+      "parent_group": "top-7f2e24d3",
+      "independence_group": "top-7f2e24d3",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于发现与媒体核验；关键经营数字和投资结论需一手或独立来源支持。",
+      "catalog_section": "科技与 AI"
+    },
+    {
+      "source_id": "wechat-web3-4a387525",
+      "name": "Web3天空之城",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "industry_media",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "product_distribution",
+        "research"
+      ],
+      "parent_group": "web3-4a387525",
+      "independence_group": "web3-4a387525",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于发现与媒体核验；关键经营数字和投资结论需一手或独立来源支持。",
+      "catalog_section": "科技与 AI"
+    },
+    {
+      "source_id": "wechat-0266f544",
+      "name": "游戏日报",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "industry_media",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "product_distribution",
+        "research"
+      ],
+      "parent_group": "0266f544",
+      "independence_group": "0266f544",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于发现与媒体核验；关键经营数字和投资结论需一手或独立来源支持。",
+      "catalog_section": "科技与 AI"
+    },
+    {
+      "source_id": "wechat-e36f0efd",
+      "name": "清科研究",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "market_context",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "zero2ipo",
+      "independence_group": "zero2ipo",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于融资与市场线索；金额、估值和交易状态需回到原始披露核验。",
+      "catalog_section": "创投与资本"
+    },
+    {
+      "source_id": "wechat-e1600bc1",
+      "name": "投资界",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "market_context",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "zero2ipo",
+      "independence_group": "zero2ipo",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于融资与市场线索；金额、估值和交易状态需回到原始披露核验。",
+      "catalog_section": "创投与资本"
+    },
+    {
+      "source_id": "wechat-7a475cf9",
+      "name": "投中网",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "market_context",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "7a475cf9",
+      "independence_group": "7a475cf9",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于融资与市场线索；金额、估值和交易状态需回到原始披露核验。",
+      "catalog_section": "创投与资本"
+    },
+    {
+      "source_id": "wechat-fofweekly-8d6e41db",
+      "name": "FOFWEEKLY",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "market_context",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "fofweekly-8d6e41db",
+      "independence_group": "fofweekly-8d6e41db",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于融资与市场线索；金额、估值和交易状态需回到原始披露核验。",
+      "catalog_section": "创投与资本"
+    },
+    {
+      "source_id": "wechat-19372dd0",
+      "name": "母基金研究中心",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "market_context",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "19372dd0",
+      "independence_group": "19372dd0",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于融资与市场线索；金额、估值和交易状态需回到原始披露核验。",
+      "catalog_section": "创投与资本"
+    },
+    {
+      "source_id": "wechat-ipo-9f509240",
+      "name": "IPO早知道",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "market_context",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "ipo-9f509240",
+      "independence_group": "ipo-9f509240",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于融资与市场线索；金额、估值和交易状态需回到原始披露核验。",
+      "catalog_section": "创投与资本"
+    },
+    {
+      "source_id": "wechat-waves-b2a27ce9",
+      "name": "暗涌Waves",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "market_context",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "waves-b2a27ce9",
+      "independence_group": "waves-b2a27ce9",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于融资与市场线索；金额、估值和交易状态需回到原始披露核验。",
+      "catalog_section": "创投与资本"
+    },
+    {
+      "source_id": "wechat-dd224138",
+      "name": "创业邦",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "market_context",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "dd224138",
+      "independence_group": "dd224138",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于融资与市场线索；金额、估值和交易状态需回到原始披露核验。",
+      "catalog_section": "创投与资本"
+    },
+    {
+      "source_id": "wechat-36-a5a825a3",
+      "name": "36氪",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "market_context",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "36kr",
+      "independence_group": "36kr",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于融资与市场线索；金额、估值和交易状态需回到原始披露核验。",
+      "catalog_section": "创投与资本"
+    },
+    {
+      "source_id": "wechat-83cb51c1",
+      "name": "融中财经",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "market_context",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "83cb51c1",
+      "independence_group": "83cb51c1",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于融资与市场线索；金额、估值和交易状态需回到原始披露核验。",
+      "catalog_section": "创投与资本"
+    },
+    {
+      "source_id": "wechat-01c16fcd",
+      "name": "经纬创投",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "market_context",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "01c16fcd",
+      "independence_group": "01c16fcd",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于融资与市场线索；金额、估值和交易状态需回到原始披露核验。",
+      "catalog_section": "创投与资本"
+    },
+    {
+      "source_id": "wechat-36-pro-23705cd3",
+      "name": "36氪 Pro",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "market_context",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "36kr",
+      "independence_group": "36kr",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于融资与市场线索；金额、估值和交易状态需回到原始披露核验。",
+      "catalog_section": "创投与资本"
+    },
+    {
+      "source_id": "wechat-36-de376985",
+      "name": "36氪出海",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "market_context",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "36kr",
+      "independence_group": "36kr",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于融资与市场线索；金额、估值和交易状态需回到原始披露核验。",
+      "catalog_section": "创投与资本"
+    },
+    {
+      "source_id": "wechat-cc68e586",
+      "name": "第一新声",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "market_context",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "cc68e586",
+      "independence_group": "cc68e586",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于融资与市场线索；金额、估值和交易状态需回到原始披露核验。",
+      "catalog_section": "创投与资本"
+    },
+    {
+      "source_id": "wechat-bfc58825",
+      "name": "中金宏观",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "market_context",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "bfc58825",
+      "independence_group": "bfc58825",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于融资与市场线索；金额、估值和交易状态需回到原始披露核验。",
+      "catalog_section": "创投与资本"
+    },
+    {
+      "source_id": "wechat-92eb87d1",
+      "name": "科技资本圈",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "market_context",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "92eb87d1",
+      "independence_group": "92eb87d1",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于融资与市场线索；金额、估值和交易状态需回到原始披露核验。",
+      "catalog_section": "创投与资本"
+    },
+    {
+      "source_id": "wechat-abceba95",
+      "name": "新智独角兽",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "market_context",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "abceba95",
+      "independence_group": "abceba95",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于融资与市场线索；金额、估值和交易状态需回到原始披露核验。",
+      "catalog_section": "创投与资本"
+    },
+    {
+      "source_id": "wechat-21d6a0f8",
+      "name": "独角兽早知道",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "market_context",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "21d6a0f8",
+      "independence_group": "21d6a0f8",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于融资与市场线索；金额、估值和交易状态需回到原始披露核验。",
+      "catalog_section": "创投与资本"
+    },
+    {
+      "source_id": "wechat-732e3363",
+      "name": "融了么",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "market_context",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "732e3363",
+      "independence_group": "732e3363",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于融资与市场线索；金额、估值和交易状态需回到原始披露核验。",
+      "catalog_section": "创投与资本"
+    },
+    {
+      "source_id": "wechat-app-0adf6e41",
+      "name": "妙投APP",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "market_context",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "app-0adf6e41",
+      "independence_group": "app-0adf6e41",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "用于融资与市场线索；金额、估值和交易状态需回到原始披露核验。",
+      "catalog_section": "创投与资本"
+    },
+    {
+      "source_id": "wechat-c7c6a08b",
+      "name": "红杉中国",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "investor_stakeholder",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "c7c6a08b",
+      "independence_group": "c7c6a08b",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认该机构宣布的投资及其观点，不能单独证明估值合理性、客户质量或经营表现。",
+      "catalog_section": "投资机构"
+    },
+    {
+      "source_id": "wechat-13109585",
+      "name": "启明创投",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "investor_stakeholder",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "13109585",
+      "independence_group": "13109585",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认该机构宣布的投资及其观点，不能单独证明估值合理性、客户质量或经营表现。",
+      "catalog_section": "投资机构"
+    },
+    {
+      "source_id": "wechat-9671fe1e",
+      "name": "高瓴创投",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "investor_stakeholder",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "9671fe1e",
+      "independence_group": "9671fe1e",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认该机构宣布的投资及其观点，不能单独证明估值合理性、客户质量或经营表现。",
+      "catalog_section": "投资机构"
+    },
+    {
+      "source_id": "wechat-ggv-324c9316",
+      "name": "GGV纪源资本",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "investor_stakeholder",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "ggv-324c9316",
+      "independence_group": "ggv-324c9316",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认该机构宣布的投资及其观点，不能单独证明估值合理性、客户质量或经营表现。",
+      "catalog_section": "投资机构"
+    },
+    {
+      "source_id": "wechat-8d3d32a9",
+      "name": "五源资本",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "investor_stakeholder",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "8d3d32a9",
+      "independence_group": "8d3d32a9",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认该机构宣布的投资及其观点，不能单独证明估值合理性、客户质量或经营表现。",
+      "catalog_section": "投资机构"
+    },
+    {
+      "source_id": "wechat-f87b1fb4",
+      "name": "真格基金",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "investor_stakeholder",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "f87b1fb4",
+      "independence_group": "f87b1fb4",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认该机构宣布的投资及其观点，不能单独证明估值合理性、客户质量或经营表现。",
+      "catalog_section": "投资机构"
+    },
+    {
+      "source_id": "wechat-84ef91ab",
+      "name": "源码资本",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "investor_stakeholder",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "84ef91ab",
+      "independence_group": "84ef91ab",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认该机构宣布的投资及其观点，不能单独证明估值合理性、客户质量或经营表现。",
+      "catalog_section": "投资机构"
+    },
+    {
+      "source_id": "wechat-681ce915",
+      "name": "云启资本",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "investor_stakeholder",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "681ce915",
+      "independence_group": "681ce915",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认该机构宣布的投资及其观点，不能单独证明估值合理性、客户质量或经营表现。",
+      "catalog_section": "投资机构"
+    },
+    {
+      "source_id": "wechat-75d1cd58",
+      "name": "耀途资本",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "investor_stakeholder",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "75d1cd58",
+      "independence_group": "75d1cd58",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认该机构宣布的投资及其观点，不能单独证明估值合理性、客户质量或经营表现。",
+      "catalog_section": "投资机构"
+    },
+    {
+      "source_id": "wechat-4fd82bf0",
+      "name": "腾讯投资",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "investor_stakeholder",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "tencent",
+      "independence_group": "tencent",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认该机构宣布的投资及其观点，不能单独证明估值合理性、客户质量或经营表现。",
+      "catalog_section": "投资机构"
+    },
+    {
+      "source_id": "wechat-0321283b",
+      "name": "联想创投",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "investor_stakeholder",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "0321283b",
+      "independence_group": "0321283b",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认该机构宣布的投资及其观点，不能单独证明估值合理性、客户质量或经营表现。",
+      "catalog_section": "投资机构"
+    },
+    {
+      "source_id": "wechat-fc4461e1",
+      "name": "顺为资本",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "investor_stakeholder",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "fc4461e1",
+      "independence_group": "fc4461e1",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认该机构宣布的投资及其观点，不能单独证明估值合理性、客户质量或经营表现。",
+      "catalog_section": "投资机构"
+    },
+    {
+      "source_id": "wechat-a6880f17",
+      "name": "险峰长青",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "investor_stakeholder",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "a6880f17",
+      "independence_group": "a6880f17",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认该机构宣布的投资及其观点，不能单独证明估值合理性、客户质量或经营表现。",
+      "catalog_section": "投资机构"
+    },
+    {
+      "source_id": "wechat-9ff694ae",
+      "name": "蓝驰创投",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "investor_stakeholder",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "9ff694ae",
+      "independence_group": "9ff694ae",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认该机构宣布的投资及其观点，不能单独证明估值合理性、客户质量或经营表现。",
+      "catalog_section": "投资机构"
+    },
+    {
+      "source_id": "wechat-8e5424cd",
+      "name": "光速光合",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "investor_stakeholder",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "8e5424cd",
+      "independence_group": "8e5424cd",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认该机构宣布的投资及其观点，不能单独证明估值合理性、客户质量或经营表现。",
+      "catalog_section": "投资机构"
+    },
+    {
+      "source_id": "wechat-9357cc10",
+      "name": "明势资本",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "investor_stakeholder",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "9357cc10",
+      "independence_group": "9357cc10",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认该机构宣布的投资及其观点，不能单独证明估值合理性、客户质量或经营表现。",
+      "catalog_section": "投资机构"
+    },
+    {
+      "source_id": "wechat-9cec7aa5",
+      "name": "中科创星",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "investor_stakeholder",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "9cec7aa5",
+      "independence_group": "9cec7aa5",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认该机构宣布的投资及其观点，不能单独证明估值合理性、客户质量或经营表现。",
+      "catalog_section": "投资机构"
+    },
+    {
+      "source_id": "wechat-4e1d97c4",
+      "name": "元禾原点",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "investor_stakeholder",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "4e1d97c4",
+      "independence_group": "4e1d97c4",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认该机构宣布的投资及其观点，不能单独证明估值合理性、客户质量或经营表现。",
+      "catalog_section": "投资机构"
+    },
+    {
+      "source_id": "wechat-74b91c57",
+      "name": "百度风投",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "investor_stakeholder",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "baidu",
+      "independence_group": "baidu",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认该机构宣布的投资及其观点，不能单独证明估值合理性、客户质量或经营表现。",
+      "catalog_section": "投资机构"
+    },
+    {
+      "source_id": "wechat-7345de87",
+      "name": "小米产投",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "investor_stakeholder",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "7345de87",
+      "independence_group": "7345de87",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认该机构宣布的投资及其观点，不能单独证明估值合理性、客户质量或经营表现。",
+      "catalog_section": "投资机构"
+    },
+    {
+      "source_id": "wechat-05a85984",
+      "name": "阿里战略投资",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "investor_stakeholder",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "alibaba",
+      "independence_group": "alibaba",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认该机构宣布的投资及其观点，不能单独证明估值合理性、客户质量或经营表现。",
+      "catalog_section": "投资机构"
+    },
+    {
+      "source_id": "wechat-0c01d328",
+      "name": "美团龙珠",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "investor_stakeholder",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "0c01d328",
+      "independence_group": "0c01d328",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认该机构宣布的投资及其观点，不能单独证明估值合理性、客户质量或经营表现。",
+      "catalog_section": "投资机构"
+    },
+    {
+      "source_id": "wechat-73018e06",
+      "name": "商汤国香资本",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "investor_stakeholder",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "capital"
+      ],
+      "parent_group": "sensetime",
+      "independence_group": "sensetime",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认该机构宣布的投资及其观点，不能单独证明估值合理性、客户质量或经营表现。",
+      "catalog_section": "投资机构"
+    },
+    {
+      "source_id": "wechat-ai-98563069",
+      "name": "智谱AI",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "zhipu",
+      "independence_group": "zhipu",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-deepseek-2b893991",
+      "name": "DeepSeek",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "deepseek-2b893991",
+      "independence_group": "deepseek-2b893991",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-kimi-d3ffbd28",
+      "name": "月之暗面Kimi",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "kimi-d3ffbd28",
+      "independence_group": "kimi-d3ffbd28",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-minimax-833381db",
+      "name": "MiniMax",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "minimax-833381db",
+      "independence_group": "minimax-833381db",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-20ef379b",
+      "name": "阿里云",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "alibaba",
+      "independence_group": "alibaba",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-45549b51",
+      "name": "火山引擎",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "bytedance",
+      "independence_group": "bytedance",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-8db085b6",
+      "name": "阶跃星辰",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "8db085b6",
+      "independence_group": "8db085b6",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-47ce5eab",
+      "name": "百川智能",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "47ce5eab",
+      "independence_group": "47ce5eab",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-f8c4222d",
+      "name": "零一万物",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "f8c4222d",
+      "independence_group": "f8c4222d",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-64910b4c",
+      "name": "百度智能云",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "baidu",
+      "independence_group": "baidu",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-88f4c71e",
+      "name": "腾讯云",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "tencent",
+      "independence_group": "tencent",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-c1c6f8f3",
+      "name": "华为云",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "c1c6f8f3",
+      "independence_group": "c1c6f8f3",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-2cced23e",
+      "name": "科大讯飞",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "2cced23e",
+      "independence_group": "2cced23e",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-92ebe3bb",
+      "name": "商汤科技",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "sensetime",
+      "independence_group": "sensetime",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-wps-a2d164db",
+      "name": "金山办公WPS",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "wps-a2d164db",
+      "independence_group": "wps-a2d164db",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-90d78dd1",
+      "name": "快手可灵",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "90d78dd1",
+      "independence_group": "90d78dd1",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-50d74f66",
+      "name": "面壁智能",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "50d74f66",
+      "independence_group": "50d74f66",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-e5392cd4",
+      "name": "天翼云",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "e5392cd4",
+      "independence_group": "e5392cd4",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-e7f6c683",
+      "name": "用友网络",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "e7f6c683",
+      "independence_group": "e7f6c683",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-a4f822a4",
+      "name": "金蝶软件",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "a4f822a4",
+      "independence_group": "a4f822a4",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-3a76f430",
+      "name": "第四范式",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "3a76f430",
+      "independence_group": "3a76f430",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-baa7ac8c",
+      "name": "达观数据",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "baa7ac8c",
+      "independence_group": "baa7ac8c",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-ed729092",
+      "name": "字节即梦",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "bytedance",
+      "independence_group": "bytedance",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-vidu-e663c983",
+      "name": "生数科技Vidu",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "vidu-e663c983",
+      "independence_group": "vidu-e663c983",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-437ef674",
+      "name": "智谱清影",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "zhipu",
+      "independence_group": "zhipu",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-coze-a0bf3a1b",
+      "name": "扣子Coze",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "bytedance",
+      "independence_group": "bytedance",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-29bb62af",
+      "name": "百度文心智能体平台",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "baidu",
+      "independence_group": "baidu",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-manus-39aaf632",
+      "name": "Manus蝴蝶效应",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "company_primary",
+        "product_distribution"
+      ],
+      "parent_group": "manus-39aaf632",
+      "independence_group": "manus-39aaf632",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "中国 AI 公司官方账号"
+    },
+    {
+      "source_id": "wechat-b013eec9",
+      "name": "寒武纪",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "infrastructure"
+      ],
+      "parent_group": "b013eec9",
+      "independence_group": "b013eec9",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "芯片与基础设施产业链"
+    },
+    {
+      "source_id": "wechat-31b87d3e",
+      "name": "华为昇腾",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "infrastructure"
+      ],
+      "parent_group": "31b87d3e",
+      "independence_group": "31b87d3e",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "芯片与基础设施产业链"
+    },
+    {
+      "source_id": "wechat-ad83a8cb",
+      "name": "浪潮信息",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "infrastructure"
+      ],
+      "parent_group": "ad83a8cb",
+      "independence_group": "ad83a8cb",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "芯片与基础设施产业链"
+    },
+    {
+      "source_id": "wechat-bffb080a",
+      "name": "中际旭创",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "infrastructure"
+      ],
+      "parent_group": "bffb080a",
+      "independence_group": "bffb080a",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "芯片与基础设施产业链"
+    },
+    {
+      "source_id": "wechat-e985668c",
+      "name": "摩尔线程",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "infrastructure"
+      ],
+      "parent_group": "e985668c",
+      "independence_group": "e985668c",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "芯片与基础设施产业链"
+    },
+    {
+      "source_id": "wechat-a79c7009",
+      "name": "燧原科技",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "infrastructure"
+      ],
+      "parent_group": "a79c7009",
+      "independence_group": "a79c7009",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "芯片与基础设施产业链"
+    },
+    {
+      "source_id": "wechat-metax-4734aac7",
+      "name": "沐曦MetaX",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "infrastructure"
+      ],
+      "parent_group": "metax-4734aac7",
+      "independence_group": "metax-4734aac7",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "芯片与基础设施产业链"
+    },
+    {
+      "source_id": "wechat-d95632ce",
+      "name": "中科曙光",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "infrastructure"
+      ],
+      "parent_group": "d95632ce",
+      "independence_group": "d95632ce",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "芯片与基础设施产业链"
+    },
+    {
+      "source_id": "wechat-44ce341a",
+      "name": "紫光股份新华三",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "infrastructure"
+      ],
+      "parent_group": "44ce341a",
+      "independence_group": "44ce341a",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "芯片与基础设施产业链"
+    },
+    {
+      "source_id": "wechat-5175122a",
+      "name": "新易盛",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "infrastructure"
+      ],
+      "parent_group": "5175122a",
+      "independence_group": "5175122a",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "芯片与基础设施产业链"
+    },
+    {
+      "source_id": "wechat-gds-baf24c3b",
+      "name": "万国数据GDS",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "company_primary",
+        "infrastructure"
+      ],
+      "parent_group": "gds-baf24c3b",
+      "independence_group": "gds-baf24c3b",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "芯片与基础设施产业链"
+    },
+    {
+      "source_id": "wechat-b7991eb8",
+      "name": "壁仞科技",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "company_primary",
+        "infrastructure"
+      ],
+      "parent_group": "b7991eb8",
+      "independence_group": "b7991eb8",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "芯片与基础设施产业链"
+    },
+    {
+      "source_id": "wechat-217712ba",
+      "name": "地平线",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "company_primary",
+        "infrastructure"
+      ],
+      "parent_group": "217712ba",
+      "independence_group": "217712ba",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "芯片与基础设施产业链"
+    },
+    {
+      "source_id": "wechat-b20af4d1",
+      "name": "锐捷网络",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "company_primary",
+        "infrastructure"
+      ],
+      "parent_group": "b20af4d1",
+      "independence_group": "b20af4d1",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "芯片与基础设施产业链"
+    },
+    {
+      "source_id": "wechat-61b1ef4e",
+      "name": "中兴通讯",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "company_primary",
+        "infrastructure"
+      ],
+      "parent_group": "61b1ef4e",
+      "independence_group": "61b1ef4e",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "芯片与基础设施产业链"
+    },
+    {
+      "source_id": "wechat-e6d85ff3",
+      "name": "光迅科技",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "company_primary",
+        "infrastructure"
+      ],
+      "parent_group": "e6d85ff3",
+      "independence_group": "e6d85ff3",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "芯片与基础设施产业链"
+    },
+    {
+      "source_id": "wechat-5a993845",
+      "name": "华工科技",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "company_primary",
+        "infrastructure"
+      ],
+      "parent_group": "5a993845",
+      "independence_group": "5a993845",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "芯片与基础设施产业链"
+    },
+    {
+      "source_id": "wechat-725b099f",
+      "name": "秦淮数据",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "company_primary",
+        "infrastructure"
+      ],
+      "parent_group": "725b099f",
+      "independence_group": "725b099f",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "芯片与基础设施产业链"
+    },
+    {
+      "source_id": "wechat-4713aa8c",
+      "name": "世纪互联",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "company_primary",
+        "infrastructure"
+      ],
+      "parent_group": "4713aa8c",
+      "independence_group": "4713aa8c",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "芯片与基础设施产业链"
+    },
+    {
+      "source_id": "wechat-55eedafc",
+      "name": "中国电信",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "company_primary",
+        "infrastructure"
+      ],
+      "parent_group": "55eedafc",
+      "independence_group": "55eedafc",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "芯片与基础设施产业链"
+    },
+    {
+      "source_id": "wechat-c912e498",
+      "name": "中国移动",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "company_primary",
+        "infrastructure"
+      ],
+      "parent_group": "c912e498",
+      "independence_group": "c912e498",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "芯片与基础设施产业链"
+    },
+    {
+      "source_id": "wechat-5c788746",
+      "name": "中国联通",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "primary_company",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "company_primary",
+        "infrastructure"
+      ],
+      "parent_group": "5c788746",
+      "independence_group": "5c788746",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认公司主动披露，客户效果、收入和市场份额仍需独立来源验证。",
+      "catalog_section": "芯片与基础设施产业链"
+    },
+    {
+      "source_id": "wechat-caict-61b13056",
+      "name": "中国信通院CAICT",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "research_primary",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "policy",
+        "research"
+      ],
+      "parent_group": "caict-61b13056",
+      "independence_group": "caict-61b13056",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认机构发布的政策或研究判断，政策目标和研究预测不能直接等同于产业收入。",
+      "catalog_section": "政策、标准与产业研究"
+    },
+    {
+      "source_id": "wechat-4cad55a4",
+      "name": "网信中国",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "research_primary",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "policy",
+        "research"
+      ],
+      "parent_group": "4cad55a4",
+      "independence_group": "4cad55a4",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认机构发布的政策或研究判断，政策目标和研究预测不能直接等同于产业收入。",
+      "catalog_section": "政策、标准与产业研究"
+    },
+    {
+      "source_id": "wechat-7a0a8dbd",
+      "name": "工信微报",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "research_primary",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "policy",
+        "research"
+      ],
+      "parent_group": "7a0a8dbd",
+      "independence_group": "7a0a8dbd",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认机构发布的政策或研究判断，政策目标和研究预测不能直接等同于产业收入。",
+      "catalog_section": "政策、标准与产业研究"
+    },
+    {
+      "source_id": "wechat-ccid-6183a94d",
+      "name": "赛迪研究院CCID",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "research_primary",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "policy",
+        "research"
+      ],
+      "parent_group": "ccid-6183a94d",
+      "independence_group": "ccid-6183a94d",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认机构发布的政策或研究判断，政策目标和研究预测不能直接等同于产业收入。",
+      "catalog_section": "政策、标准与产业研究"
+    },
+    {
+      "source_id": "wechat-afe9754b",
+      "name": "国家数据局",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "research_primary",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "policy",
+        "research"
+      ],
+      "parent_group": "afe9754b",
+      "independence_group": "afe9754b",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认机构发布的政策或研究判断，政策目标和研究预测不能直接等同于产业收入。",
+      "catalog_section": "政策、标准与产业研究"
+    },
+    {
+      "source_id": "wechat-439e1d71",
+      "name": "智源研究院",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "research_primary",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "policy",
+        "research"
+      ],
+      "parent_group": "439e1d71",
+      "independence_group": "439e1d71",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认机构发布的政策或研究判断，政策目标和研究预测不能直接等同于产业收入。",
+      "catalog_section": "政策、标准与产业研究"
+    },
+    {
+      "source_id": "wechat-1545d0ae",
+      "name": "中国电子学会",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "research_primary",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "policy",
+        "research"
+      ],
+      "parent_group": "1545d0ae",
+      "independence_group": "1545d0ae",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认机构发布的政策或研究判断，政策目标和研究预测不能直接等同于产业收入。",
+      "catalog_section": "政策、标准与产业研究"
+    },
+    {
+      "source_id": "wechat-8cc1495e",
+      "name": "中科院自动化研究所",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "research_primary",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "policy",
+        "research"
+      ],
+      "parent_group": "8cc1495e",
+      "independence_group": "8cc1495e",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认机构发布的政策或研究判断，政策目标和研究预测不能直接等同于产业收入。",
+      "catalog_section": "政策、标准与产业研究"
+    },
+    {
+      "source_id": "wechat-aiia-c8289ecc",
+      "name": "中国人工智能产业发展联盟AIIA",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "research_primary",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "policy",
+        "research"
+      ],
+      "parent_group": "aiia-c8289ecc",
+      "independence_group": "aiia-c8289ecc",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可确认机构发布的政策或研究判断，政策目标和研究预测不能直接等同于产业收入。",
+      "catalog_section": "政策、标准与产业研究"
+    },
+    {
+      "source_id": "wechat-1baced62",
+      "name": "金融电子化",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "customer_proxy",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "customer_demand"
+      ],
+      "parent_group": "1baced62",
+      "independence_group": "1baced62",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "主要用于发现行业采用线索；媒体案例不能自动等同于采购合同、续费或规模化收入。",
+      "catalog_section": "客户与行业应用"
+    },
+    {
+      "source_id": "wechat-2bd03071",
+      "name": "动脉网",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "customer_proxy",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "customer_demand"
+      ],
+      "parent_group": "2bd03071",
+      "independence_group": "2bd03071",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "主要用于发现行业采用线索；媒体案例不能自动等同于采购合同、续费或规模化收入。",
+      "catalog_section": "客户与行业应用"
+    },
+    {
+      "source_id": "wechat-ae74ad85",
+      "name": "银行科技研究社",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "customer_proxy",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "customer_demand"
+      ],
+      "parent_group": "ae74ad85",
+      "independence_group": "ae74ad85",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "主要用于发现行业采用线索；媒体案例不能自动等同于采购合同、续费或规模化收入。",
+      "catalog_section": "客户与行业应用"
+    },
+    {
+      "source_id": "wechat-41677048",
+      "name": "车东西",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "customer_proxy",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "customer_demand"
+      ],
+      "parent_group": "41677048",
+      "independence_group": "41677048",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "主要用于发现行业采用线索；媒体案例不能自动等同于采购合同、续费或规模化收入。",
+      "catalog_section": "客户与行业应用"
+    },
+    {
+      "source_id": "wechat-5199eb26",
+      "name": "高工智能汽车",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "customer_proxy",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "customer_demand"
+      ],
+      "parent_group": "5199eb26",
+      "independence_group": "5199eb26",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "主要用于发现行业采用线索；媒体案例不能自动等同于采购合同、续费或规模化收入。",
+      "catalog_section": "客户与行业应用"
+    },
+    {
+      "source_id": "wechat-8b02b768",
+      "name": "健康界",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "customer_proxy",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "customer_demand"
+      ],
+      "parent_group": "8b02b768",
+      "independence_group": "8b02b768",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "主要用于发现行业采用线索；媒体案例不能自动等同于采购合同、续费或规模化收入。",
+      "catalog_section": "客户与行业应用"
+    },
+    {
+      "source_id": "wechat-2bff6c37",
+      "name": "轻金融",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "customer_proxy",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "customer_demand"
+      ],
+      "parent_group": "2bff6c37",
+      "independence_group": "2bff6c37",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "主要用于发现行业采用线索；媒体案例不能自动等同于采购合同、续费或规模化收入。",
+      "catalog_section": "客户与行业应用"
+    },
+    {
+      "source_id": "wechat-eea15690",
+      "name": "消金界",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "customer_proxy",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "customer_demand"
+      ],
+      "parent_group": "eea15690",
+      "independence_group": "eea15690",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "主要用于发现行业采用线索；媒体案例不能自动等同于采购合同、续费或规模化收入。",
+      "catalog_section": "客户与行业应用"
+    },
+    {
+      "source_id": "wechat-6642f67e",
+      "name": "机器人大讲堂",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "customer_proxy",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "customer_demand"
+      ],
+      "parent_group": "6642f67e",
+      "independence_group": "6642f67e",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "主要用于发现行业采用线索；媒体案例不能自动等同于采购合同、续费或规模化收入。",
+      "catalog_section": "客户与行业应用"
+    },
+    {
+      "source_id": "wechat-2f35e414",
+      "name": "工控网",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "customer_proxy",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "customer_demand"
+      ],
+      "parent_group": "2f35e414",
+      "independence_group": "2f35e414",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "主要用于发现行业采用线索；媒体案例不能自动等同于采购合同、续费或规模化收入。",
+      "catalog_section": "客户与行业应用"
+    },
+    {
+      "source_id": "wechat-20802c90",
+      "name": "医疗器械创新网",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "customer_proxy",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "customer_demand"
+      ],
+      "parent_group": "20802c90",
+      "independence_group": "20802c90",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "主要用于发现行业采用线索；媒体案例不能自动等同于采购合同、续费或规模化收入。",
+      "catalog_section": "客户与行业应用"
+    },
+    {
+      "source_id": "wechat-2975325f",
+      "name": "零售商业财经",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "customer_proxy",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "customer_demand"
+      ],
+      "parent_group": "2975325f",
+      "independence_group": "2975325f",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "主要用于发现行业采用线索；媒体案例不能自动等同于采购合同、续费或规模化收入。",
+      "catalog_section": "客户与行业应用"
+    },
+    {
+      "source_id": "wechat-3ee46093",
+      "name": "电商报",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "customer_proxy",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "customer_demand"
+      ],
+      "parent_group": "3ee46093",
+      "independence_group": "3ee46093",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "主要用于发现行业采用线索；媒体案例不能自动等同于采购合同、续费或规模化收入。",
+      "catalog_section": "客户与行业应用"
+    },
+    {
+      "source_id": "wechat-d1250743",
+      "name": "国资小新",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "customer_proxy",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "customer_demand"
+      ],
+      "parent_group": "d1250743",
+      "independence_group": "d1250743",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "主要用于发现行业采用线索；媒体案例不能自动等同于采购合同、续费或规模化收入。",
+      "catalog_section": "客户与行业应用"
+    },
+    {
+      "source_id": "wechat-15b32642",
+      "name": "上海数据交易所",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "customer_proxy",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "customer_demand"
+      ],
+      "parent_group": "15b32642",
+      "independence_group": "15b32642",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "主要用于发现行业采用线索；媒体案例不能自动等同于采购合同、续费或规模化收入。",
+      "catalog_section": "客户与行业应用"
+    },
+    {
+      "source_id": "wechat-76d0c223",
+      "name": "网络法实务圈",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "counter_evidence",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "counter_evidence",
+        "policy"
+      ],
+      "parent_group": "76d0c223",
+      "independence_group": "76d0c223",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可提供安全、法律与合规线索；事件责任和影响范围仍需一手文件确认。",
+      "catalog_section": "安全、法律与负面验证"
+    },
+    {
+      "source_id": "wechat-664c57ad",
+      "name": "安全客",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "counter_evidence",
+      "priority": "C1",
+      "hard_required": false,
+      "check_frequency": "weekly",
+      "coverage_dimensions": [
+        "counter_evidence",
+        "policy"
+      ],
+      "parent_group": "664c57ad",
+      "independence_group": "664c57ad",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可提供安全、法律与合规线索；事件责任和影响范围仍需一手文件确认。",
+      "catalog_section": "安全、法律与负面验证"
+    },
+    {
+      "source_id": "wechat-2225031e",
+      "name": "奇安信",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "counter_evidence",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "counter_evidence",
+        "policy"
+      ],
+      "parent_group": "2225031e",
+      "independence_group": "2225031e",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可提供安全、法律与合规线索；事件责任和影响范围仍需一手文件确认。",
+      "catalog_section": "安全、法律与负面验证"
+    },
+    {
+      "source_id": "wechat-060403d0",
+      "name": "深信服",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "counter_evidence",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "counter_evidence",
+        "policy"
+      ],
+      "parent_group": "060403d0",
+      "independence_group": "060403d0",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可提供安全、法律与合规线索；事件责任和影响范围仍需一手文件确认。",
+      "catalog_section": "安全、法律与负面验证"
+    },
+    {
+      "source_id": "wechat-freebuf-e3074455",
+      "name": "FreeBuf",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "counter_evidence",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "counter_evidence",
+        "policy"
+      ],
+      "parent_group": "freebuf-e3074455",
+      "independence_group": "freebuf-e3074455",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可提供安全、法律与合规线索；事件责任和影响范围仍需一手文件确认。",
+      "catalog_section": "安全、法律与负面验证"
+    },
+    {
+      "source_id": "wechat-448da9e4",
+      "name": "数据合规社",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "counter_evidence",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "counter_evidence",
+        "policy"
+      ],
+      "parent_group": "448da9e4",
+      "independence_group": "448da9e4",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可提供安全、法律与合规线索；事件责任和影响范围仍需一手文件确认。",
+      "catalog_section": "安全、法律与负面验证"
+    },
+    {
+      "source_id": "wechat-0616ccd0",
+      "name": "垦丁网络法",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "counter_evidence",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "counter_evidence",
+        "policy"
+      ],
+      "parent_group": "0616ccd0",
+      "independence_group": "0616ccd0",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可提供安全、法律与合规线索；事件责任和影响范围仍需一手文件确认。",
+      "catalog_section": "安全、法律与负面验证"
+    },
+    {
+      "source_id": "wechat-realai-1288bffa",
+      "name": "瑞莱智慧RealAI",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "counter_evidence",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "counter_evidence",
+        "policy"
+      ],
+      "parent_group": "realai-1288bffa",
+      "independence_group": "realai-1288bffa",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可提供安全、法律与合规线索；事件责任和影响范围仍需一手文件确认。",
+      "catalog_section": "安全、法律与负面验证"
+    },
+    {
+      "source_id": "wechat-1aaa41f9",
+      "name": "人工智能安全治理",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "counter_evidence",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "counter_evidence",
+        "policy"
+      ],
+      "parent_group": "1aaa41f9",
+      "independence_group": "1aaa41f9",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "可提供安全、法律与合规线索；事件责任和影响范围仍需一手文件确认。",
+      "catalog_section": "安全、法律与负面验证"
+    },
+    {
+      "source_id": "wechat-4cfdbd39",
+      "name": "脉脉",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "talent_signal",
+      "priority": "C2",
+      "hard_required": false,
+      "check_frequency": "biweekly",
+      "coverage_dimensions": [
+        "talent"
+      ],
+      "parent_group": "4cfdbd39",
+      "independence_group": "4cfdbd39",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "招聘与人才流动只代表计划或组织信号，不能写成已经形成产品或收入。",
+      "catalog_section": "招聘、组织与人才流动"
+    },
+    {
+      "source_id": "wechat-29381879",
+      "name": "猎聘",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "talent_signal",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "talent"
+      ],
+      "parent_group": "29381879",
+      "independence_group": "29381879",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "招聘与人才流动只代表计划或组织信号，不能写成已经形成产品或收入。",
+      "catalog_section": "招聘、组织与人才流动"
+    },
+    {
+      "source_id": "wechat-boss-476d1bfb",
+      "name": "BOSS直聘",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "talent_signal",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "talent"
+      ],
+      "parent_group": "boss-476d1bfb",
+      "independence_group": "boss-476d1bfb",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "招聘与人才流动只代表计划或组织信号，不能写成已经形成产品或收入。",
+      "catalog_section": "招聘、组织与人才流动"
+    },
+    {
+      "source_id": "wechat-7d481691",
+      "name": "字节跳动招聘",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "talent_signal",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "talent"
+      ],
+      "parent_group": "bytedance",
+      "independence_group": "bytedance",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "招聘与人才流动只代表计划或组织信号，不能写成已经形成产品或收入。",
+      "catalog_section": "招聘、组织与人才流动"
+    },
+    {
+      "source_id": "wechat-f9cc3de3",
+      "name": "阿里招聘",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "talent_signal",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "talent"
+      ],
+      "parent_group": "alibaba",
+      "independence_group": "alibaba",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "招聘与人才流动只代表计划或组织信号，不能写成已经形成产品或收入。",
+      "catalog_section": "招聘、组织与人才流动"
+    },
+    {
+      "source_id": "wechat-43c091e0",
+      "name": "腾讯招聘",
+      "channel": "wechat_official_account",
+      "url": "",
+      "wechat_id": "",
+      "fallback_url": "",
+      "operator": "",
+      "operator_verified": false,
+      "role": "talent_signal",
+      "priority": "C3",
+      "hard_required": false,
+      "check_frequency": "event_driven",
+      "coverage_dimensions": [
+        "talent"
+      ],
+      "parent_group": "tencent",
+      "independence_group": "tencent",
+      "access": {
+        "mode": "wechat_search",
+        "paywall": false
+      },
+      "status": "unverified",
+      "last_verified_at": "",
+      "evidence_limit": "招聘与人才流动只代表计划或组织信号，不能写成已经形成产品或收入。",
+      "catalog_section": "招聘、组织与人才流动"
+    }
+  ]
 }

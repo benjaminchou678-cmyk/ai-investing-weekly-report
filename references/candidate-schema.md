@@ -32,7 +32,7 @@
 | `entity_type` | `public_company` / `private_company` / `nonprofit` / `government` / `unknown` |
 | `tickers` | 市场与代码，如 `NASDAQ:NVDA`；不能确定时为空 |
 | `event_type` | 产品、财报、融资、组织、并购、监管、供应链等 |
-| `board` | 六个主板块之一；候选阶段可为空 |
+| `board` | 最终三个新闻板块之一：`产品与模型`、`组织与人事`、`投融资`；候选阶段可为空，Release 阶段必填 |
 | `summary` | 仅包含来源支持的内容 |
 | `discovered_via` | 发现轨道或文件来源 |
 | `sources` | 来源对象数组 |

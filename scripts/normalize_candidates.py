@@ -23,20 +23,33 @@ from _candidate_io import (
 )
 
 BOARD_ALIASES = {
-    "大厂": "大厂动向", "大厂动向": "大厂动向", "bigtech": "大厂动向",
-    "初创": "初创动向", "初创动向": "初创动向", "startup": "初创动向",
-    "融资": "初创动向", "生态": "生态动向", "生态动向": "生态动向",
-    "政策": "生态动向", "policy": "生态动向", "技术": "技术博客&论文",
-    "论文": "技术博客&论文", "paper": "技术博客&论文", "research": "技术博客&论文",
-    "技术博客&论文": "技术博客&论文", "海外建设者": "海外建设者",
-    "builder": "海外建设者", "观点": "观点与深度", "观点与深度": "观点与深度",
-    "opinion": "观点与深度", "analysis": "观点与深度",
+    "产品": "产品与模型", "模型": "产品与模型", "产品与模型": "产品与模型",
+    "product": "产品与模型", "model": "产品与模型",
+    "组织": "组织与人事", "人事": "组织与人事", "组织与人事": "组织与人事",
+    "people": "组织与人事", "organization": "组织与人事",
+    "融资": "投融资", "投资": "投融资", "投融资": "投融资",
+    "funding": "投融资", "investment": "投融资", "m&a": "投融资",
+}
+
+EVENT_TYPE_BOARDS = {
+    "产品": "产品与模型", "模型": "产品与模型", "产品发布": "产品与模型",
+    "模型发布": "产品与模型", "定价": "产品与模型", "api": "产品与模型",
+    "组织": "组织与人事", "人事": "组织与人事", "任命": "组织与人事",
+    "离职": "组织与人事", "高管": "组织与人事", "人才": "组织与人事",
+    "加入": "组织与人事", "创业": "组织与人事", "重组": "组织与人事",
+    "融资": "投融资", "投资": "投融资", "战略投资": "投融资",
+    "并购": "投融资", "收购": "投融资", "ipo": "投融资", "募资": "投融资",
 }
 
 
-def normalize_board(value: Any) -> str:
+def normalize_board(value: Any, event_type: Any = "") -> str:
     text = text_value(value)
-    return BOARD_ALIASES.get(text.lower(), BOARD_ALIASES.get(text, text))
+    explicit = BOARD_ALIASES.get(text.lower(), BOARD_ALIASES.get(text, text))
+    event = text_value(event_type)
+    inferred = EVENT_TYPE_BOARDS.get(event.lower(), EVENT_TYPE_BOARDS.get(event, ""))
+    if explicit in set(BOARD_ALIASES.values()):
+        return explicit
+    return inferred or explicit
 
 
 def infer_source_type(item: dict[str, Any], discovered: list[str]) -> str:
@@ -107,7 +120,8 @@ def normalize_item(item: dict[str, Any], origin: str, preserve_raw: bool) -> dic
     event_date = text_value(first_value(item, "event_date", "eventDate")) or inferred_event_date
     companies = as_list(first_value(item, "companies", "company", "organizations", "organization"))
     business_signals = as_list(first_value(item, "business_signals", "relevance_dimensions", "investment_signals"))
-    board = normalize_board(first_value(item, "board", "category", "section", "topic"))
+    event_type = text_value(first_value(item, "event_type", "eventType"))
+    board = normalize_board(first_value(item, "board", "category", "section", "topic"), event_type)
 
     normalized: dict[str, Any] = {
         "id": text_value(item.get("id")) or stable_id(title, url),
@@ -123,7 +137,7 @@ def normalize_item(item: dict[str, Any], origin: str, preserve_raw: bool) -> dic
         "companies": companies,
         "entity_type": text_value(first_value(item, "entity_type", default="unknown")),
         "tickers": as_list(first_value(item, "tickers", "ticker")),
-        "event_type": text_value(first_value(item, "event_type", "eventType")),
+        "event_type": event_type,
         "board": board,
         "summary": summary,
         "discovered_via": discovered,

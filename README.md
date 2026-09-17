@@ -7,8 +7,11 @@
 - 以上一个完整自然周为默认时间窗口；
 - 区分事实、公司披露、媒体转述、独立验证与编辑判断；
 - 追踪跨周事件、投资假设、催化剂和反方证据；
+- 按“产品与模型、组织与人事、投融资”三个维度组织每周核心新闻；
+- 固定输出产品、组织、投融资三个维度的本周关键判断，解释最重要事件及其直接与二阶影响；
+- 单周判断不冒充长期趋势，连续 2–3 周验证后才允许升级；
 - 提供采编前 QA 与发布前 QA；
-- 使用机器可读来源注册表核对 required 来源覆盖；
+- 使用机器来源注册表与独立策略文件检查硬性来源、C1 调度、维度覆盖、来源独立性和新鲜度；
 - 默认输出公司研究优先级，不把它写成买入建议。
 
 ## 安装
@@ -32,6 +35,7 @@ $ai-investing-weekly-report
 
 ```text
 采集与覆盖记录
+→ 来源注册表校验与 Source QA
 → 标准化与 URL 审计
 → 保守去重
 → Pre-edit QA
@@ -44,6 +48,8 @@ $ai-investing-weekly-report
 
 - [Skill 入口](SKILL.md)
 - [采集流程](references/collection-workflow.md)
+- [来源注册表 2.0](references/source-registry-schema.md)
+- [来源质量门策略](references/source-policy.json)
 - [数据管线](references/data-pipeline.md)
 - [编辑标准](references/editorial-policy.md)
 - [质量门](references/quality-gates.md)

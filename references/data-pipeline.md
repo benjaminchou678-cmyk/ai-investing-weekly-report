@@ -12,16 +12,20 @@ reports/2026-08-31_to_2026-09-06/
 ├── url-audit.json
 ├── merge-audit.json
 ├── coverage.json
+├── source-qa.json
 ├── run-manifest.json
 ├── pre-edit-qa.json
 ├── release-qa.json
-└── weekly-report.md
+├── weekly-report.md
+└── report-structure-qa.json
 ```
 
 ## 阶段一：采编前处理
 
 ```text
 原始采集
+→ validate_source_registry.py
+→ audit_source_coverage.py
 → normalize_candidates.py
 → validate_candidate_urls.py
 → merge_candidates.py
@@ -30,6 +34,15 @@ reports/2026-08-31_to_2026-09-06/
 ```
 
 ```bash
+python3 scripts/validate_source_registry.py \
+  references/source-registry.json --output registry-qa.json
+
+python3 scripts/audit_source_coverage.py \
+  --registry references/source-registry.json \
+  --policy references/source-policy.json \
+  --coverage coverage.json --profile full_weekly \
+  --as-of YYYY-MM-DD --output source-qa.json
+
 python3 scripts/normalize_candidates.py raw \
   --output candidates.json --drop-empty-title
 
@@ -44,6 +57,7 @@ python3 scripts/audit_candidates.py candidates-merged.json \
   --week-start YYYY-MM-DD --week-end YYYY-MM-DD \
   --timezone Asia/Shanghai --coverage coverage.json \
   --source-registry references/source-registry.json \
+  --source-qa source-qa.json \
   --run-manifest run-manifest.json
 ```
 
@@ -59,14 +73,26 @@ python3 scripts/audit_candidates.py selected-items.json \
   --week-start YYYY-MM-DD --week-end YYYY-MM-DD \
   --timezone Asia/Shanghai --coverage coverage.json \
   --source-registry references/source-registry.json \
+  --source-qa source-qa.json \
   --run-manifest run-manifest.json --strict
 ```
 
 Release QA 检查入选条目数量、评级、投资相关性、编辑确认、claim 来源绑定和假设影响。通过后才能写正式版。
 
+## 阶段三：成稿结构审核
+
+完成 `weekly-report.md` 后，检查三个关键判断是否分别对应产品与模型、组织与人事、投融资，并包含影响链、置信度与推翻条件：
+
+```bash
+python3 scripts/audit_report_structure.py weekly-report.md \
+  --output report-structure-qa.json
+```
+
+结构为 `FAIL` 时必须修正后重新运行。周度判断允许由单一高材料性事件主导，不要求凑足两个事件；但至少提供一个可回溯来源，高置信度判断至少提供两个来源链接并由编辑确认独立性。不得把单周判断直接表述为长期趋势。
+
 ## coverage 与执行清单
 
-`coverage.json` 必须使用来源注册表中的 `source_id`。审计脚本按注册表计算缺失项，不能只统计 coverage 文件中主动提交的来源。
+`coverage.json` 必须使用来源注册表中的 `source_id`。`audit_source_coverage.py` 同时检查硬性来源、计划 C1、维度覆盖、来源独立性和注册表新鲜度，输出 `source-qa.json`；`audit_candidates.py` 将其作为 Gate 1 的判定结果。未提供 `source-qa.json` 时只运行兼容性检查，并至少返回 WARN。
 
 `run-manifest.json` 至少记录：
 
@@ -97,4 +123,4 @@ Release QA 检查入选条目数量、评级、投资相关性、编辑确认、
 - 参数或文件错误：退出码 2；
 - `--strict`：WARN 也返回退出码 1。
 
-脚本只做结构和启发式检查，不能证明网页真实存在或内容支持正文。原始数据与所有中间产物应保留，且默认写新文件，不覆盖上一步输入。
+脚本只做结构和启发式检查，不能证明网页真实存在、来源相互独立或内容支持正文。原始数据与所有中间产物应保留，且默认写新文件，不覆盖上一步输入。
