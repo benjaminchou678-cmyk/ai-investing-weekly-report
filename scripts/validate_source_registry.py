@@ -93,6 +93,52 @@ def validate(payload: Any) -> list[dict[str, str]]:
                     issues.append(issue("FAIL", "HARD_WECHAT_FALLBACK_EMPTY", "微信硬性来源必须配置 fallback_url", source_id))
         if source.get("status") == "unverified":
             issues.append(issue("WARN", "SOURCE_UNVERIFIED", "来源尚未完成人工核验，不可作为硬门或独立确认", source_id))
+
+        # v2.0: priority-frequency consistency
+        p = source.get("priority")
+        cf = source.get("check_frequency")
+        if p in ("C1", "C2") and cf != "weekly":
+            issues.append(issue("FAIL", "FREQ_MISMATCH", f"{p} 必须 weekly，当前 {cf}", source_id))
+        if p == "C3" and cf != "event_driven":
+            issues.append(issue("FAIL", "FREQ_MISMATCH", f"C3 必须 event_driven，当前 {cf}", source_id))
+
+        # v2.0: resolver validation
+        resolver = source.get("resolver")
+        if resolver is not None:
+            if not isinstance(resolver, dict):
+                issues.append(issue("FAIL", "RESOLVER_INVALID", "resolver 必须为对象", source_id))
+            else:
+                level = resolver.get("level")
+                valid_levels = {"L1", "L2", "L3", "L4", "L5"}
+                if level not in valid_levels:
+                    issues.append(issue("FAIL", "RESOLVER_LEVEL_INVALID", f"resolver.level 必须是 L1-L5: {level}", source_id))
+                primary = resolver.get("primary")
+                if not isinstance(primary, dict):
+                    issues.append(issue("FAIL", "RESOLVER_PRIMARY_MISSING", "resolver.primary 必须为对象", source_id))
+                else:
+                    valid_statuses = {"stable", "stable_fallback", "candidate_retest", "wechat_only"}
+                    st = primary.get("status")
+                    if st not in valid_statuses:
+                        issues.append(issue("FAIL", "RESOLVER_STATUS_INVALID", f"resolver.primary.status 必须是 {valid_statuses}: {st}", source_id))
+                    if st in ("stable", "stable_fallback"):
+                        if not primary.get("url"):
+                            issues.append(issue("FAIL", "STABLE_NO_URL", f"{st} resolver 必须有 url", source_id))
+                        if not source.get("last_verified_at"):
+                            issues.append(issue("FAIL", "STABLE_NO_VERIFIED", f"{st} resolver 必须有 last_verified_at", source_id))
+                    if "fallbacks" in resolver and not isinstance(resolver["fallbacks"], list):
+                        issues.append(issue("FAIL", "RESOLVER_FALLBACKS_TYPE", "resolver.fallbacks 必须为数组", source_id))
+
+        # v2.0: primary_track validation
+        valid_tracks = {"company_regulatory", "media_business_verification", "builder_technical", "capital_market"}
+        pt = source.get("primary_track")
+        if pt is not None and pt not in valid_tracks:
+            issues.append(issue("FAIL", "TRACK_INVALID", f"primary_track 不合法: {pt}", source_id))
+
+    # v2.0: aliases validation
+    aliases = payload.get("aliases", {})
+    if not isinstance(aliases, dict):
+        issues.append(issue("FAIL", "ALIASES_TYPE", "aliases 必须为对象"))
+
     return issues
 
 

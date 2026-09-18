@@ -63,7 +63,49 @@ python3 scripts/audit_candidates.py candidates-merged.json \
 
 采编前 QA 只检查执行轨迹、来源覆盖、结构、时间窗、URL 状态和疑似重复，不检查最终条目数量或评级完成度。
 
-## 阶段二：编辑与发布前审核
+## 阶段二：内容生成中间层（新增）
+
+旧管线 `normalize → merge → report` 已拆为可校验的六步中间层。所有命令在来源校验通过后执行，只改内容生成层，不碰 Source Resolver。
+
+```text
+raw_articles
+→ cluster_events.py        → event_clusters
+→ rank_events.py           → ranked_events
+→ build_theses.py          → candidate_theses
+→ editorial_pass.py        → weekly_editorial_plan + final_weekly_report(.md/.html)
+```
+
+```bash
+python3 scripts/cluster_events.py merged-candidates.json -o event_clusters.json
+
+python3 scripts/rank_events.py event_clusters.json merged-candidates.json \
+  -o ranked_events.json
+
+python3 scripts/build_theses.py ranked_events.json -o candidate_theses.json
+
+python3 scripts/editorial_pass.py ranked_events.json candidate_theses.json \
+  --week-label YYYY-MM-DD—YYYY-MM-DD \
+  --plan-out weekly_editorial_plan.json \
+  --md-out final_weekly_report.md \
+  --html-out final_weekly_report.html
+```
+
+- **cluster_events.py**：保守聚类。同公司同日但不同产品版本 / 融资轮次 / 金额不合并；合并时更新 `source_ids` / `independence_groups` / `dates`；输出标准字段 `summary / what_is_new / why_it_matters / sources / related_events`。
+- **rank_events.py**：用户指定权重打分（合计 100）：行业/竞争格局 25、中长期产业方向 25、商业化/资本/产业链 20、持续影响 15、来源可信度 10、增量/反常识 5。每维同时输出分数与理由；**不**因发布日接近周三加分。分档：80–100 core、65–79 possible_core、50–64 watchlist、<50 appendix。
+- **build_theses.py**：不生成模板句。每条判断必须有 `statement / structural_change / key_evidence(2–4) / why_it_matters / investment_readthrough / counter_evidence / falsification_conditions / confidence`。证据门槛：≥2 个跨 `independence_group` 的重要事件，或 1 个 ≥80 核心事件 + ≥2 条辅助证据；逐事件独立性检查。判断可跨栏目，不凑 3 条；证据不足时在 `note` 写明"本周仅形成 N 条可发布判断"。
+- **editorial_pass.py**：输出编辑计划与最终报告。一句话 50–80 字；可发布判断 1–3 条（不凑数）；核心事件 5–7（不足 5 个则明示）；Watchlist 3–5；事件卡 150–250 字（发生了什么 / 真正新变化 / 为什么重要 / 关联判断）；Other Updates / Sources 极简。同时输出 Markdown 与最小 HTML。
+
+### Demo 与 old-vs-new 对比
+
+```bash
+python3 scripts/demo_compare.py \
+  --demo examples/demo-merged-candidates.json \
+  --workdir reports/demo --out reports/demo/compare.json
+```
+
+对比原始候选数、旧/新正文字符数、压缩率（目标下降 30%–50%）、事件数、判断数、每判断证据事件数，以及核心 5–7 / Watchlist 3–5 的达成情况。
+
+## 阶段三：编辑与发布前审核
 
 模型读取候选、原始正文和审计报告，按编辑标准完成逐 claim 核验、筛选、评级、投资假设判断，保存 `selected-items.json`，再执行：
 

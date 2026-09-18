@@ -26,7 +26,18 @@
 
 无法归入三类的候选不要强行改类，可继续作为关键判断的辅助证据、反方证据或观察项。常规目标为 4–6、2–3、3–5 条，但采集阶段应保留更多候选，编辑阶段再按材料性和证据强度筛选。
 
-## 覆盖记录
+## 调度与 discovery 分级
+
+完整周报条件由 C1 扩展为 **C1 + C2 全部做 discovery**（`scheduled_c1_checked_ratio = 1.0`，`c2_discovery_required = true`）：
+
+- **C1**：weekly required discovery，逐项访问并保留 attempt evidence；有候选才进入正文。
+- **C2**：weekly lightweight discovery，只做轻量 discovery（如 Feed/列表/搜索快照），必须留 attempt evidence；是否进入正文按是否入窗、是否相关、是否有材料性决定，未入窗不展开。
+- **C3**：event_driven，不做例行周检，仅在出现明确事件线索（融资传闻、监管动态、重大客户/竞品动作）时按需检索并补 attempt evidence。
+
+来源状态补充规则：
+
+- `unverified`：仍进入本周调度并记录 attempt evidence，但不计入 hard_required，也不参与独立性计数。
+- `no_update`：仅当身份已核验（`operator_verified = true`）且 `account_window_complete = true` 时可用；否则按 `failed` 或 `blocked` 记录。
 
 每个来源必须使用 `references/source-registry.json` 的 `source_id`，并按 `references/source-policy.json` 的运行配置调度。至少记录：`scheduled`、`checked_at`、`status`、`access_method`、新增条数、最新条目时间、是否使用备用入口、失败代码和备注。
 
@@ -51,4 +62,4 @@ Builder Feed 记录 `generatedAt`，超过48小时标为陈旧。微信公众号
 - 补搜财报/资本开支、融资并购、组织调整、客户与定价、监管与供应链；
 - 保留 `discovered_via` 与 claim 来源，不把不同观点合成不存在的共同事实。
 
-采集完成条件：硬性来源均有记录，计划检查的 C1 有明确状态，核心覆盖维度达到策略要求，必需轨道有状态，原始候选落盘，失败与无更新可区分，上期观察项已回看或明确无历史基线。
+采集完成条件：硬性来源均有记录，**计划检查的 C1 + C2 均有明确状态（含 attempt evidence）**，核心覆盖维度达到策略要求，必需轨道有状态，原始候选落盘，失败与无更新可区分，上期观察项已回看或明确无历史基线。C3 未触发事件时允许无记录，但需在 run-manifest 中说明 event_driven 未触发。

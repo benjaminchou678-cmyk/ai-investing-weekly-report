@@ -30,12 +30,12 @@ description: 检索、核验并撰写面向投资与产品决策者的中文 AI 
 
 ### 完整周报
 
-1. 读取 [采集流程](references/collection-workflow.md)、[来源清单](references/source-registry.md) 和 [机器来源策略](references/source-registry-schema.md)。来源调度与质量门分别由 `source-registry.json` 和 `source-policy.json` 驱动。
+1. 读取 [采集流程](references/collection-workflow.md)、[来源清单](references/source-registry.md)、[机器来源策略](references/source-registry-schema.md) 与 [来源解析器](references/source-resolver.md)。来源调度与质量门分别由 `source-registry.json` 和 `source-policy.json` 驱动；C1+C2 全部做 discovery，C3 事件驱动。
 2. 读取 [候选数据结构](references/candidate-schema.md)，将采集结果保存为结构化候选，并记录 `coverage.json` 与 `run-manifest.json`。
 3. 按 [数据管线](references/data-pipeline.md) 完成标准化、URL 结构检查、保守去重和采编前 QA。
-4. 读取 [编辑与投资判断标准](references/editorial-policy.md)，核验事实、筛选条目、更新投资假设并生成 `selected-items.json`。
-5. 先运行来源注册表校验和来源覆盖审计，生成 `source-qa.json`；再按 [质量门](references/quality-gates.md) 执行发布前 QA。硬性 Gate 失败时不得标记为正式版。
-6. 按 [周报模板](references/report-template.md) 输出 Markdown，其中三个关键判断必须依次对应产品与模型、组织与人事、投融资。
+4. 进入内容生成中间层：`cluster_events.py → rank_events.py → build_theses.py → editorial_pass.py`，产出 `event_clusters`、`ranked_events`、`candidate_theses`、`weekly_editorial_plan` 与 `final_weekly_report(.md/.html)`。评分权重与判断证据门槛见 [编辑标准](references/editorial-policy.md)。
+5. 先运行来源注册表校验和来源覆盖审计，生成 `source-qa.json`；再按 [质量门](references/quality-gates.md) 执行发布前 QA（含内容层机械 QA）。硬性 Gate 失败时不得标记为正式版。
+6. 按 [周报模板](references/report-template.md) 输出压缩版 Markdown 与最小 HTML；核心事件 5–7、Watchlist 3–5、可发布判断 1–3 条，不凑数。
 7. 运行 `scripts/audit_report_structure.py` 生成 `report-structure-qa.json`；结构 FAIL 时修正后再交付。
 
 ### 基于已有材料撰写
@@ -61,8 +61,8 @@ description: 检索、核验并撰写面向投资与产品决策者的中文 AI 
 
 - 全程使用中文，必要的海外原文短句除外。
 - 报告主标题保持简洁，使用“AI 投资周报 · 日期区间”；不要添加“关键判断版”“趋势版”“扩展版”等版本型后缀。试跑、来源限制或质量状态应在正文说明，不写进主标题。
-- 核心新闻固定按“产品与模型、组织与人事、投融资”三个板块组织。常规周建议分别 4–6、2–3、3–5 条，总计约 9–14 条；这是编辑目标而非硬配额，质量不足时允许更少并说明，不为填满板块而凑数。
-- 固定输出三个维度判断，依次为产品与模型、组织与人事、投融资；每个维度选择本周最重要的一件事或一组高度相关事件，回答“发生了什么、为何最重要、可能带来什么后续影响”。
+- 核心新闻按新中间层产出：可发布判断 1–3 条（不凑数）、核心事件 5–7（宁缺毋滥，不足则明示）、Watchlist 3–5；正文较旧详版下降 30%–50%。
+- 可发布判断不强制按产品/组织/投融资各一条；证据门槛未达到时明确写"本周仅形成 N 条可发布判断"。单事件不升格为判断。
 - 周度判断允许由一件高材料性事件主导，不要求凑足两个事件；但核心事实必须充分核验，并写明直接影响、二阶影响、受益者/承压者、时间范围、反方证据或推翻条件、判断置信度和未来验证。
 - 只有经过连续 2–3 周证据验证的判断才可升级为中期趋势；不得把单周判断直接表述为长期趋势。
 - 政策、安全、客户、算力和研究信息继续用于关键判断、反证与投资假设；只有符合三个板块的重大事件才进入核心新闻。
