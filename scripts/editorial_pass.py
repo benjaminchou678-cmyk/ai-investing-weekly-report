@@ -242,6 +242,8 @@ def render_html(plan: dict, report: dict) -> str:
     parts = [
         "<!doctype html>",
         "<html lang='zh-CN'><head><meta charset='utf-8'>",
+        "<meta name='viewport' content='width=device-width, initial-scale=1, viewport-fit=cover'>",
+        "<link rel=\"icon\" type=\"image/svg+xml\" href=\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f4f6f'/%3E%3Cpath d='M18 46L29 16h7l11 30h-7l-2-7H27l-2 7zM29 33h7l-3.5-11z' fill='white'/%3E%3C/svg%3E\">",
         f"<title>AI 投资周报 · {html.escape(plan['week_label'])}</title>",
         f"<style>{css}</style></head><body>",
         f"<h1>AI 投资周报 · {html.escape(plan['week_label'])}</h1>",
