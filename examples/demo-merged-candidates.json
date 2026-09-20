@@ -1,0 +1,204 @@
+{
+  "deduped_from": 86,
+  "final": 14,
+  "events": [
+    {
+      "id": "E01",
+      "cat": "product",
+      "date": "2026-09-10",
+      "title": "DeepSeek V4.1 Flash 发布",
+      "src": "DeepSeek",
+      "role": "stakeholder",
+      "materiality": "high",
+      "url": "https://www.deepseek.com/news/deepseek-v4-1-flash/",
+      "summary": "552B MoE，新 Causal-Encoder-Decoder 架构",
+      "sources": [
+        "https://www.deepseek.com/news/deepseek-v4-1-flash/",
+        "http://www.geekpark.net/news/370157"
+      ]
+    },
+    {
+      "id": "E02",
+      "cat": "product",
+      "date": "2026-09-08",
+      "title": "OpenAI 解决 Navier-Stokes 千禧年难题",
+      "src": "OpenAI",
+      "role": "stakeholder",
+      "materiality": "high",
+      "url": "https://openai.com/index/navier-stokes-solution/",
+      "summary": "AI 首次部分解决 Navier-Stokes 存在性与光滑性问题",
+      "sources": [
+        "https://openai.com/index/navier-stokes-solution/"
+      ]
+    },
+    {
+      "id": "E03",
+      "cat": "product",
+      "date": "2026-09-10",
+      "title": "OpenAI 发布 Agents API",
+      "src": "OpenAI",
+      "role": "stakeholder",
+      "materiality": "high",
+      "url": "https://openai.com/index/agents-api/",
+      "summary": "企业级 Agent 编排 API，支持工具调用与工作流",
+      "sources": [
+        "https://openai.com/index/agents-api/",
+        "https://aws.amazon.com/about-aws/whats-new/"
+      ]
+    },
+    {
+      "id": "E04",
+      "cat": "product",
+      "date": "2026-09-08",
+      "title": "Meta 发布 Muse 个人 AI Agent",
+      "src": "Meta",
+      "role": "stakeholder",
+      "materiality": "high",
+      "url": "https://about.fb.com/news/",
+      "summary": "首个面向 C 端的个人 AI Agent",
+      "sources": [
+        "https://about.fb.com/news/"
+      ]
+    },
+    {
+      "id": "E05",
+      "cat": "product",
+      "date": "2026-09-08",
+      "title": "DeepMind AlphaGenome Atlas 发布",
+      "src": "Google DeepMind",
+      "role": "stakeholder",
+      "materiality": "high",
+      "url": "https://deepmind.google/discover/blog/",
+      "summary": "预测每个 DNA 变异的影响图谱",
+      "sources": [
+        "https://deepmind.google/discover/blog/"
+      ]
+    },
+    {
+      "id": "E06",
+      "cat": "product",
+      "date": "2026-09-13",
+      "title": "月之暗面发布 Kimi K2.8",
+      "src": "Moonshot AI",
+      "role": "media",
+      "materiality": "med",
+      "url": "https://www.moonshot.cn/",
+      "summary": "百万 token 上下文，冲刺港股 IPO",
+      "sources": [
+        "https://www.moonshot.cn/"
+      ]
+    },
+    {
+      "id": "E07",
+      "cat": "org",
+      "date": "2026-09-12",
+      "title": "Anthropic CEO Amodei：We Must Pace the Frontier",
+      "src": "Anthropic",
+      "role": "stakeholder",
+      "materiality": "high",
+      "url": "https://www.anthropic.com/news",
+      "summary": "呼吁放缓前沿模型发展",
+      "sources": [
+        "https://www.anthropic.com/news"
+      ]
+    },
+    {
+      "id": "E08",
+      "cat": "org",
+      "date": "2026-09-07",
+      "title": "工信部发布信息通信行业十五五规划",
+      "src": "工信部",
+      "role": "regulator",
+      "materiality": "high",
+      "url": "https://www.miit.gov.cn/",
+      "summary": "2030 智算较 2025 增 5 倍",
+      "sources": [
+        "https://www.miit.gov.cn/"
+      ]
+    },
+    {
+      "id": "E09",
+      "cat": "org",
+      "date": "2026-09-11",
+      "title": "国家数据局数据产权登记系统上线",
+      "src": "国家数据局",
+      "role": "regulator",
+      "materiality": "med",
+      "url": "https://www.nda.gov.cn/",
+      "summary": "数据要素市场化基础设施",
+      "sources": [
+        "https://www.nda.gov.cn/"
+      ]
+    },
+    {
+      "id": "E10",
+      "cat": "funding",
+      "date": "2026-09-12",
+      "title": "Nvidia 拟向 Anthropic 锚定投 $10B（估值 ~$2T）",
+      "src": "Reuters",
+      "role": "media",
+      "materiality": "high",
+      "url": "https://www.reuters.com/technology/",
+      "summary": "Anthropic 拟 IPO 募 $100B",
+      "sources": [
+        "https://www.reuters.com/technology/"
+      ]
+    },
+    {
+      "id": "E11",
+      "cat": "funding",
+      "date": "2026-09-08",
+      "title": "Cognition（Devin）融资 $2B，估值 $48B",
+      "src": "Crunchbase",
+      "role": "media",
+      "materiality": "high",
+      "url": "https://news.crunchbase.com/",
+      "summary": "AI 编程公司 E 轮",
+      "sources": [
+        "https://news.crunchbase.com/"
+      ]
+    },
+    {
+      "id": "E12",
+      "cat": "funding",
+      "date": "2026-09-08",
+      "title": "Mistral 融资 €3B，三星领投",
+      "src": "Reuters",
+      "role": "media",
+      "materiality": "high",
+      "url": "https://www.reuters.com/",
+      "summary": "欧洲史上最大私募 tech 轮",
+      "sources": [
+        "https://www.reuters.com/"
+      ]
+    },
+    {
+      "id": "E13",
+      "cat": "funding",
+      "date": "2026-09-13",
+      "title": "智谱 AI 完成 ~$5B 融资",
+      "src": "媒体",
+      "role": "media",
+      "materiality": "high",
+      "url": "https://www.zhipuai.cn/",
+      "summary": "$2B 股权 + $3B 可转债",
+      "sources": [
+        "https://www.zhipuai.cn/"
+      ]
+    },
+    {
+      "id": "E14",
+      "cat": "funding",
+      "date": "2026-09-11",
+      "title": "燧原科技（688801.SH）登陆科创板",
+      "src": "燧原科技",
+      "role": "stakeholder",
+      "materiality": "high",
+      "url": "https://www.enflame-tech.com/news/2026-09-11",
+      "summary": "国产 AI 芯片首家科创板 IPO",
+      "sources": [
+        "https://www.enflame-tech.com/news/2026-09-11"
+      ]
+    }
+  ]
+}

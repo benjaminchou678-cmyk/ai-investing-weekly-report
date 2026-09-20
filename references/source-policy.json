@@ -1,14 +1,20 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "default_profile": "full_weekly",
   "profiles": {
     "full_weekly": {
       "hard_required_success_ratio": 0.7,
-      "scheduled_c1_checked_ratio": 0.8,
+      "scheduled_c1_checked_ratio": 1.0,
+      "c2_discovery_required": true,
       "registry_max_age_days": {
         "C1": 120,
         "C2": 240,
         "C3": 365
+      },
+      "schedule_rules": {
+        "C1": "weekly required discovery",
+        "C2": "weekly lightweight discovery (正文按需)",
+        "C3": "event_driven"
       },
       "dimension_requirements": {
         "company_primary": {"min_checked": 4, "hard": true},

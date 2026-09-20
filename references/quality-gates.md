@@ -1,6 +1,20 @@
 # 周报质量门
 
-发布审核分为采编前 QA 和 Release QA。机器检查与编辑检查必须同时完成。
+发布审核分为采编前 QA、内容生成中间层 QA 和 Release QA。机器检查与编辑检查必须同时完成。
+
+## 内容生成中间层机械 QA（新）
+
+由 `tests/test_editorial_layer.py` 与 `tests/test_mechanical_qa.py` 强制执行：
+
+- 评分六维权重和 = 重要性总分（25+25+20+15+10+5=100）；
+- 每维必须有理由字段；不出现周三就近加分；
+- 分档正确：80–100 core、65–79 possible_core、50–64 watchlist、<50 appendix；
+- <50 不进正文；50–64 不进 core；
+- 判断标题 ≠ 事件标题；每条判断证据 ≥2 个独立事件或 1 核心 + ≥2 辅助；
+- 逐事件独立性检查（非 group 合集）；单事件不升格；
+- 同一 cluster 只出一张卡；
+- 核心事件 5–7（不足则在 plan.core_note 明示）；Watchlist 3–5；
+- 正文较旧详版下降 30%–50%（sparse 周可超，并在对比中说明）。
 
 ## Gate 0：执行完整性（硬门）
 
@@ -15,15 +29,17 @@
 Gate 1 由 `source-registry.json`、`source-policy.json`、`coverage.json` 和生成的 `source-qa.json` 驱动，分为：
 
 1. **注册表完整性**：ID 唯一、枚举合法、分组完整；硬性来源必须已核验且 active。微信硬性来源还必须配置微信号和备用入口。
-2. **采集覆盖率**：硬性来源全部进入 coverage 且成功率达到策略阈值；计划检查的 C1 完成率不足时 WARN。
+2. **采集覆盖率**：**C1 + C2 discovery 全量执行（100% attempt evidence）**，硬性来源成功率达到策略阈值；任一 C1/C2 缺 attempt evidence 即 FAIL。C3 为 event_driven，未触发事件时不要求 attempt evidence，但需在 run-manifest 标注。
 3. **维度覆盖**：公司一手、资本、政策等核心维度达到最低数量；软性维度不足时 WARN。
 4. **来源独立性**：按 `independence_group` 计算，不得用同集团账号制造多源验证；单一集团占比过高时 WARN。
 5. **新鲜度与访问**：注册信息超过复核周期、Feed 过期、付费墙、备用入口和抓取失败单独记录。
+6. **Resolver status gate**：`resolver.status = stable` 的路径必须同时具备 `evidence URL`（`resolver.primary.url`）与 `last_checked_at` 字段；缺失即 FAIL。`candidate` / `wechat_only` 路径允许缺 `last_checked_at`，但必须在备注中写明受限原因。
 
 `no_update` 只表示成功访问后确认周期内无更新；缺少 `checked_at` 时 FAIL。`unverified` 来源不进入硬门和独立确认。
 
 ## Gate 2：时间窗、去重与历史连续性
 
+- 本期时间窗固定为 **2026-09-07（周一 00:00）至 2026-09-13（周日 23:59），Asia/Shanghai**；用户指定区间时覆盖默认值，并在 QA 首行标注。
 - 日期缺失必须 WARN；超出周期且无本周新增事实必须删除或降级；
 - 自动合并需同时满足公司、日期与事件类型；
 - 标题相似但信息不足只进入人工复核；
