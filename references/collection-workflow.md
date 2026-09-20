@@ -47,6 +47,14 @@ Builder Feed 记录 `generatedAt`，超过48小时标为陈旧。采集顺序为
 
 WeRSS、RSSHub 与搜索仅用于 discovery；同一主体通过多个 endpoint 被发现仍只算一个来源。候选保留 `discovered_via`、`collector_provider`、`canonical_url` 和可选 `mirror_url`，正式证据优先回到原始微信文章或发布主体官网。
 
+## 来源 rollout
+
+- `source-endpoint-audit.json/csv`：覆盖15个基础来源与29个微信C1，分别记录主体核验、入口配置、HTTP可达性和时间窗枚举能力。
+- `source-rollout-plan.json`：固定20源 pilot、50个微信C2周度轻扫描和94个微信C3事件驱动三类 cohort。
+- pilot 先回填两个完整自然周；`compare_source_runs.py` 比较 endpoint成功率、来源命中数、带日期/无日期候选数。
+- 真实召回率必须有人工 ground truth。没有基准集时只允许使用“发现覆盖率”或“召回代理”表述。
+- 私有WeRSS未提供服务地址、账号ID与凭据变量前保持 `unconfigured`，不可用公开网页试跑冒充WeRSS试跑。
+
 ## 网页降级
 
 1. 搜索具体标题、域名和日期；

@@ -32,6 +32,7 @@ description: 检索、核验并撰写面向投资与产品决策者的中文 AI 
 
 1. 读取 [采集流程](references/collection-workflow.md)、[来源清单](references/source-registry.md)、[机器来源策略](references/source-registry-schema.md) 与 [来源入口解析器](references/source-resolver.md)。来源主体与采集 endpoint 分离；来源调度与质量门分别由 `source-registry.json` 和 `source-policy.json` 驱动，C1+C2 全部做 discovery，C3 事件驱动。
 2. 先运行注册表校验；对已配置 endpoint 使用 `collect_source_endpoints.py` 采集，将结果保存为结构化候选，并在 `coverage.json` 中记录逐 endpoint attempt、时间窗完整性与 provider group。未配置入口不得伪装成已检查。
+   - 来源入口迭代时，先运行 `audit_source_endpoints.py` 生成 JSON/CSV 审计，再按 `source-rollout-plan.json` 运行 pilot 或 C2 cohort；两周结果使用 `compare_source_runs.py` 比较。没有人工 ground truth 时只报告发现覆盖率，不得称为真实召回率。
 3. 按 [数据管线](references/data-pipeline.md) 完成标准化、URL 结构检查、保守去重和采编前 QA。
 4. 进入内容生成中间层：`cluster_events.py → rank_events.py → build_theses.py → editorial_pass.py`，产出 `event_clusters`、`ranked_events`、`candidate_theses`、`weekly_editorial_plan` 与 `final_weekly_report(.md/.html)`。评分权重与判断证据门槛见 [编辑标准](references/editorial-policy.md)。
 5. 先运行来源注册表校验和来源覆盖审计，生成 `source-qa.json`；再按 [质量门](references/quality-gates.md) 执行发布前 QA（含内容层机械 QA）。硬性 Gate 失败时不得标记为正式版。

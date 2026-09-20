@@ -118,9 +118,22 @@ def parse_html(data: bytes, endpoint: dict[str, Any]) -> list[dict[str, str]]:
 
 def parse_json_items(data: bytes) -> list[dict[str, str]]:
     payload = json.loads(data.decode("utf-8"))
+    if isinstance(payload, dict) and isinstance(payload.get("x"), list):
+        flattened = []
+        for account in payload["x"]:
+            if not isinstance(account, dict):
+                continue
+            for tweet in account.get("tweets", []):
+                if isinstance(tweet, dict):
+                    flattened.append({
+                        "title": str(tweet.get("text") or ""), "url": str(tweet.get("url") or ""),
+                        "published_at": str(tweet.get("createdAt") or ""),
+                        "summary": f"{account.get('name', '')} (@{account.get('handle', '')})".strip(),
+                    })
+        return flattened
     candidates: Any = payload
     if isinstance(payload, dict):
-        for key in ("items", "articles", "entries", "results", "data"):
+        for key in ("items", "articles", "entries", "results", "data", "podcasts", "blogs"):
             if isinstance(payload.get(key), list):
                 candidates = payload[key]
                 break
@@ -141,8 +154,8 @@ def parse_json_items(data: bytes) -> list[dict[str, str]]:
         result.append({
             "title": str(row.get("title") or row.get("name") or ""),
             "url": str(row.get("url") or row.get("link") or row.get("article_url") or ""),
-            "published_at": str(row.get("published_at") or row.get("publish_time") or row.get("pubDate") or ""),
-            "summary": str(row.get("summary") or row.get("description") or row.get("digest") or ""),
+            "published_at": str(row.get("published_at") or row.get("publishedAt") or row.get("publish_time") or row.get("pubDate") or ""),
+            "summary": str(row.get("summary") or row.get("description") or row.get("digest") or row.get("transcript") or "")[:4000],
         })
     return [item for item in result if item["title"] or item["url"]]
 
@@ -168,7 +181,11 @@ def filter_week(items: list[dict[str, str]], week_start: str, week_end: str) -> 
     result = []
     for item in items:
         published = parse_item_date(str(item.get("published_at") or ""))
-        if published is None or start <= published.date() <= end:
+        if published is None:
+            item["date_status"] = "unknown"
+            result.append(item)
+        elif start <= published.date() <= end:
+            item["date_status"] = "in_window"
             result.append(item)
     return result
 
@@ -208,12 +225,26 @@ def main() -> int:
     parser.add_argument("--week-start", required=True)
     parser.add_argument("--week-end", required=True)
     parser.add_argument("--source-id", action="append", default=[])
+    parser.add_argument("--plan", help="source-rollout-plan.json；与 --cohort 一起使用")
+    parser.add_argument("--cohort", choices=["pilot", "c2_weekly"], help="从 plan 读取来源集合")
     parser.add_argument("--output", required=True)
     parser.add_argument("--coverage-output", required=True)
     parser.add_argument("--timeout", type=int, default=20)
     args = parser.parse_args()
     registry = json.loads(Path(args.registry).read_text(encoding="utf-8"))
     selected = set(args.source_id)
+    if args.cohort:
+        if not args.plan:
+            parser.error("--cohort 需要 --plan")
+        plan = json.loads(Path(args.plan).read_text(encoding="utf-8"))
+        if args.cohort == "pilot":
+            selected.update(plan["pilot"]["source_ids"])
+        else:
+            rule = plan["c2_scan"]
+            selected.update(
+                source["source_id"] for source in registry.get("sources", [])
+                if source.get("channel") == rule["channel"] and source.get("priority") == rule["priority"]
+            )
     candidates: list[dict[str, Any]] = []
     coverage: list[dict[str, Any]] = []
     for source in registry.get("sources", []):
@@ -253,11 +284,13 @@ def main() -> int:
                     "checked_at": checked_at, "status": "blocked" if code == "credential_missing" else "failed",
                     "items_found": 0, "window_complete": False, "failure_code": code,
                 })
-        status = "ok" if found else "no_update" if attempts and complete else "failed" if attempts else "not_scheduled"
+        any_success = any(attempt.get("status") == "ok" for attempt in attempts)
+        status = "ok" if found else "no_update" if attempts and complete and any_success else "stale" if any_success else "failed" if attempts else "not_scheduled"
         coverage.append({
             "source_id": source.get("source_id"), "scheduled": bool(endpoints), "checked_at": now_iso() if attempts else "",
             "status": status, "new_items": len(found), "account_window_complete": complete,
-            "endpoint_attempts": attempts, "failure_code": "" if attempts else "no_configured_endpoint",
+            "endpoint_attempts": attempts,
+            "failure_code": "window_incomplete_no_items" if status == "stale" else "" if attempts else "no_configured_endpoint",
         })
     output_path = Path(args.output)
     coverage_path = Path(args.coverage_output)

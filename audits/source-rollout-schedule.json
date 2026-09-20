@@ -1,0 +1,1404 @@
+{
+  "schema_version": "1.0",
+  "as_of": "2026-09-20",
+  "pilot": [
+    {
+      "source_id": "openai-news",
+      "name": "OpenAI News",
+      "priority": "C1",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "openai-news-official-html-list-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "google-ai-blog",
+      "name": "Google AI Blog",
+      "priority": "C1",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "google-ai-blog-official-html-list-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "deepmind-blog",
+      "name": "Google DeepMind Blog",
+      "priority": "C1",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "deepmind-blog-official-html-list-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "anthropic-news",
+      "name": "Anthropic News",
+      "priority": "C1",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "anthropic-news-official-html-list-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "meta-ai-blog",
+      "name": "Meta AI Blog",
+      "priority": "C1",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "meta-ai-blog-official-html-list-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "aws-news",
+      "name": "AWS News Blog",
+      "priority": "C1",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "aws-news-official-html-list-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "reuters-tech",
+      "name": "Reuters Technology",
+      "priority": "C1",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "reuters-tech-official-html-list-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "36kr-ai",
+      "name": "36Kr AI 与创投",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "36kr-ai-official-html-list-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "geekpark",
+      "name": "极客公园",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "geekpark-official-html-list-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "builder-x",
+      "name": "Builder X Feed",
+      "priority": "C1",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "builder-x-official-api-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "builder-podcasts",
+      "name": "Builder Podcasts Feed",
+      "priority": "C1",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "builder-podcasts-official-api-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "builder-blogs",
+      "name": "Builder Blogs Feed",
+      "priority": "C1",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "builder-blogs-official-api-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "wechat-6b999bbf",
+      "name": "量子位",
+      "priority": "C1",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "wechat-6b999bbf-official-html-list-2"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "wechat-1ab46c58",
+      "name": "新智元",
+      "priority": "C1",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "wechat-1ab46c58-official-html-list-2"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "wechat-e36f0efd",
+      "name": "清科研究",
+      "priority": "C1",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "wechat-e36f0efd-official-html-list-2"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "wechat-minimax-833381db",
+      "name": "MiniMax",
+      "priority": "C1",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "wechat-minimax-833381db-official-html-list-2"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "wechat-45549b51",
+      "name": "火山引擎",
+      "priority": "C1",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "wechat-45549b51-official-html-list-2"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "wechat-caict-61b13056",
+      "name": "中国信通院CAICT",
+      "priority": "C1",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "wechat-caict-61b13056-official-html-list-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "wechat-afe9754b",
+      "name": "国家数据局",
+      "priority": "C1",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "wechat-afe9754b-official-html-list-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "wechat-664c57ad",
+      "name": "安全客",
+      "priority": "C1",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "wechat-664c57ad-official-rss-1"
+      ],
+      "runnable": true
+    }
+  ],
+  "c2_weekly": [
+    {
+      "source_id": "wechat-2d6c7e79",
+      "name": "雷峰网",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-5afaf213",
+      "name": "硬氪",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-app-8c68b7a5",
+      "name": "虎嗅APP",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-2552e692",
+      "name": "智能涌现",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-one-d76cf95f",
+      "name": "定焦One",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-19372dd0",
+      "name": "母基金研究中心",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-ipo-9f509240",
+      "name": "IPO早知道",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-waves-b2a27ce9",
+      "name": "暗涌Waves",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-dd224138",
+      "name": "创业邦",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-36-a5a825a3",
+      "name": "36氪",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-83cb51c1",
+      "name": "融中财经",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-01c16fcd",
+      "name": "经纬创投",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-ggv-324c9316",
+      "name": "GGV纪源资本",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-8d3d32a9",
+      "name": "五源资本",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-f87b1fb4",
+      "name": "真格基金",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-84ef91ab",
+      "name": "源码资本",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-681ce915",
+      "name": "云启资本",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-75d1cd58",
+      "name": "耀途资本",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-4fd82bf0",
+      "name": "腾讯投资",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-0321283b",
+      "name": "联想创投",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-8db085b6",
+      "name": "阶跃星辰",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-47ce5eab",
+      "name": "百川智能",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-f8c4222d",
+      "name": "零一万物",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-64910b4c",
+      "name": "百度智能云",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-88f4c71e",
+      "name": "腾讯云",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-c1c6f8f3",
+      "name": "华为云",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-2cced23e",
+      "name": "科大讯飞",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-92ebe3bb",
+      "name": "商汤科技",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-wps-a2d164db",
+      "name": "金山办公WPS",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-90d78dd1",
+      "name": "快手可灵",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-e985668c",
+      "name": "摩尔线程",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-a79c7009",
+      "name": "燧原科技",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-metax-4734aac7",
+      "name": "沐曦MetaX",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-d95632ce",
+      "name": "中科曙光",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-44ce341a",
+      "name": "紫光股份新华三",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-5175122a",
+      "name": "新易盛",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-gds-baf24c3b",
+      "name": "万国数据GDS",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-ccid-6183a94d",
+      "name": "赛迪研究院CCID",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "wechat-ccid-6183a94d-official-html-list-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "wechat-439e1d71",
+      "name": "智源研究院",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "wechat-439e1d71-official-html-list-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "wechat-ae74ad85",
+      "name": "银行科技研究社",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-41677048",
+      "name": "车东西",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "wechat-41677048-official-rss-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "wechat-5199eb26",
+      "name": "高工智能汽车",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-8b02b768",
+      "name": "健康界",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "wechat-8b02b768-official-html-list-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "wechat-2225031e",
+      "name": "奇安信",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "wechat-2225031e-official-rss-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "wechat-060403d0",
+      "name": "深信服",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "wechat-060403d0-official-html-list-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "wechat-freebuf-e3074455",
+      "name": "FreeBuf",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "wechat-freebuf-e3074455-official-rss-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "wechat-448da9e4",
+      "name": "数据合规社",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-0616ccd0",
+      "name": "垦丁网络法",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-realai-1288bffa",
+      "name": "瑞莱智慧RealAI",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [
+        "wechat-realai-1288bffa-official-html-list-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "wechat-4cfdbd39",
+      "name": "脉脉",
+      "priority": "C2",
+      "mode": "weekly_lightweight",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    }
+  ],
+  "c3_event_driven": [
+    {
+      "source_id": "wechat-ai-x-da914a74",
+      "name": "AI.X硬件社",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-ai-8c20480a",
+      "name": "AI产品榜",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-e0573539",
+      "name": "返朴",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-3d-c9c59f0a",
+      "name": "南极熊3D打印",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-b2c5899a",
+      "name": "芝能汽车",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-vr-5211d970",
+      "name": "VR陀螺",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-appso-4e318afe",
+      "name": "APPSO",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-aing-8403e338",
+      "name": "AING硬迹",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-ai-101b3aef",
+      "name": "AI无象限",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-dt-9dc4f3df",
+      "name": "DT商业观察",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-18169e0b",
+      "name": "大厂指南",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-2c0332da",
+      "name": "数星星的星哥",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-aea3d1aa",
+      "name": "深思圈",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-top-7f2e24d3",
+      "name": "TOP创新区研究院",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-web3-4a387525",
+      "name": "Web3天空之城",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-0266f544",
+      "name": "游戏日报",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-36-pro-23705cd3",
+      "name": "36氪 Pro",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-36-de376985",
+      "name": "36氪出海",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-cc68e586",
+      "name": "第一新声",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-bfc58825",
+      "name": "中金宏观",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-92eb87d1",
+      "name": "科技资本圈",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-abceba95",
+      "name": "新智独角兽",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-21d6a0f8",
+      "name": "独角兽早知道",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-732e3363",
+      "name": "融了么",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-app-0adf6e41",
+      "name": "妙投APP",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-fc4461e1",
+      "name": "顺为资本",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-a6880f17",
+      "name": "险峰长青",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-9ff694ae",
+      "name": "蓝驰创投",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-8e5424cd",
+      "name": "光速光合",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-9357cc10",
+      "name": "明势资本",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-9cec7aa5",
+      "name": "中科创星",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-4e1d97c4",
+      "name": "元禾原点",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-74b91c57",
+      "name": "百度风投",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-7345de87",
+      "name": "小米产投",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-05a85984",
+      "name": "阿里战略投资",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-0c01d328",
+      "name": "美团龙珠",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-73018e06",
+      "name": "商汤国香资本",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-50d74f66",
+      "name": "面壁智能",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-e5392cd4",
+      "name": "天翼云",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-e7f6c683",
+      "name": "用友网络",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-a4f822a4",
+      "name": "金蝶软件",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-3a76f430",
+      "name": "第四范式",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-baa7ac8c",
+      "name": "达观数据",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-ed729092",
+      "name": "字节即梦",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-vidu-e663c983",
+      "name": "生数科技Vidu",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-437ef674",
+      "name": "智谱清影",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-coze-a0bf3a1b",
+      "name": "扣子Coze",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-29bb62af",
+      "name": "百度文心智能体平台",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-manus-39aaf632",
+      "name": "Manus蝴蝶效应",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-b7991eb8",
+      "name": "壁仞科技",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-217712ba",
+      "name": "地平线",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-b20af4d1",
+      "name": "锐捷网络",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-61b1ef4e",
+      "name": "中兴通讯",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-e6d85ff3",
+      "name": "光迅科技",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-5a993845",
+      "name": "华工科技",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-725b099f",
+      "name": "秦淮数据",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-4713aa8c",
+      "name": "世纪互联",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-55eedafc",
+      "name": "中国电信",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-c912e498",
+      "name": "中国移动",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-5c788746",
+      "name": "中国联通",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-1545d0ae",
+      "name": "中国电子学会",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [
+        "wechat-1545d0ae-official-html-list-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "wechat-8cc1495e",
+      "name": "中科院自动化研究所",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [
+        "wechat-8cc1495e-official-html-list-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "wechat-aiia-c8289ecc",
+      "name": "中国人工智能产业发展联盟AIIA",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-2bff6c37",
+      "name": "轻金融",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-eea15690",
+      "name": "消金界",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-6642f67e",
+      "name": "机器人大讲堂",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-2f35e414",
+      "name": "工控网",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [
+        "wechat-2f35e414-official-html-list-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "wechat-20802c90",
+      "name": "医疗器械创新网",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [
+        "wechat-20802c90-official-html-list-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "wechat-2975325f",
+      "name": "零售商业财经",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-3ee46093",
+      "name": "电商报",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-d1250743",
+      "name": "国资小新",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-15b32642",
+      "name": "上海数据交易所",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [
+        "wechat-15b32642-official-html-list-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "wechat-1aaa41f9",
+      "name": "人工智能安全治理",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-29381879",
+      "name": "猎聘",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-boss-476d1bfb",
+      "name": "BOSS直聘",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wechat-7d481691",
+      "name": "字节跳动招聘",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [
+        "wechat-7d481691-official-html-list-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "wechat-f9cc3de3",
+      "name": "阿里招聘",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [
+        "wechat-f9cc3de3-official-html-list-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "wechat-43c091e0",
+      "name": "腾讯招聘",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [
+        "wechat-43c091e0-official-html-list-1"
+      ],
+      "runnable": true
+    },
+    {
+      "source_id": "cec-capital",
+      "name": "易凯资本",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "taihe-capital",
+      "name": "泰合资本",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "lightsource-capital",
+      "name": "光源资本",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "hina-group",
+      "name": "汉能投资",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "healthcare-capital",
+      "name": "浩悦资本",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "sinergie-capital",
+      "name": "势能资本",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "star26-capital",
+      "name": "星汉资本",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "wave-capital",
+      "name": "浪潮资本",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "yuanshi-capital",
+      "name": "远识资本",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "100summit",
+      "name": "义柏资本",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "tanzhen-capital",
+      "name": "探针资本",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "leap-capital",
+      "name": "跃为资本",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "phoenixtree",
+      "name": "青桐资本",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "palm-capital",
+      "name": "棕榈资本",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "life-venture",
+      "name": "生命资本",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [],
+      "runnable": false
+    },
+    {
+      "source_id": "aiia",
+      "name": "AIIA",
+      "priority": "C3",
+      "mode": "event_driven",
+      "configured_endpoint_ids": [
+        "aiia-official-html-list-1"
+      ],
+      "runnable": true
+    }
+  ],
+  "summary": {
+    "pilot": 20,
+    "pilot_runnable": 20,
+    "c2": 50,
+    "c2_runnable": 8,
+    "c3": 94,
+    "c3_runnable": 9
+  }
+}

@@ -85,6 +85,14 @@ python3 scripts/collect_source_endpoints.py \
 
 密钥只通过 endpoint 的 `credential_ref` 指向环境变量，不写入仓库。空 URL、公众号 ID 或 Feed ID 会保持 `unconfigured`，不会被误记为“本周无更新”。
 
+首批来源迭代由以下机器文件驱动：
+
+- `references/source-endpoint-overrides.json`：经审阅的候选入口；
+- `references/source-rollout-plan.json`：20源 pilot、50个微信C2与94个微信C3的调度定义；
+- `audits/source-endpoint-audit.json/csv`：15个基础来源与29个微信C1的逐入口审计；
+- `audits/source-rollout-schedule.json`：实际可运行数量与缺口；
+- `reports/source-pilot/two-week-comparison.json`：两周回填对比。
+
 仓库中的示例均为占位内容，不代表真实新闻或投资结论。
 
 ## 免责声明

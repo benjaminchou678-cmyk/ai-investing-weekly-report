@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "as_of": "2026-09-20",
+  "audit_cohort": {
+    "include_non_wechat": true,
+    "wechat_priorities": ["C1"]
+  },
+  "pilot": {
+    "source_ids": [
+      "openai-news", "google-ai-blog", "deepmind-blog", "anthropic-news",
+      "meta-ai-blog", "aws-news", "reuters-tech", "36kr-ai", "geekpark",
+      "builder-x", "builder-podcasts", "builder-blogs",
+      "wechat-6b999bbf", "wechat-1ab46c58", "wechat-e36f0efd",
+      "wechat-minimax-833381db", "wechat-45549b51", "wechat-caict-61b13056",
+      "wechat-afe9754b", "wechat-664c57ad"
+    ],
+    "backfill_windows": [
+      {"week_start": "2026-08-31", "week_end": "2026-09-06"},
+      {"week_start": "2026-09-07", "week_end": "2026-09-13"}
+    ],
+    "selection_rationale": "20个来源覆盖官方网页、官方API/RSS、国际与中国媒体、公司与政策来源；未配置私有WeRSS前不伪造WeRSS试跑。"
+  },
+  "c2_scan": {
+    "channel": "wechat_official_account",
+    "priority": "C2",
+    "expected_count": 50,
+    "mode": "weekly_lightweight"
+  },
+  "c3": {
+    "channel": "wechat_official_account",
+    "priority": "C3",
+    "expected_count": 94,
+    "mode": "event_driven"
+  }
+}

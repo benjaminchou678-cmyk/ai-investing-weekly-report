@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-09-20",
+  "notes": "C1 官方网页候选入口。candidate 仅表示入口已配置，不能替代公众号主体核验或连续成功记录。",
+  "sources": {
+    "wechat-6b999bbf": {"type": "official_html_list", "url": "https://www.qbitai.com/", "officiality": "official", "provider_group": "official", "limitations": "官网文章列表；需继续核验与公众号发布是否完整一致"},
+    "wechat-1ab46c58": {"type": "official_html_list", "url": "https://www.aiera.com.cn/", "officiality": "official", "provider_group": "official", "limitations": "官网可发现文章；公众号完整映射仍待核验"},
+    "wechat-e36f0efd": {"type": "official_html_list", "url": "https://research.pedaily.cn/", "officiality": "official", "provider_group": "zero2ipo-web", "limitations": "清科研究官网列表"},
+    "wechat-e1600bc1": {"type": "official_html_list", "url": "https://news.pedaily.cn/", "officiality": "official", "provider_group": "zero2ipo-web", "limitations": "投资界网页列表；与清科研究共享基础设施"},
+    "wechat-7a475cf9": {"type": "official_html_list", "url": "https://www.chinaventure.com.cn/", "officiality": "official", "provider_group": "chinaventure-web", "limitations": "官网首页；需配置文章路径过滤"},
+    "wechat-fofweekly-8d6e41db": {"type": "official_html_list", "url": "https://www.fofweekly.com/", "officiality": "official", "provider_group": "fofweekly-web", "limitations": "官网首页；需配置文章路径过滤"},
+    "wechat-c7c6a08b": {"type": "official_html_list", "url": "https://www.hongshan.com/", "officiality": "official", "provider_group": "hongshan-web", "limitations": "机构官网；新闻列表完整性待核验"},
+    "wechat-13109585": {"type": "official_html_list", "url": "https://www.qimingvc.com/cn/newsroom", "officiality": "official", "provider_group": "qiming-web", "limitations": "机构官方新闻页"},
+    "wechat-9671fe1e": {"type": "official_html_list", "url": "https://www.hillhouseinvestment.com/", "officiality": "official", "provider_group": "hillhouse-web", "limitations": "机构官网；入口可访问性与更新频率待核验"},
+    "wechat-ai-98563069": {"type": "official_html_list", "url": "https://www.zhipuai.cn/", "officiality": "official", "provider_group": "zhipu-web", "limitations": "官网包含产品与研究动态；需配置内容路径过滤"},
+    "wechat-deepseek-2b893991": {"type": "official_html_list", "url": "https://www.deepseek.com/transparency/", "officiality": "official", "provider_group": "deepseek-web", "limitations": "仅覆盖透明度中心与主要模型发布，不等于公众号全量"},
+    "wechat-kimi-d3ffbd28": {"type": "official_html_list", "url": "https://www.moonshot.cn/", "officiality": "official", "provider_group": "moonshot-web", "limitations": "公司官网；公开动态列表完整性待核验"},
+    "wechat-minimax-833381db": {"type": "official_html_list", "url": "https://www.minimax.cn/", "officiality": "official", "provider_group": "minimax-web", "limitations": "官网首页包含最新研究与模型发布"},
+    "wechat-20ef379b": {"type": "official_html_list", "url": "https://cn.aliyun.com/", "officiality": "official", "provider_group": "aliyun-web", "limitations": "阿里云官网产品动态；不是公众号完整镜像"},
+    "wechat-45549b51": {"type": "official_html_list", "url": "https://www.volcengine.com/news", "officiality": "official", "provider_group": "volcengine-web", "limitations": "火山引擎官方发布中心"},
+    "wechat-b013eec9": {"type": "official_html_list", "url": "https://www.cambricon.com/", "officiality": "official", "provider_group": "cambricon-web", "limitations": "公司官网新闻；更新频率可能低于公告渠道"},
+    "wechat-31b87d3e": {"type": "official_html_list", "url": "https://www.huawei.com/cn/news", "officiality": "official_proxy", "provider_group": "huawei-web", "limitations": "华为官方新闻中心，覆盖范围大于昇腾账号，需按昇腾关键词过滤"},
+    "wechat-ad83a8cb": {"type": "official_html_list", "url": "https://www.ieisystem.com/about/news/", "officiality": "official", "provider_group": "inspur-web", "limitations": "浪潮信息官方新闻中心"},
+    "wechat-bffb080a": {"type": "official_html_list", "url": "https://www.zj-innolight.com/cn/news.html", "officiality": "official", "provider_group": "innolight-web", "limitations": "公司官方新闻页；证券公告仍应回到交易所来源"},
+    "wechat-1baced62": {"type": "official_html_list", "url": "https://www.fddnet.cn/", "officiality": "official_proxy", "provider_group": "fddnet-web", "limitations": "可发现署名为金融电子化的内容，但与公众号主体关系仍需人工确认"},
+    "china-renaissance": {"type": "official_html_list", "url": "https://www.huaxing.com/", "officiality": "official", "provider_group": "huaxing-web", "limitations": "华兴资本官网；需定位 newsroom 稳定列表"}
+  }
+}

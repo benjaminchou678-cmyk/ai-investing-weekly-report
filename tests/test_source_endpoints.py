@@ -36,6 +36,16 @@ class EndpointCollectorTests(unittest.TestCase):
         data = json.dumps({"data": {"list": [{"title": "A", "article_url": "https://mp.weixin.qq.com/s/a"}]}}).encode()
         self.assertEqual(self.collector.parse_json_items(data)[0]["url"], "https://mp.weixin.qq.com/s/a")
 
+    def test_parse_builder_x_and_podcast_json(self) -> None:
+        x_data = json.dumps({"x": [{"name": "A", "handle": "a", "tweets": [
+            {"text": "launch", "url": "https://x.com/a/1", "createdAt": "2026-09-18T00:00:00Z"}
+        ]}]}).encode()
+        podcast_data = json.dumps({"podcasts": [
+            {"title": "episode", "url": "https://e.test/p", "publishedAt": "2026-09-18T00:00:00Z"}
+        ]}).encode()
+        self.assertEqual(self.collector.parse_json_items(x_data)[0]["title"], "launch")
+        self.assertEqual(self.collector.parse_json_items(podcast_data)[0]["published_at"], "2026-09-18T00:00:00Z")
+
     def test_html_include_and_exclude_patterns(self) -> None:
         data = b'<a href="/news/1">AI launch</a><a href="/about">About</a><a href="/news/ad">AI ad</a>'
         endpoint = {"url": "https://e.test", "include_patterns": ["news"], "exclude_patterns": ["/ad"]}
@@ -48,6 +58,16 @@ class EndpointCollectorTests(unittest.TestCase):
             {"title": "unknown", "published_at": ""},
         ]
         self.assertEqual([x["title"] for x in self.collector.filter_week(items, "2026-09-14", "2026-09-20")], ["in", "unknown"])
+        self.assertEqual(items[0]["date_status"], "in_window")
+        self.assertEqual(items[2]["date_status"], "unknown")
+
+    def test_rollout_artifacts_have_expected_cohorts(self) -> None:
+        audit = json.loads((ROOT / "audits/source-endpoint-audit.json").read_text(encoding="utf-8"))
+        schedule = json.loads((ROOT / "audits/source-rollout-schedule.json").read_text(encoding="utf-8"))
+        self.assertEqual(audit["summary"]["source_counts"], {"base_15": 15, "wechat_c1_29": 29})
+        self.assertEqual(schedule["summary"]["pilot"], 20)
+        self.assertEqual(schedule["summary"]["c2"], 50)
+        self.assertEqual(schedule["summary"]["c3"], 94)
 
     def test_migration_json_feed_is_api_and_empty_is_unconfigured(self) -> None:
         payload = {"schema_version": "2.0", "sources": [

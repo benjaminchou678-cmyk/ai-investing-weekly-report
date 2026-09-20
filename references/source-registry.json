@@ -896,6 +896,30 @@
           "content_scope": "metadata",
           "last_verified_at": "",
           "limitations": "入口地址或账号标识尚未配置"
+        },
+        {
+          "endpoint_id": "wechat-6b999bbf-official-html-list-2",
+          "type": "official_html_list",
+          "status": "candidate",
+          "purpose": [
+            "discovery",
+            "evidence"
+          ],
+          "officiality": "official",
+          "provider_group": "official",
+          "url": "https://www.qbitai.com/",
+          "base_url": "",
+          "route": "",
+          "account_id": "",
+          "feed_id": "",
+          "auth_required": false,
+          "credential_ref": "",
+          "browser_required": false,
+          "date_filterable": false,
+          "list_enumerable": false,
+          "content_scope": "metadata",
+          "last_verified_at": "",
+          "limitations": "官网文章列表；需继续核验与公众号发布是否完整一致"
         }
       ]
     },
@@ -1008,6 +1032,30 @@
           "content_scope": "metadata",
           "last_verified_at": "",
           "limitations": "入口地址或账号标识尚未配置"
+        },
+        {
+          "endpoint_id": "wechat-1ab46c58-official-html-list-2",
+          "type": "official_html_list",
+          "status": "candidate",
+          "purpose": [
+            "discovery",
+            "evidence"
+          ],
+          "officiality": "official",
+          "provider_group": "official",
+          "url": "https://www.aiera.com.cn/",
+          "base_url": "",
+          "route": "",
+          "account_id": "",
+          "feed_id": "",
+          "auth_required": false,
+          "credential_ref": "",
+          "browser_required": false,
+          "date_filterable": false,
+          "list_enumerable": false,
+          "content_scope": "metadata",
+          "last_verified_at": "",
+          "limitations": "官网可发现文章；公众号完整映射仍待核验"
         }
       ]
     },
@@ -2223,6 +2271,30 @@
           "content_scope": "metadata",
           "last_verified_at": "",
           "limitations": "入口地址或账号标识尚未配置"
+        },
+        {
+          "endpoint_id": "wechat-e36f0efd-official-html-list-2",
+          "type": "official_html_list",
+          "status": "candidate",
+          "purpose": [
+            "discovery",
+            "evidence"
+          ],
+          "officiality": "official",
+          "provider_group": "zero2ipo-web",
+          "url": "https://research.pedaily.cn/",
+          "base_url": "",
+          "route": "",
+          "account_id": "",
+          "feed_id": "",
+          "auth_required": false,
+          "credential_ref": "",
+          "browser_required": false,
+          "date_filterable": false,
+          "list_enumerable": false,
+          "content_scope": "metadata",
+          "last_verified_at": "",
+          "limitations": "清科研究官网列表"
         }
       ]
     },
@@ -2278,6 +2350,30 @@
           "content_scope": "metadata",
           "last_verified_at": "",
           "limitations": "入口地址或账号标识尚未配置"
+        },
+        {
+          "endpoint_id": "wechat-e1600bc1-official-html-list-2",
+          "type": "official_html_list",
+          "status": "candidate",
+          "purpose": [
+            "discovery",
+            "evidence"
+          ],
+          "officiality": "official",
+          "provider_group": "zero2ipo-web",
+          "url": "https://news.pedaily.cn/",
+          "base_url": "",
+          "route": "",
+          "account_id": "",
+          "feed_id": "",
+          "auth_required": false,
+          "credential_ref": "",
+          "browser_required": false,
+          "date_filterable": false,
+          "list_enumerable": false,
+          "content_scope": "metadata",
+          "last_verified_at": "",
+          "limitations": "投资界网页列表；与清科研究共享基础设施"
         }
       ]
     },
@@ -2333,6 +2429,30 @@
           "content_scope": "metadata",
           "last_verified_at": "",
           "limitations": "入口地址或账号标识尚未配置"
+        },
+        {
+          "endpoint_id": "wechat-7a475cf9-official-html-list-2",
+          "type": "official_html_list",
+          "status": "candidate",
+          "purpose": [
+            "discovery",
+            "evidence"
+          ],
+          "officiality": "official",
+          "provider_group": "chinaventure-web",
+          "url": "https://www.chinaventure.com.cn/",
+          "base_url": "",
+          "route": "",
+          "account_id": "",
+          "feed_id": "",
+          "auth_required": false,
+          "credential_ref": "",
+          "browser_required": false,
+          "date_filterable": false,
+          "list_enumerable": false,
+          "content_scope": "metadata",
+          "last_verified_at": "",
+          "limitations": "官网首页；需配置文章路径过滤"
         }
       ]
     },
@@ -2388,6 +2508,30 @@
           "content_scope": "metadata",
           "last_verified_at": "",
           "limitations": "入口地址或账号标识尚未配置"
+        },
+        {
+          "endpoint_id": "wechat-fofweekly-8d6e41db-official-html-list-2",
+          "type": "official_html_list",
+          "status": "candidate",
+          "purpose": [
+            "discovery",
+            "evidence"
+          ],
+          "officiality": "official",
+          "provider_group": "fofweekly-web",
+          "url": "https://www.fofweekly.com/",
+          "base_url": "",
+          "route": "",
+          "account_id": "",
+          "feed_id": "",
+          "auth_required": false,
+          "credential_ref": "",
+          "browser_required": false,
+          "date_filterable": false,
+          "list_enumerable": false,
+          "content_scope": "metadata",
+          "last_verified_at": "",
+          "limitations": "官网首页；需配置文章路径过滤"
         }
       ]
     },
@@ -3314,6 +3458,30 @@
           "content_scope": "metadata",
           "last_verified_at": "",
           "limitations": "入口地址或账号标识尚未配置"
+        },
+        {
+          "endpoint_id": "wechat-c7c6a08b-official-html-list-2",
+          "type": "official_html_list",
+          "status": "candidate",
+          "purpose": [
+            "discovery",
+            "evidence"
+          ],
+          "officiality": "official",
+          "provider_group": "hongshan-web",
+          "url": "https://www.hongshan.com/",
+          "base_url": "",
+          "route": "",
+          "account_id": "",
+          "feed_id": "",
+          "auth_required": false,
+          "credential_ref": "",
+          "browser_required": false,
+          "date_filterable": false,
+          "list_enumerable": false,
+          "content_scope": "metadata",
+          "last_verified_at": "",
+          "limitations": "机构官网；新闻列表完整性待核验"
         }
       ]
     },
@@ -3369,6 +3537,30 @@
           "content_scope": "metadata",
           "last_verified_at": "",
           "limitations": "入口地址或账号标识尚未配置"
+        },
+        {
+          "endpoint_id": "wechat-13109585-official-html-list-2",
+          "type": "official_html_list",
+          "status": "candidate",
+          "purpose": [
+            "discovery",
+            "evidence"
+          ],
+          "officiality": "official",
+          "provider_group": "qiming-web",
+          "url": "https://www.qimingvc.com/cn/newsroom",
+          "base_url": "",
+          "route": "",
+          "account_id": "",
+          "feed_id": "",
+          "auth_required": false,
+          "credential_ref": "",
+          "browser_required": false,
+          "date_filterable": false,
+          "list_enumerable": false,
+          "content_scope": "metadata",
+          "last_verified_at": "",
+          "limitations": "机构官方新闻页"
         }
       ]
     },
@@ -3424,6 +3616,30 @@
           "content_scope": "metadata",
           "last_verified_at": "",
           "limitations": "入口地址或账号标识尚未配置"
+        },
+        {
+          "endpoint_id": "wechat-9671fe1e-official-html-list-2",
+          "type": "official_html_list",
+          "status": "candidate",
+          "purpose": [
+            "discovery",
+            "evidence"
+          ],
+          "officiality": "official",
+          "provider_group": "hillhouse-web",
+          "url": "https://www.hillhouseinvestment.com/",
+          "base_url": "",
+          "route": "",
+          "account_id": "",
+          "feed_id": "",
+          "auth_required": false,
+          "credential_ref": "",
+          "browser_required": false,
+          "date_filterable": false,
+          "list_enumerable": false,
+          "content_scope": "metadata",
+          "last_verified_at": "",
+          "limitations": "机构官网；入口可访问性与更新频率待核验"
         }
       ]
     },
@@ -4568,6 +4784,30 @@
           "content_scope": "metadata",
           "last_verified_at": "",
           "limitations": "入口地址或账号标识尚未配置"
+        },
+        {
+          "endpoint_id": "wechat-ai-98563069-official-html-list-2",
+          "type": "official_html_list",
+          "status": "candidate",
+          "purpose": [
+            "discovery",
+            "evidence"
+          ],
+          "officiality": "official",
+          "provider_group": "zhipu-web",
+          "url": "https://www.zhipuai.cn/",
+          "base_url": "",
+          "route": "",
+          "account_id": "",
+          "feed_id": "",
+          "auth_required": false,
+          "credential_ref": "",
+          "browser_required": false,
+          "date_filterable": false,
+          "list_enumerable": false,
+          "content_scope": "metadata",
+          "last_verified_at": "",
+          "limitations": "官网包含产品与研究动态；需配置内容路径过滤"
         }
       ]
     },
@@ -4624,6 +4864,30 @@
           "content_scope": "metadata",
           "last_verified_at": "",
           "limitations": "入口地址或账号标识尚未配置"
+        },
+        {
+          "endpoint_id": "wechat-deepseek-2b893991-official-html-list-2",
+          "type": "official_html_list",
+          "status": "candidate",
+          "purpose": [
+            "discovery",
+            "evidence"
+          ],
+          "officiality": "official",
+          "provider_group": "deepseek-web",
+          "url": "https://www.deepseek.com/transparency/",
+          "base_url": "",
+          "route": "",
+          "account_id": "",
+          "feed_id": "",
+          "auth_required": false,
+          "credential_ref": "",
+          "browser_required": false,
+          "date_filterable": false,
+          "list_enumerable": false,
+          "content_scope": "metadata",
+          "last_verified_at": "",
+          "limitations": "仅覆盖透明度中心与主要模型发布，不等于公众号全量"
         }
       ]
     },
@@ -4680,6 +4944,30 @@
           "content_scope": "metadata",
           "last_verified_at": "",
           "limitations": "入口地址或账号标识尚未配置"
+        },
+        {
+          "endpoint_id": "wechat-kimi-d3ffbd28-official-html-list-2",
+          "type": "official_html_list",
+          "status": "candidate",
+          "purpose": [
+            "discovery",
+            "evidence"
+          ],
+          "officiality": "official",
+          "provider_group": "moonshot-web",
+          "url": "https://www.moonshot.cn/",
+          "base_url": "",
+          "route": "",
+          "account_id": "",
+          "feed_id": "",
+          "auth_required": false,
+          "credential_ref": "",
+          "browser_required": false,
+          "date_filterable": false,
+          "list_enumerable": false,
+          "content_scope": "metadata",
+          "last_verified_at": "",
+          "limitations": "公司官网；公开动态列表完整性待核验"
         }
       ]
     },
@@ -4736,6 +5024,30 @@
           "content_scope": "metadata",
           "last_verified_at": "",
           "limitations": "入口地址或账号标识尚未配置"
+        },
+        {
+          "endpoint_id": "wechat-minimax-833381db-official-html-list-2",
+          "type": "official_html_list",
+          "status": "candidate",
+          "purpose": [
+            "discovery",
+            "evidence"
+          ],
+          "officiality": "official",
+          "provider_group": "minimax-web",
+          "url": "https://www.minimax.cn/",
+          "base_url": "",
+          "route": "",
+          "account_id": "",
+          "feed_id": "",
+          "auth_required": false,
+          "credential_ref": "",
+          "browser_required": false,
+          "date_filterable": false,
+          "list_enumerable": false,
+          "content_scope": "metadata",
+          "last_verified_at": "",
+          "limitations": "官网首页包含最新研究与模型发布"
         }
       ]
     },
@@ -4792,6 +5104,30 @@
           "content_scope": "metadata",
           "last_verified_at": "",
           "limitations": "入口地址或账号标识尚未配置"
+        },
+        {
+          "endpoint_id": "wechat-20ef379b-official-html-list-2",
+          "type": "official_html_list",
+          "status": "candidate",
+          "purpose": [
+            "discovery",
+            "evidence"
+          ],
+          "officiality": "official",
+          "provider_group": "aliyun-web",
+          "url": "https://cn.aliyun.com/",
+          "base_url": "",
+          "route": "",
+          "account_id": "",
+          "feed_id": "",
+          "auth_required": false,
+          "credential_ref": "",
+          "browser_required": false,
+          "date_filterable": false,
+          "list_enumerable": false,
+          "content_scope": "metadata",
+          "last_verified_at": "",
+          "limitations": "阿里云官网产品动态；不是公众号完整镜像"
         }
       ]
     },
@@ -4848,6 +5184,30 @@
           "content_scope": "metadata",
           "last_verified_at": "",
           "limitations": "入口地址或账号标识尚未配置"
+        },
+        {
+          "endpoint_id": "wechat-45549b51-official-html-list-2",
+          "type": "official_html_list",
+          "status": "candidate",
+          "purpose": [
+            "discovery",
+            "evidence"
+          ],
+          "officiality": "official",
+          "provider_group": "volcengine-web",
+          "url": "https://www.volcengine.com/news",
+          "base_url": "",
+          "route": "",
+          "account_id": "",
+          "feed_id": "",
+          "auth_required": false,
+          "credential_ref": "",
+          "browser_required": false,
+          "date_filterable": false,
+          "list_enumerable": false,
+          "content_scope": "metadata",
+          "last_verified_at": "",
+          "limitations": "火山引擎官方发布中心"
         }
       ]
     },
@@ -6124,6 +6484,30 @@
           "content_scope": "metadata",
           "last_verified_at": "",
           "limitations": "入口地址或账号标识尚未配置"
+        },
+        {
+          "endpoint_id": "wechat-b013eec9-official-html-list-2",
+          "type": "official_html_list",
+          "status": "candidate",
+          "purpose": [
+            "discovery",
+            "evidence"
+          ],
+          "officiality": "official",
+          "provider_group": "cambricon-web",
+          "url": "https://www.cambricon.com/",
+          "base_url": "",
+          "route": "",
+          "account_id": "",
+          "feed_id": "",
+          "auth_required": false,
+          "credential_ref": "",
+          "browser_required": false,
+          "date_filterable": false,
+          "list_enumerable": false,
+          "content_scope": "metadata",
+          "last_verified_at": "",
+          "limitations": "公司官网新闻；更新频率可能低于公告渠道"
         }
       ]
     },
@@ -6180,6 +6564,29 @@
           "content_scope": "metadata",
           "last_verified_at": "",
           "limitations": "入口地址或账号标识尚未配置"
+        },
+        {
+          "endpoint_id": "wechat-31b87d3e-official-html-list-2",
+          "type": "official_html_list",
+          "status": "candidate",
+          "purpose": [
+            "discovery"
+          ],
+          "officiality": "official_proxy",
+          "provider_group": "huawei-web",
+          "url": "https://www.huawei.com/cn/news",
+          "base_url": "",
+          "route": "",
+          "account_id": "",
+          "feed_id": "",
+          "auth_required": false,
+          "credential_ref": "",
+          "browser_required": false,
+          "date_filterable": false,
+          "list_enumerable": false,
+          "content_scope": "metadata",
+          "last_verified_at": "",
+          "limitations": "华为官方新闻中心，覆盖范围大于昇腾账号，需按昇腾关键词过滤"
         }
       ]
     },
@@ -6236,6 +6643,30 @@
           "content_scope": "metadata",
           "last_verified_at": "",
           "limitations": "入口地址或账号标识尚未配置"
+        },
+        {
+          "endpoint_id": "wechat-ad83a8cb-official-html-list-2",
+          "type": "official_html_list",
+          "status": "candidate",
+          "purpose": [
+            "discovery",
+            "evidence"
+          ],
+          "officiality": "official",
+          "provider_group": "inspur-web",
+          "url": "https://www.ieisystem.com/about/news/",
+          "base_url": "",
+          "route": "",
+          "account_id": "",
+          "feed_id": "",
+          "auth_required": false,
+          "credential_ref": "",
+          "browser_required": false,
+          "date_filterable": false,
+          "list_enumerable": false,
+          "content_scope": "metadata",
+          "last_verified_at": "",
+          "limitations": "浪潮信息官方新闻中心"
         }
       ]
     },
@@ -6292,6 +6723,30 @@
           "content_scope": "metadata",
           "last_verified_at": "",
           "limitations": "入口地址或账号标识尚未配置"
+        },
+        {
+          "endpoint_id": "wechat-bffb080a-official-html-list-2",
+          "type": "official_html_list",
+          "status": "candidate",
+          "purpose": [
+            "discovery",
+            "evidence"
+          ],
+          "officiality": "official",
+          "provider_group": "innolight-web",
+          "url": "https://www.zj-innolight.com/cn/news.html",
+          "base_url": "",
+          "route": "",
+          "account_id": "",
+          "feed_id": "",
+          "auth_required": false,
+          "credential_ref": "",
+          "browser_required": false,
+          "date_filterable": false,
+          "list_enumerable": false,
+          "content_scope": "metadata",
+          "last_verified_at": "",
+          "limitations": "公司官方新闻页；证券公告仍应回到交易所来源"
         }
       ]
     },
@@ -7845,6 +8300,29 @@
           "content_scope": "metadata",
           "last_verified_at": "",
           "limitations": "入口地址或账号标识尚未配置"
+        },
+        {
+          "endpoint_id": "wechat-1baced62-official-html-list-2",
+          "type": "official_html_list",
+          "status": "candidate",
+          "purpose": [
+            "discovery"
+          ],
+          "officiality": "official_proxy",
+          "provider_group": "fddnet-web",
+          "url": "https://www.fddnet.cn/",
+          "base_url": "",
+          "route": "",
+          "account_id": "",
+          "feed_id": "",
+          "auth_required": false,
+          "credential_ref": "",
+          "browser_required": false,
+          "date_filterable": false,
+          "list_enumerable": false,
+          "content_scope": "metadata",
+          "last_verified_at": "",
+          "limitations": "可发现署名为金融电子化的内容，但与公众号主体关系仍需人工确认"
         }
       ]
     },
@@ -9487,6 +9965,30 @@
           "content_scope": "metadata",
           "last_verified_at": "",
           "limitations": "入口地址或账号标识尚未配置"
+        },
+        {
+          "endpoint_id": "china-renaissance-official-html-list-2",
+          "type": "official_html_list",
+          "status": "candidate",
+          "purpose": [
+            "discovery",
+            "evidence"
+          ],
+          "officiality": "official",
+          "provider_group": "huaxing-web",
+          "url": "https://www.huaxing.com/",
+          "base_url": "",
+          "route": "",
+          "account_id": "",
+          "feed_id": "",
+          "auth_required": false,
+          "credential_ref": "",
+          "browser_required": false,
+          "date_filterable": false,
+          "list_enumerable": false,
+          "content_scope": "metadata",
+          "last_verified_at": "",
+          "limitations": "华兴资本官网；需定位 newsroom 稳定列表"
         }
       ]
     },
