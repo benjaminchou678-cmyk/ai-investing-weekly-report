@@ -21,6 +21,7 @@ from _candidate_io import (
     wrap_items,
     write_json,
 )
+from datetime import datetime, timezone
 
 BOARD_ALIASES = {
     "产品": "产品与模型", "模型": "产品与模型", "产品与模型": "产品与模型",
@@ -155,6 +156,16 @@ def normalize_item(item: dict[str, Any], origin: str, preserve_raw: bool) -> dic
         "editor_reviewed": bool(item.get("editor_reviewed", False)),
         "reviewed_at": text_value(item.get("reviewed_at")),
         "previous_issue_refs": as_list(item.get("previous_issue_refs")),
+        "provenance": {
+            "source_id": text_value(item.get("source_id")),
+            "endpoint_id": text_value(item.get("endpoint_id")),
+            "provider_group": text_value(first_value(item, "collector_provider", "provider_group")),
+            "discovered_url": text_value(first_value(item, "original_url", "url")),
+            "canonical_url": text_value(first_value(item, "canonical_url", "url")),
+            "mirror_url": text_value(item.get("mirror_url")),
+            "retrieved_at": text_value(first_value(item, "first_seen_at", "firstSeenAt"))
+                             or datetime.now(timezone.utc).isoformat(),
+        },
     }
     if preserve_raw:
         normalized["raw"] = item

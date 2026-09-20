@@ -22,6 +22,18 @@
 5. primary 路径成功发现有效条目后可停止；零条目只有在时间窗完整时才可停止，否则继续 fallback。
 6. 登录、验证码、凭据缺失分别记录 `blocked` 或具体失败码，不无限重试。
 
+## 状态必须区分（不得混为一谈）
+
+采集结束时，以下五种状态语义不同，必须分别记录，尤其不能把"抓取失败"写成"本周无更新"：
+
+| 状态 | 含义 | 记录 |
+|---|---|---|
+| `source unavailable` | 来源主体本身在注册表中缺失或未启用 | 配置缺口，FAIL/WARN |
+| `endpoint unconfigured` | 主体存在但无可用 endpoint（缺 URL/账号 ID） | `unconfigured`，不调度 |
+| `endpoint failed` | 已发起请求但失败/被反爬拦截 | `failed`/`blocked`，记 failure_code |
+| `success with no in-window update` | 成功且完整枚举时间窗，窗口内确无更新 | 仅此时可用 `no_update` |
+| `verification required` | 发现条目但日期/独立性无法确认 | 进 `date_unknown_review_queue` / `human_review_queue` |
+
 ## 健康度与升级
 
 - candidate 连续两轮完整成功后才可人工提升为 stable；

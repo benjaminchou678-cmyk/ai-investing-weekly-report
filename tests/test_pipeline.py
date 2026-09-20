@@ -111,47 +111,84 @@ class PipelineTests(unittest.TestCase):
                 ["产品与模型", "组织与人事", "投融资"],
             )
 
-    def test_example_report_has_three_dimension_aligned_judgments(self) -> None:
+    def _valid_thesis(self, tid: str, groups=None) -> dict:
+        groups = groups or ["g1"]
+        ev = [{"cluster_id": f"{tid}-e{i}", "title": f"证据{i}", "score": 80,
+               "independence_status": "verified", "independence_groups": [g]}
+              for i, g in enumerate(groups)]
+        return {
+            "thesis_id": tid, "theme": "T", "statement": "一条足够长且可证伪的产业判断主张",
+            "structural_change": "结构变化", "key_evidence": ev,
+            "why_it_matters": "为什么重要", "investment_readthrough": "投资含义",
+            "counter_evidence": "反方证据", "falsification_conditions": "推翻条件",
+            "confidence": "medium", "related_boards": ["产品与模型"],
+        }
+
+    def _write_final(self, tmp: Path, theses) -> Path:
+        data = {
+            "schema_version": "3.0",
+            "report_meta": {"week_label": "w", "week_start": "2026-09-14",
+                            "week_end": "2026-09-20", "timezone": "Asia/Shanghai",
+                            "generated_at": "2026-09-20T00:00:00+08:00"},
+            "weekly_lead": "本周主线已形成。",
+            "theses": theses,
+            "core_events": [{"cluster_id": "c1", "title": "核心", "score": 85, "tier": "core"}],
+            "watchlist": [], "editorial_candidate_pool": [], "human_review_queue": [],
+            "appendix_events": [], "excluded_events": [], "source_audit": {},
+            "quality_status": {"thesis_count": len(theses), "core_count": 1,
+                               "watchlist_count": 0, "status": "PASS"},
+        }
+        p = tmp / "final.json"
+        p.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+        return p
+
+    def test_final_report_two_theses_passes(self) -> None:
         with tempfile.TemporaryDirectory() as raw_tmp:
             tmp = Path(raw_tmp)
-            result = self.run_script(
-                "audit_report_structure.py", ROOT / "examples/report.example.md",
-                "--output", tmp / "report-qa.json", "--strict",
-            )
+            fj = self._write_final(tmp, [self._valid_thesis("t1", ["g1", "g2"]),
+                                         self._valid_thesis("t2", ["g3", "g4"])])
+            result = self.run_script("audit_report_structure.py", "--json", fj,
+                                     "--output", tmp / "qa.json")
             self.assertEqual(result.returncode, 0, result.stderr)
-            report = json.loads((tmp / "report-qa.json").read_text(encoding="utf-8"))
-            self.assertEqual(report["overall_status"], "PASS")
-            self.assertEqual([x["dimension"] for x in report["judgments"]], ["产品与模型", "组织与人事", "投融资"])
+            qa = json.loads((tmp / "qa.json").read_text(encoding="utf-8"))
+            self.assertEqual(qa["overall_status"], "PASS")
 
-    def test_report_judgment_dimension_mismatch_fails(self) -> None:
+    def test_zero_theses_allowed_when_evidence_insufficient(self) -> None:
         with tempfile.TemporaryDirectory() as raw_tmp:
             tmp = Path(raw_tmp)
-            malformed = (ROOT / "examples/report.example.md").read_text(encoding="utf-8").replace(
-                "判断 2｜组织与人事", "判断 2｜产品与模型", 1,
-            )
-            (tmp / "report.md").write_text(malformed, encoding="utf-8")
-            result = self.run_script(
-                "audit_report_structure.py", tmp / "report.md", "--output", tmp / "report-qa.json",
-            )
-            self.assertEqual(result.returncode, 1)
-            report = json.loads((tmp / "report-qa.json").read_text(encoding="utf-8"))
-            self.assertTrue(any(x["code"] == "JUDGMENT_DIMENSIONS_MISMATCH" for x in report["issues"]))
+            data = json.loads(self._write_final(tmp, []).read_text(encoding="utf-8"))
+            data["weekly_lead"] = "本周未形成达到证据门槛的产业判断，信号留在观察池。"
+            fj = tmp / "final.json"
+            fj.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+            result = self.run_script("audit_report_structure.py", "--json", fj,
+                                     "--output", tmp / "qa.json")
+            self.assertEqual(result.returncode, 0, result.stderr)  # WARN, not FAIL
+            qa = json.loads((tmp / "qa.json").read_text(encoding="utf-8"))
+            self.assertIn("ZERO_THESIS", [i["code"] for i in qa["issues"]])
 
-    def test_high_confidence_judgment_requires_two_source_links(self) -> None:
+    def test_too_many_theses_fails(self) -> None:
         with tempfile.TemporaryDirectory() as raw_tmp:
             tmp = Path(raw_tmp)
-            malformed = (ROOT / "examples/report.example.md").read_text(encoding="utf-8").replace(
-                "[示例产品公告](https://example.com/company/agent-workflow) / [示例模型卡](https://example.com/model/agent-governance)",
-                "[示例产品公告](https://example.com/company/agent-workflow)",
-                1,
-            )
-            (tmp / "report.md").write_text(malformed, encoding="utf-8")
-            result = self.run_script(
-                "audit_report_structure.py", tmp / "report.md", "--output", tmp / "report-qa.json",
-            )
+            theses = [self._valid_thesis(f"t{i}", [f"g{i}a", f"g{i}b"]) for i in range(4)]
+            fj = self._write_final(tmp, theses)
+            result = self.run_script("audit_report_structure.py", "--json", fj,
+                                     "--output", tmp / "qa.json")
             self.assertEqual(result.returncode, 1)
-            report = json.loads((tmp / "report-qa.json").read_text(encoding="utf-8"))
-            self.assertTrue(any(x["code"] == "HIGH_CONFIDENCE_SOURCES_LOW" for x in report["issues"]))
+            qa = json.loads((tmp / "qa.json").read_text(encoding="utf-8"))
+            self.assertTrue(any(i["code"] == "THESIS_COUNT_TOO_HIGH" for i in qa["issues"]))
+
+    def test_unknown_independence_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as raw_tmp:
+            tmp = Path(raw_tmp)
+            t = self._valid_thesis("t1", ["g1", "g2"])
+            t["key_evidence"][0]["independence_status"] = "unknown"
+            fj = self._write_final(tmp, [t])
+            result = self.run_script("audit_report_structure.py", "--json", fj,
+                                     "--output", tmp / "qa.json")
+            self.assertEqual(result.returncode, 1)
+            qa = json.loads((tmp / "qa.json").read_text(encoding="utf-8"))
+            self.assertTrue(any(i["code"] == "THESIS_EVIDENCE_INDEPENDENCE_UNKNOWN"
+                                for i in qa["issues"]))
 
 
 if __name__ == "__main__":

@@ -14,15 +14,18 @@ import os
 import re
 import sys
 import xml.etree.ElementTree as ET
-from datetime import datetime, timezone
+from datetime import datetime, time, timedelta, timezone
 from email.utils import parsedate_to_datetime
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlencode, urljoin
 from urllib.request import Request, urlopen
+from zoneinfo import ZoneInfo
 
 from source_endpoints import configured_endpoints
+
+SHANGHAI = ZoneInfo("Asia/Shanghai")
 
 
 def now_iso() -> str:
@@ -168,23 +171,42 @@ def parse_item_date(value: str) -> datetime | None:
         parsed = datetime.fromisoformat(raw.replace("Z", "+00:00"))
         return parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
     except ValueError:
+        pass
+    # Common loose / Chinese formats: 2026年9月14日, 2026/9/14, 2026.9.14
+    m = re.search(r"(20\d{2})\s*[年/.\-]\s*(\d{1,2})\s*[月/.\-]\s*(\d{1,2})", raw)
+    if m:
         try:
-            parsed = parsedate_to_datetime(raw)
-            return parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
-        except (TypeError, ValueError, OverflowError):
-            return None
+            return datetime(int(m.group(1)), int(m.group(2)), int(m.group(3)),
+                            tzinfo=SHANGHAI)
+        except ValueError:
+            pass
+    try:
+        parsed = parsedate_to_datetime(raw)
+        return parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
+    except (TypeError, ValueError, OverflowError):
+        return None
 
 
 def filter_week(items: list[dict[str, str]], week_start: str, week_end: str) -> list[dict[str, str]]:
-    start = datetime.fromisoformat(week_start).date()
-    end = datetime.fromisoformat(week_end).date()
+    """Half-open window in Asia/Shanghai:
+    week_start 00:00+08:00 <= published_at < (week_end + 1 day) 00:00+08:00.
+
+    Items with an unparseable date are kept in the returned list but tagged
+    date_status="unknown" so the caller can route them to date_unknown_review_queue
+    instead of silently treating them as in-window facts.
+    """
+    start = datetime.fromisoformat(week_start).replace(tzinfo=SHANGHAI)
+    end_date = datetime.fromisoformat(week_end).date() + timedelta(days=1)
+    end = datetime.combine(end_date, time.min, tzinfo=SHANGHAI)
     result = []
     for item in items:
         published = parse_item_date(str(item.get("published_at") or ""))
         if published is None:
             item["date_status"] = "unknown"
             result.append(item)
-        elif start <= published.date() <= end:
+            continue
+        local = published.astimezone(SHANGHAI)
+        if start <= local < end:
             item["date_status"] = "in_window"
             result.append(item)
     return result
@@ -246,6 +268,7 @@ def main() -> int:
                 if source.get("channel") == rule["channel"] and source.get("priority") == rule["priority"]
             )
     candidates: list[dict[str, Any]] = []
+    date_unknown_queue: list[dict[str, Any]] = []
     coverage: list[dict[str, Any]] = []
     for source in registry.get("sources", []):
         if selected and source.get("source_id") not in selected:
@@ -259,14 +282,21 @@ def main() -> int:
             try:
                 items, endpoint_complete = collect_endpoint(endpoint, args.week_start, args.week_end, args.timeout)
                 items = filter_week(items, args.week_start, args.week_end)
+                in_window = [i for i in items if i.get("date_status") == "in_window"]
+                for i in items:
+                    if i.get("date_status") == "unknown":
+                        date_unknown_queue.append({
+                            **i, "source_id": source["source_id"],
+                            "endpoint_id": endpoint["endpoint_id"],
+                        })
                 complete = complete or endpoint_complete
-                found.extend(items)
+                found.extend(in_window)
                 attempts.append({
                     "endpoint_id": endpoint["endpoint_id"], "provider_group": endpoint["provider_group"],
-                    "checked_at": checked_at, "status": "ok", "items_found": len(items),
+                    "checked_at": checked_at, "status": "ok", "items_found": len(in_window),
                     "window_complete": endpoint_complete, "failure_code": "",
                 })
-                for item in items:
+                for item in in_window:
                     candidates.append({
                         **item, "source_id": source["source_id"], "source_name": source["name"],
                         "endpoint_id": endpoint["endpoint_id"], "discovered_via": endpoint["type"],
@@ -275,7 +305,7 @@ def main() -> int:
                         "mirror_url": endpoint_url(endpoint, args.week_start, args.week_end)
                         if endpoint.get("officiality") in {"third_party", "official_proxy"} else "",
                     })
-                if items and endpoint.get("status") != "fallback":
+                if in_window and endpoint.get("status") != "fallback":
                     break
             except Exception as exc:
                 code = str(exc).split(":", 1)[0][:80]
@@ -296,12 +326,25 @@ def main() -> int:
     coverage_path = Path(args.coverage_output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     coverage_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(json.dumps({"schema_version": "2.0", "items": candidates}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    output_path.write_text(json.dumps(
+        {"schema_version": "3.0", "items": candidates,
+         "in_window_candidates": len(candidates),
+         "date_unknown_review_queue": date_unknown_queue},
+        ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    fetch_failures = [
+        a for c in coverage for a in c.get("endpoint_attempts", [])
+        if a.get("status") in {"failed", "blocked"}
+    ]
     coverage_path.write_text(json.dumps({
-        "schema_version": "2.0", "week_start": args.week_start, "week_end": args.week_end,
+        "schema_version": "3.0", "week_start": args.week_start, "week_end": args.week_end,
+        "timezone": "Asia/Shanghai", "window_type": "half_open",
         "profile": "full_weekly", "sources": coverage,
+        "in_window_candidates": len(candidates),
+        "date_unknown_review_queue": date_unknown_queue,
+        "fetch_or_verification_failures": fetch_failures,
     }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"collected {len(candidates)} candidates from {len(coverage)} sources", file=sys.stderr)
+    print(f"collected {len(candidates)} in-window, {len(date_unknown_queue)} date-unknown, "
+          f"{len(fetch_failures)} endpoint failures across {len(coverage)} sources", file=sys.stderr)
     return 0
 
 

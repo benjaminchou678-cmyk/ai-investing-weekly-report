@@ -16,7 +16,10 @@ reports/2026-08-31_to_2026-09-06/
 ├── run-manifest.json
 ├── pre-edit-qa.json
 ├── release-qa.json
-├── weekly-report.md
+├── weekly_editorial_plan.json
+├── final_weekly_report.json        ← 唯一权威产物
+├── final_weekly_report.md          ← 从 JSON 渲染
+├── final_weekly_report.html        ← 从 JSON 渲染
 └── report-structure-qa.json
 ```
 
@@ -76,10 +79,13 @@ python3 scripts/audit_candidates.py candidates-merged.json \
 
 ```text
 raw_articles
-→ cluster_events.py        → event_clusters
-→ rank_events.py           → ranked_events
-→ build_theses.py          → candidate_theses
-→ editorial_pass.py        → weekly_editorial_plan + final_weekly_report(.md/.html)
+→ normalized_articles
+→ event_clusters
+→ ranked_events
+→ candidate_theses
+→ weekly_editorial_plan
+→ final_weekly_report.json      ← 唯一权威状态
+→ Markdown / HTML renderers     ← 从同一 JSON 渲染，不重新生成内容
 ```
 
 ```bash
@@ -93,14 +99,15 @@ python3 scripts/build_theses.py ranked_events.json -o candidate_theses.json
 python3 scripts/editorial_pass.py ranked_events.json candidate_theses.json \
   --week-label YYYY-MM-DD—YYYY-MM-DD \
   --plan-out weekly_editorial_plan.json \
+  --json-out final_weekly_report.json \
   --md-out final_weekly_report.md \
   --html-out final_weekly_report.html
 ```
 
 - **cluster_events.py**：保守聚类。同公司同日但不同产品版本 / 融资轮次 / 金额不合并；合并时更新 `source_ids` / `independence_groups` / `dates`；输出标准字段 `summary / what_is_new / why_it_matters / sources / related_events`。
 - **rank_events.py**：用户指定权重打分（合计 100）：行业/竞争格局 25、中长期产业方向 25、商业化/资本/产业链 20、持续影响 15、来源可信度 10、增量/反常识 5。每维同时输出分数与理由；**不**因发布日接近周三加分。分档：80–100 core、65–79 possible_core、50–64 watchlist、<50 appendix。
-- **build_theses.py**：不生成模板句。每条判断必须有 `statement / structural_change / key_evidence(2–4) / why_it_matters / investment_readthrough / counter_evidence / falsification_conditions / confidence`。证据门槛：≥2 个跨 `independence_group` 的重要事件，或 1 个 ≥80 核心事件 + ≥2 条辅助证据；逐事件独立性检查。判断可跨栏目，不凑 3 条；证据不足时在 `note` 写明"本周仅形成 N 条可发布判断"。
-- **editorial_pass.py**：输出编辑计划与最终报告。一句话 50–80 字；可发布判断 1–3 条（不凑数）；核心事件 5–7（不足 5 个则明示）；Watchlist 3–5；事件卡 150–250 字（发生了什么 / 真正新变化 / 为什么重要 / 关联判断）；Other Updates / Sources 极简。同时输出 Markdown 与最小 HTML。
+- **build_theses.py**：不生成模板句。每条判断必须有 `statement / structural_change / key_evidence(2–4) / why_it_matters / investment_readthrough / counter_evidence / falsification_conditions / confidence / related_boards`。证据门槛：≥2 个跨 `independence_group` 的重要事件，或 1 个 ≥80 核心事件 + ≥2 条辅助证据；逐事件独立性检查，`independence_status=unknown` 不得通过独立证据门。判断数量动态 0–3，可跨板块，不凑数；证据不足时在 `note` 写明"本周未形成达到证据门槛的产业判断"。
+- **editorial_pass.py**：以 `final_weekly_report.json` 为唯一权威产物，Markdown/HTML 从该 JSON 渲染。一句话 50–80 字；可发布判断动态 0–3 条（不凑数）；核心事件建议 5–7（不足 5 个则明示，不用 possible_core 自动补满）；Watchlist 3–5；事件卡 150–250 字；分层保留 `editorial_candidate_pool / human_review_queue / appendix_events / excluded_events` 供人判断。
 
 ### Demo 与 old-vs-new 对比
 
@@ -130,14 +137,16 @@ Release QA 检查入选条目数量、评级、投资相关性、编辑确认、
 
 ## 阶段三：成稿结构审核
 
-完成 `weekly-report.md` 后，检查三个关键判断是否分别对应产品与模型、组织与人事、投融资，并包含影响链、置信度与推翻条件：
+完成 `final_weekly_report.json` 后，**优先审计 JSON**，再核对 Markdown/HTML 是否完整呈现 JSON 核心字段：
 
 ```bash
-python3 scripts/audit_report_structure.py weekly-report.md \
+python3 scripts/audit_report_structure.py \
+  --json final_weekly_report.json \
+  --md final_weekly_report.md --html final_weekly_report.html \
   --output report-structure-qa.json
 ```
 
-结构为 `FAIL` 时必须修正后重新运行。周度判断允许由单一高材料性事件主导，不要求凑足两个事件；但至少提供一个可回溯来源，高置信度判断至少提供两个来源链接并由编辑确认独立性。不得把单周判断直接表述为长期趋势。
+审计规则：判断动态 0–3 条（>3 FAIL）；每条判断字段完整；独立性未知证据不得通过门；核心事件 ≤7、Watchlist ≤5；各层候选不重复；Markdown/HTML 的判断数与核心事件数必须与 JSON 一致。结构为 `FAIL` 时必须修正后重新运行。周度判断允许由单一高材料性事件主导，不要求凑足两个事件；但不得把单周判断直接表述为长期趋势。
 
 ## coverage 与执行清单
 

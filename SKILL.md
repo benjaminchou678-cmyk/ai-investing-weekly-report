@@ -1,6 +1,6 @@
 ---
 name: ai-investing-weekly-report
-description: 检索、核验并撰写面向投资与产品决策者的中文 AI 行业周报，按产品与模型、组织与人事、投融资三个维度整理核心新闻，并判断公司经营与投资假设如何变化。适用于“AI 投资周报”“本周 AI 公司动态”“AI 商业化周度复盘”等请求；不用于单一公司深度尽调、个性化证券交易建议、实时快讯或普通技术问答。
+description: 检索、核验并撰写面向投资与产品决策者的中文 AI 行业周报。产品与模型、组织与人事、投融资，以及政策、算力、安全、人才等作为检索/分类/审计标签使用，最终形成 0–3 条动态、可证伪的产业判断，并判断公司经营与投资假设如何变化。适用于“AI 投资周报”“本周 AI 公司动态”“AI 商业化周度复盘”等请求；不用于单一公司深度尽调、个性化证券交易建议、实时快讯或普通技术问答。
 ---
 
 # AI 投资周报
@@ -34,10 +34,10 @@ description: 检索、核验并撰写面向投资与产品决策者的中文 AI 
 2. 先运行注册表校验；对已配置 endpoint 使用 `collect_source_endpoints.py` 采集，将结果保存为结构化候选，并在 `coverage.json` 中记录逐 endpoint attempt、时间窗完整性与 provider group。未配置入口不得伪装成已检查。
    - 来源入口迭代时，先运行 `audit_source_endpoints.py` 生成 JSON/CSV 审计，再按 `source-rollout-plan.json` 运行 pilot 或 C2 cohort；两周结果使用 `compare_source_runs.py` 比较。没有人工 ground truth 时只报告发现覆盖率，不得称为真实召回率。
 3. 按 [数据管线](references/data-pipeline.md) 完成标准化、URL 结构检查、保守去重和采编前 QA。
-4. 进入内容生成中间层：`cluster_events.py → rank_events.py → build_theses.py → editorial_pass.py`，产出 `event_clusters`、`ranked_events`、`candidate_theses`、`weekly_editorial_plan` 与 `final_weekly_report(.md/.html)`。评分权重与判断证据门槛见 [编辑标准](references/editorial-policy.md)。
+4. 进入内容生成中间层：`cluster_events.py → rank_events.py → build_theses.py → editorial_pass.py`，产出 `event_clusters`、`ranked_events`、`candidate_theses`、`weekly_editorial_plan`，并以 `final_weekly_report.json` 为唯一权威产物；Markdown 与 HTML 均从该 JSON 渲染。评分权重与判断证据门槛见 [编辑标准](references/editorial-policy.md)。
 5. 先运行来源注册表校验和来源覆盖审计，生成 `source-qa.json`；再按 [质量门](references/quality-gates.md) 执行发布前 QA（含内容层机械 QA）。硬性 Gate 失败时不得标记为正式版。
-6. 按 [周报模板](references/report-template.md) 输出压缩版 Markdown 与最小 HTML；核心事件 5–7、Watchlist 3–5、可发布判断 1–3 条，不凑数。
-7. 运行 `scripts/audit_report_structure.py` 生成 `report-structure-qa.json`；结构 FAIL 时修正后再交付。
+6. 按 [周报模板](references/report-template.md) 从 `final_weekly_report.json` 渲染压缩版 Markdown 与最小 HTML；核心事件建议 5–7、Watchlist 3–5、可发布判断动态 0–3 条，不凑数。
+7. 运行 `scripts/audit_report_structure.py --json final_weekly_report.json [--md ... --html ...]` 生成 `report-structure-qa.json`；优先审计 JSON Schema，再核对 Markdown/HTML 是否完整呈现 JSON 核心字段。结构 FAIL 时修正后再交付。
 
 ### 基于已有材料撰写
 
@@ -54,6 +54,8 @@ description: 检索、核验并撰写面向投资与产品决策者的中文 AI 
 
 ## 数据与判断边界
 
+**诚实性说明（重要）**：`rank_events` 的 80/65/50 分档是**正则关键词启发式打分，未经历史标定**，只用于排序与分层，不代表事件真实重要性；`build_theses` 产出的 `statement`/`editorial_pass` 产出的事件卡是**编辑草稿**，不是结论。脚本负责格式、排序与证据门；**最终可发布的产业判断必须由人（或 LLM）复核主张、证据与反证后定稿**，不得把脚本生成的模板句直接当成品。
+
 脚本负责格式统一、URL 结构检查、保守去重、来源覆盖核对、字段统计和机械 QA。模型负责网页事实核验、来源独立性、claim 与来源绑定、投资相关性、假设影响、信号等级、关键判断和最终写作。
 
 脚本返回 `PASS` 不代表事实真实；`WARN` 必须人工复核；硬性 Gate 返回 `FAIL` 时不得发布正式版。
@@ -64,11 +66,12 @@ WeRSS、RSSHub 与搜索只属于发现渠道，不构成新的独立信源。�
 
 - 全程使用中文，必要的海外原文短句除外。
 - 报告主标题保持简洁，使用“AI 投资周报 · 日期区间”；不要添加“关键判断版”“趋势版”“扩展版”等版本型后缀。试跑、来源限制或质量状态应在正文说明，不写进主标题。
-- 核心新闻按新中间层产出：可发布判断 1–3 条（不凑数）、核心事件 5–7（宁缺毋滥，不足则明示）、Watchlist 3–5；正文较旧详版下降 30%–50%。
-- 可发布判断不强制按产品/组织/投融资各一条；证据门槛未达到时明确写"本周仅形成 N 条可发布判断"。单事件不升格为判断。
-- 周度判断允许由一件高材料性事件主导，不要求凑足两个事件；但核心事实必须充分核验，并写明直接影响、二阶影响、受益者/承压者、时间范围、反方证据或推翻条件、判断置信度和未来验证。
+- 核心新闻按新中间层产出：可发布判断动态 0–3 条（不凑数，正常周建议 1–3，证据不足允许 0 条并明示）、核心事件建议 5–7（宁缺毋滥，不足则明示）、Watchlist 3–5；正文较旧详版下降 30%–50%。
+- 可发布判断不强制按产品/组织/投融资各一条，也不要求每个后台板块都出判断；一条判断可跨多个板块并带 `related_boards`。证据门槛未达到时明确写"本周未形成达到证据门槛的产业判断"。单事件不升格为判断。
+- 周度判断允许由一件高材料性事件主导，不要求凑足两个事件；但核心事实必须充分核验，并写明核心变化、为什么重要、Investment Readthrough、反方证据或推翻条件、判断置信度。
 - 只有经过连续 2–3 周证据验证的判断才可升级为中期趋势；不得把单周判断直接表述为长期趋势。
-- 政策、安全、客户、算力和研究信息继续用于关键判断、反证与投资假设；只有符合三个板块的重大事件才进入核心新闻。
+- 产品与模型、组织与人事、投融资，以及政策、算力、安全、人才等只作为检索标签、事件分类标签、来源覆盖审计维度和事件关联分析维度，不再是前台强制栏目。
+- 候选池分层保留供人判断：65+ 进核心候选、50–64 进 Watchlist 候选、<50 留 Appendix；日期未知/独立性未知进 `human_review_queue`，不静默删除。
 - 每条核心事件附原始链接或明确的 URL 降级说明。
 - 默认输出“研究优先级/假设变化”，不输出“最值得买入”排名。
 - 先完成 Markdown 与发布前 QA，再执行可视化或外部发布。
@@ -80,5 +83,5 @@ WeRSS、RSSHub 与搜索只属于发现渠道，不构成新的独立信源。�
 - 候选已完成标准化、URL 检查、去重与采编前 QA；
 - 入选内容已完成人工核验、信号评级、claim 来源映射和投资假设判断；
 - 发布前 Gate 0–5 已执行，硬性失败已处理；
-- 最终 Markdown 已通过三判断结构审计，且三个维度均写明置信度、影响链和推翻条件；
+- 结构化权威产物 `final_weekly_report.json` 已生成并通过结构审计（动态 0–3 条判断、每条字段完整、独立性门通过、Markdown/HTML 与 JSON 数量与标题一致）；
 - 最终产物符合用户要求，未擅自生成或发布额外产物。

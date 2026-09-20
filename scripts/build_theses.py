@@ -71,6 +71,16 @@ THEMES = [
         "counter_evidence": "规划/政策到落地存在时滞，具体补贴、采购与执行细则尚未明确。",
         "falsification": "若 2 个季度内无配套执行细则、采购或落地项目，政策拉动判断被证伪。",
     },
+    {
+        "id": "talent_org",
+        "label": "人才与组织资源迁移",
+        "match": r"离职|加入|出任|任命|接任|创业|组织架构|重组|调任|首席|科学家|VP|负责人|团队|人才|挖角|加盟",
+        "structural_change": "核心 AI 人才与组织资源在实验室、大厂与初创之间重新配置，改变研究路线与执行资源。",
+        "why_it_matters": "关键人才与组织归属决定研究方向、算力预算与产品节奏，是公司层执行力的先行指标。",
+        "investment_readthrough": "吸引或留住核心研究与执行团队的公司研究优先级上升；关键人流失且无补位的公司下调。",
+        "counter_evidence": "职位名称与实际权力可能不一致；单人变动的产品影响常被高估。",
+        "falsification": "若 1 个季度内无团队、预算或产品路线的可见调整，该人事变动不构成实质假设变化。",
+    },
 ]
 
 
@@ -78,15 +88,32 @@ def _indep_groups(ev: dict) -> set[str]:
     return {g for g in ev.get("independence_groups", []) if g}
 
 
+def _independence_status(ev: dict) -> str:
+    """verified | inferred | unknown.
+
+    - explicit value wins (manual registry marking);
+    - groups derived from a URL domain are only ``inferred``, never ``verified``;
+    - no groups => unknown, which cannot pass the independent-evidence gate.
+    """
+    explicit = ev.get("independence_status")
+    if explicit in {"verified", "inferred", "unknown"}:
+        return str(explicit)
+    return "inferred" if _indep_groups(ev) else "unknown"
+
+
 def _pairwise_independent(events: list[dict]) -> bool:
-    """True iff no two events share an independence_group."""
+    """True iff every event has KNOWN independence and no two share a group.
+
+    Any event whose independence is unknown fails the gate: we cannot claim
+    independent evidence from unidentified sources.
+    """
     seen: set[str] = set()
     for ev in events:
+        if _independence_status(ev) == "unknown":
+            return False
         groups = _indep_groups(ev)
         if not groups:
-            # Unknown independence -> treat as independent only if truly unknown;
-            # to be conservative, two unknown-group events do NOT pass independence.
-            groups = {f"__unknown__{ev['cluster_id']}"}
+            return False
         if seen & groups:
             return False
         seen |= groups
@@ -191,9 +218,10 @@ def build_theses(ranked: list[dict]) -> tuple[list[dict], list[dict]]:
             continue
 
         selected = selected[:4]
-        n_groups = len(set().union(*[_indep_groups(e) or {f"__unk_{e['cluster_id']}"} for e in selected]))
+        n_groups = len(set().union(*[_indep_groups(e) for e in selected if _indep_groups(e)]))
         n_core = sum(1 for e in selected if e["importance_score"] >= CORE_MIN)
         n_support = len(selected)
+        related_boards = sorted({str(e.get("board", "")).strip() for e in selected if e.get("board")})
 
         thesis = {
             "thesis_id": f"thesis-{theme['id']}",
@@ -207,6 +235,7 @@ def build_theses(ranked: list[dict]) -> tuple[list[dict], list[dict]]:
                     "title": e.get("representative_title", ""),
                     "score": e["importance_score"],
                     "tier": e["tier"],
+                    "independence_status": _independence_status(e),
                     "independence_groups": sorted(_indep_groups(e)),
                 }
                 for e in selected
@@ -216,6 +245,9 @@ def build_theses(ranked: list[dict]) -> tuple[list[dict], list[dict]]:
             "counter_evidence": theme["counter_evidence"],
             "falsification_conditions": theme["falsification"],
             "confidence": _confidence(n_core, n_support, n_groups),
+            "related_boards": related_boards,
+            "editorial_override": False,
+            "override_reason": "",
         }
         theses.append(thesis)
         for e in selected:

@@ -9,7 +9,21 @@
 - C1、C2：`check_frequency=weekly`；
 - C3：`check_frequency=event_driven`；
 - `unverified` 仍进入 C1/C2 调度，但不能作为独立确认或 `no_update` 的依据；
-- `hard_required` 来源至少配置一个可执行 endpoint。
+- `hard_required` 来源至少配置一个可执行 endpoint，并自动进入调度范围，不完全依赖手工 pilot 名单。
+
+## 独立性字段（证据门用）
+
+每条候选/证据必须能回溯独立性。`independence_status` 取值：
+
+| 值 | 含义 |
+|---|---|
+| `verified` | 发布主体已人工核验，独立关系明确 |
+| `inferred` | 从域名/父账号规则推断，未经人工确认 |
+| `unknown` | 无法判断独立关系 |
+
+`unknown` **不能被自动视为相互独立**：在判断证据门中，含 `independence_status=unknown` 或无 `independence_group` 的证据一律不得通过独立证据门。
+
+配套字段：`independence_status`、`source_group`（内容同源分组）、`provider_group`（采集基础设施分组）、`canonical_source_id`（同一原始来源的归一 ID，用于识别转载/镜像）。
 
 ## endpoints[]
 

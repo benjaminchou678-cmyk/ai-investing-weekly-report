@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-investing-weekly-report/schemas/final_weekly_report.schema.json",
+  "title": "final_weekly_report",
+  "description": "唯一权威周报产物。Markdown 与 HTML 均由本 JSON 渲染，不得各自重新生成内容。",
+  "type": "object",
+  "required": ["report_meta", "weekly_lead", "theses", "core_events", "watchlist",
+               "editorial_candidate_pool", "human_review_queue", "appendix_events",
+               "excluded_events", "source_audit", "quality_status"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string", "const": "3.0"},
+    "report_meta": {
+      "type": "object",
+      "required": ["week_label", "week_start", "week_end", "timezone", "generated_at"],
+      "additionalProperties": true,
+      "properties": {
+        "week_label": {"type": "string"},
+        "week_start": {"type": "string", "format": "date"},
+        "week_end": {"type": "string", "format": "date"},
+        "timezone": {"type": "string", "const": "Asia/Shanghai"},
+        "generated_at": {"type": "string"},
+        "trial_run": {"type": "boolean"},
+        "profile": {"type": "string"}
+      }
+    },
+    "weekly_lead": {"type": "string", "maxLength": 240},
+    "theses": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["thesis_id", "theme", "statement", "structural_change",
+                     "key_evidence", "why_it_matters", "investment_readthrough",
+                     "counter_evidence", "falsification_conditions", "confidence",
+                     "related_boards"],
+        "additionalProperties": true,
+        "properties": {
+          "thesis_id": {"type": "string"},
+          "theme": {"type": "string"},
+          "statement": {"type": "string", "minLength": 10},
+          "structural_change": {"type": "string"},
+          "key_evidence": {
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 4,
+            "items": {
+              "type": "object",
+              "required": ["cluster_id", "title"],
+              "additionalProperties": true
+            }
+          },
+          "why_it_matters": {"type": "string"},
+          "investment_readthrough": {"type": "string"},
+          "counter_evidence": {"type": "string"},
+          "falsification_conditions": {"type": "string"},
+          "confidence": {"type": "string", "enum": ["low", "medium", "high"]},
+          "related_boards": {"type": "array", "items": {"type": "string"}, "default": []},
+          "editorial_override": {"type": "boolean", "default": false},
+          "override_reason": {"type": "string", "default": ""}
+        }
+      }
+    },
+    "core_events": {
+      "type": "array",
+      "description": "最终正文核心事件，建议 5-7，不足时在 quality_status 注明证据不足",
+      "items": {"type": "object", "required": ["cluster_id", "title"], "additionalProperties": true}
+    },
+    "watchlist": {
+      "type": "array",
+      "maxItems": 5,
+      "items": {"type": "object", "required": ["event_cluster_id", "title"], "additionalProperties": true}
+    },
+    "editorial_candidate_pool": {
+      "type": "array",
+      "description": "65 分以上、未进入最终正文的事件，完整保留供人工判断",
+      "items": {"type": "object", "additionalProperties": true}
+    },
+    "human_review_queue": {
+      "type": "array",
+      "description": "日期未知、独立性未知或证据不足，未静默删除的条目",
+      "items": {"type": "object", "required": ["cluster_id"], "additionalProperties": true}
+    },
+    "appendix_events": {
+      "type": "array",
+      "description": "低于观察门槛(<50)，保留在 Source Pool",
+      "items": {"type": "object", "additionalProperties": true}
+    },
+    "excluded_events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["event_id", "reason", "score"],
+        "additionalProperties": false,
+        "properties": {
+          "event_id": {"type": "string"},
+          "reason": {"type": "string"},
+          "score": {"type": "number"}
+        }
+      }
+    },
+    "source_audit": {"type": "object", "additionalProperties": true},
+    "quality_status": {
+      "type": "object",
+      "required": ["thesis_count", "core_count", "watchlist_count", "status"],
+      "additionalProperties": true,
+      "properties": {
+        "thesis_count": {"type": "integer", "minimum": 0, "maximum": 3},
+        "core_count": {"type": "integer", "minimum": 0},
+        "watchlist_count": {"type": "integer", "minimum": 0},
+        "status": {"type": "string", "enum": ["PASS", "WARN", "FAIL"]},
+        "core_note": {"type": "string"}
+      }
+    }
+  }
+}

@@ -1,5 +1,9 @@
 # AI 投资周报 · 2026-08-31—2026-09-06
 
+> **[已废弃]** 本文件是旧版"固定三判断（产品/组织/投融资各一条）"格式的历史示例，不再作为生产模板。
+> 当前权威格式见 `references/report-template.md` 与 `schemas/final_weekly_report.schema.json`；
+> 生产周报以 `final_weekly_report.json` 为唯一权威产物，判断数量动态 0–3 条。
+>
 > 本文件仅展示结构，所有公司、事件和链接均为占位示例。
 
 ## 一、本周投资假设变化

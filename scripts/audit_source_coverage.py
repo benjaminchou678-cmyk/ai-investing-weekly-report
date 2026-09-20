@@ -112,18 +112,31 @@ def main() -> int:
     schedule_summary: dict[str, Any] = {}
     for priority in ("C1", "C2"):
         expected = {sid for sid, source in schedulable.items() if source.get("priority") == priority}
+        # A source is "configured" only if it actually has a usable endpoint;
+        # hard_required sources are pulled into scheduling automatically rather
+        # than relying on a hand-curated pilot list.
+        configured = {sid for sid in expected if configured_endpoints(schedulable[sid])}
         scheduled = {sid for sid in expected if sid in records and records[sid].get("scheduled") is True}
         attempted = {
-            sid for sid in scheduled
-            if isinstance(records[sid].get("endpoint_attempts"), list) and records[sid]["endpoint_attempts"]
+            sid for sid in configured
+            if sid in records and isinstance(records[sid].get("endpoint_attempts"), list)
+            and records[sid]["endpoint_attempts"]
         }
-        ratio = len(attempted) / len(expected) if expected else 1.0
+        configured_ratio = len(configured) / len(expected) if expected else 1.0
+        attempted_ratio = len(attempted) / len(configured) if configured else 1.0
         rule = profile.get("attempt_requirements", {}).get(priority, {})
         minimum = float(rule.get("ratio", 0))
-        if ratio < minimum:
+        if attempted_ratio < minimum:
             severity = "FAIL" if rule.get("hard") else "WARN"
-            add_issue(issues, severity, f"{priority}_ATTEMPT_RATIO_LOW", f"{priority} endpoint attempt 覆盖不足", ratio=round(ratio, 4))
-        schedule_summary[priority] = {"attempted": len(attempted), "total": len(expected), "ratio": round(ratio, 4)}
+            add_issue(issues, severity, f"{priority}_ATTEMPT_RATIO_LOW",
+                      f"{priority} endpoint attempt 覆盖不足（在已配置来源中）",
+                      attempted_ratio=round(attempted_ratio, 4))
+        schedule_summary[priority] = {
+            "expected": len(expected), "configured": len(configured), "scheduled": len(scheduled),
+            "attempted": len(attempted),
+            "registry_configured_ratio": round(configured_ratio, 4),
+            "attempted_ratio_among_configured": round(attempted_ratio, 4),
+        }
 
     hard = {sid for sid, source in active.items() if source.get("hard_required")}
     hard_success = hard & {sid for sid, record in records.items() if record.get("status") in SUCCESS}
