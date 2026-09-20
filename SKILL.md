@@ -30,8 +30,8 @@ description: 检索、核验并撰写面向投资与产品决策者的中文 AI 
 
 ### 完整周报
 
-1. 读取 [采集流程](references/collection-workflow.md)、[来源清单](references/source-registry.md)、[机器来源策略](references/source-registry-schema.md) 与 [来源解析器](references/source-resolver.md)。来源调度与质量门分别由 `source-registry.json` 和 `source-policy.json` 驱动；C1+C2 全部做 discovery，C3 事件驱动。
-2. 读取 [候选数据结构](references/candidate-schema.md)，将采集结果保存为结构化候选，并记录 `coverage.json` 与 `run-manifest.json`。
+1. 读取 [采集流程](references/collection-workflow.md)、[来源清单](references/source-registry.md)、[机器来源策略](references/source-registry-schema.md) 与 [来源入口解析器](references/source-resolver.md)。来源主体与采集 endpoint 分离；来源调度与质量门分别由 `source-registry.json` 和 `source-policy.json` 驱动，C1+C2 全部做 discovery，C3 事件驱动。
+2. 先运行注册表校验；对已配置 endpoint 使用 `collect_source_endpoints.py` 采集，将结果保存为结构化候选，并在 `coverage.json` 中记录逐 endpoint attempt、时间窗完整性与 provider group。未配置入口不得伪装成已检查。
 3. 按 [数据管线](references/data-pipeline.md) 完成标准化、URL 结构检查、保守去重和采编前 QA。
 4. 进入内容生成中间层：`cluster_events.py → rank_events.py → build_theses.py → editorial_pass.py`，产出 `event_clusters`、`ranked_events`、`candidate_theses`、`weekly_editorial_plan` 与 `final_weekly_report(.md/.html)`。评分权重与判断证据门槛见 [编辑标准](references/editorial-policy.md)。
 5. 先运行来源注册表校验和来源覆盖审计，生成 `source-qa.json`；再按 [质量门](references/quality-gates.md) 执行发布前 QA（含内容层机械 QA）。硬性 Gate 失败时不得标记为正式版。
@@ -57,6 +57,8 @@ description: 检索、核验并撰写面向投资与产品决策者的中文 AI 
 
 脚本返回 `PASS` 不代表事实真实；`WARN` 必须人工复核；硬性 Gate 返回 `FAIL` 时不得发布正式版。
 
+WeRSS、RSSHub 与搜索只属于发现渠道，不构成新的独立信源。候选必须同时保留发布主体、采集 endpoint、原始 URL 与镜像 URL；正式 claim 优先引用原始文章或主体官网。
+
 ## 默认输出
 
 - 全程使用中文，必要的海外原文短句除外。
@@ -73,6 +75,7 @@ description: 检索、核验并撰写面向投资与产品决策者的中文 AI 
 ## 完成条件
 
 - 周期、时区、来源覆盖、失败项和执行轨迹有记录；
+- C1/C2 的已配置 endpoint 均留有 attempt evidence；未配置 C1 已作为硬性配置缺口披露；
 - 候选已完成标准化、URL 检查、去重与采编前 QA；
 - 入选内容已完成人工核验、信号评级、claim 来源映射和投资假设判断；
 - 发布前 Gate 0–5 已执行，硬性失败已处理；

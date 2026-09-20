@@ -1,6 +1,6 @@
 # 来源与关注对象
 
-完整周报使用同目录的 `source-registry.json` 作为机器可读清单，使用 `source-policy.json` 保存质量门阈值。本文件只说明选择原则；不要在 Markdown 和 JSON 中维护两套不一致的来源状态。字段定义见 [来源注册表 2.0](source-registry-schema.md)。
+完整周报使用同目录的 `source-registry.json` 作为机器可读清单，使用 `source-policy.json` 保存质量门阈值。本文件只说明选择原则；不要在 Markdown 和 JSON 中维护两套不一致的来源状态。字段定义见 [来源注册表 3.0](source-registry-schema.md)。
 
 ## 优先级
 
@@ -29,11 +29,12 @@
 - 融资、估值和用户量尽量找到原始披露，并注明是否得到独立验证；
 - 技术媒体、公众号、榜单、Newsletter、Product Hunt 和聚合源主要用于发现；
 - 同一 `parent_group` 的多个账号不得被视为独立交叉验证；
+- 同一主体的多个 endpoint、WeRSS/RSSHub 镜像和搜索结果不得被视为独立交叉验证；
 - `status: unverified` 的来源不进入硬门，也不能单独支撑独立验证结论；
 - 证券层结论需要价格、估值和市场预期，缺失时只给研究优先级。
 
 ## 维护
 
-每季度复核一次机器清单：运营主体、微信号、URL、备用入口、优先级、角色、分组、状态和 `hard_required`。临时新增来源可先记录在当期 coverage 中；多期稳定使用后再进入注册表。
+每季度复核一次机器清单：运营主体、微信号、endpoints、优先级、角色、分组、状态和 `hard_required`。endpoint 必须经过实际访问核验；连续两轮成功后才可由 candidate 提升为 stable。临时新增来源可先记录在当期 coverage 中；多期稳定使用后再进入注册表。
 
 人工维护的公众号 Markdown 通过 `scripts/import_wechat_sources.py` 导入。首次导入默认标为 `unverified`，禁止脚本猜测账号主体、微信号或备用官网。

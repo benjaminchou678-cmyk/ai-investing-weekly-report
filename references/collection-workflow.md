@@ -39,11 +39,13 @@
 - `unverified`：仍进入本周调度并记录 attempt evidence，但不计入 hard_required，也不参与独立性计数。
 - `no_update`：仅当身份已核验（`operator_verified = true`）且 `account_window_complete = true` 时可用；否则按 `failed` 或 `blocked` 记录。
 
-每个来源必须使用 `references/source-registry.json` 的 `source_id`，并按 `references/source-policy.json` 的运行配置调度。至少记录：`scheduled`、`checked_at`、`status`、`access_method`、新增条数、最新条目时间、是否使用备用入口、失败代码和备注。
+每个来源必须使用 `references/source-registry.json` 的 `source_id`，每次访问同时记录 `endpoint_id` 与 `provider_group`。至少记录：`scheduled`、`checked_at`、`status`、`account_window_complete`、逐 endpoint attempt、新增条数、最新条目时间、是否使用备用入口、失败代码和备注。
 
 合法状态：`ok`、`no_update`、`failed`、`blocked`、`stale`、`not_scheduled`。`no_update` 仅在成功访问且周期内确无更新时使用；抓取失败写 `failed`，登录或反爬限制写 `blocked`。`not_scheduled` 只适用于本轮未计划检查的非硬性来源。
 
-Builder Feed 记录 `generatedAt`，超过48小时标为陈旧。微信公众号优先按机器注册表中的访问方式采集，失败后使用 `fallback_url`；账号主体、微信号或入口不明时保持 `unverified`，不猜测工具、路径或运营主体。
+Builder Feed 记录 `generatedAt`，超过48小时标为陈旧。采集顺序为官方 RSS/API → 官方网页列表 → 私有 WeRSS → RSSHub → 搜索/人工。微信公众号账号主体、微信号、WeRSS Feed ID 或入口不明时保持 `unverified` / `unconfigured`，不猜测工具、路径或运营主体。
+
+WeRSS、RSSHub 与搜索仅用于 discovery；同一主体通过多个 endpoint 被发现仍只算一个来源。候选保留 `discovered_via`、`collector_provider`、`canonical_url` 和可选 `mirror_url`，正式证据优先回到原始微信文章或发布主体官网。
 
 ## 网页降级
 

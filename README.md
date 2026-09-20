@@ -11,7 +11,7 @@
 - 固定输出产品、组织、投融资三个维度的本周关键判断，解释最重要事件及其直接与二阶影响；
 - 单周判断不冒充长期趋势，连续 2–3 周验证后才允许升级；
 - 提供采编前 QA 与发布前 QA；
-- 使用机器来源注册表与独立策略文件检查硬性来源、C1 调度、维度覆盖、来源独立性和新鲜度；
+- 使用 source + endpoints 机器注册表检查硬性来源、C1/C2 调度、入口健康度、基础设施集中度、来源独立性和新鲜度；
 - 默认输出公司研究优先级，不把它写成买入建议。
 
 ## 安装
@@ -35,6 +35,7 @@ $ai-investing-weekly-report
 
 ```text
 采集与覆盖记录
+→ RSS / 网页 / WeRSS / RSSHub endpoint 解析
 → 来源注册表校验与 Source QA
 → 标准化与 URL 审计
 → 保守去重
@@ -48,7 +49,8 @@ $ai-investing-weekly-report
 
 - [Skill 入口](SKILL.md)
 - [采集流程](references/collection-workflow.md)
-- [来源注册表 2.0](references/source-registry-schema.md)
+- [来源注册表 3.0](references/source-registry-schema.md)
+- [来源入口解析与降级](references/source-resolver.md)
 - [来源质量门策略](references/source-policy.json)
 - [数据管线](references/data-pipeline.md)
 - [编辑标准](references/editorial-policy.md)
@@ -60,6 +62,28 @@ $ai-investing-weekly-report
 ```bash
 python3 -m unittest discover -s tests -v
 ```
+
+## 来源入口配置
+
+旧版注册表可一次性迁移为 source + endpoints 结构：
+
+```bash
+python3 scripts/migrate_source_registry_v3.py \
+  references/source-registry-v2.json \
+  --output references/source-registry.json
+```
+
+配置好官方 RSS/API、网页列表、私有 WeRSS 或 RSSHub 路由后，执行机器采集并生成逐入口覆盖证据：
+
+```bash
+python3 scripts/collect_source_endpoints.py \
+  --registry references/source-registry.json \
+  --week-start YYYY-MM-DD --week-end YYYY-MM-DD \
+  --output reports/current/raw/machine-endpoints.json \
+  --coverage-output reports/current/coverage.json
+```
+
+密钥只通过 endpoint 的 `credential_ref` 指向环境变量，不写入仓库。空 URL、公众号 ID 或 Feed ID 会保持 `unconfigured`，不会被误记为“本周无更新”。
 
 仓库中的示例均为占位内容，不代表真实新闻或投资结论。
 

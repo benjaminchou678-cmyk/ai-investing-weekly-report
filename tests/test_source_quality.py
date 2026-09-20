@@ -27,114 +27,103 @@ class SourceQualityTests(unittest.TestCase):
             cwd=ROOT, text=True, capture_output=True, check=False,
         )
 
-    def test_registry_v2_is_structurally_valid(self) -> None:
-        result = self.run_script(
-            "validate_source_registry.py", ROOT / "references/source-registry.json",
-        )
+    def registry(self) -> dict:
+        return json.loads((ROOT / "references/source-registry.json").read_text(encoding="utf-8"))
+
+    def test_registry_v3_is_structurally_valid(self) -> None:
+        result = self.run_script("validate_source_registry.py", ROOT / "references/source-registry.json")
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("WARN", result.stderr)  # imported WeChat accounts still need operator verification
+        self.assertIn("WARN", result.stderr)
+        self.assertEqual(self.registry()["schema_version"], "3.0")
 
     def test_registry_contains_173_wechat_sources(self) -> None:
-        registry = json.loads((ROOT / "references/source-registry.json").read_text(encoding="utf-8"))
-        sources = [s for s in registry["sources"] if s["channel"] == "wechat_official_account"]
+        sources = [s for s in self.registry()["sources"] if s["channel"] == "wechat_official_account"]
         self.assertEqual(len(sources), 173)
         self.assertEqual(sum(s["priority"] == "C1" for s in sources), 29)
         self.assertTrue(all(s["status"] == "unverified" and not s["hard_required"] for s in sources))
 
+    def test_every_source_has_endpoint_array(self) -> None:
+        for source in self.registry()["sources"]:
+            self.assertIsInstance(source.get("endpoints"), list)
+            self.assertTrue(source["endpoints"], source["source_id"])
+
+    def test_endpoint_status_and_stable_metadata(self) -> None:
+        helpers = load_module("source_endpoints_test", SCRIPTS / "source_endpoints.py")
+        valid = {"stable", "candidate", "fallback", "unconfigured", "blocked", "inactive"}
+        for source in self.registry()["sources"]:
+            for endpoint in source["endpoints"]:
+                self.assertIn(endpoint["status"], valid)
+                if endpoint["status"] == "stable":
+                    self.assertTrue(helpers.endpoint_address_ready(endpoint), endpoint["endpoint_id"])
+                    self.assertTrue(endpoint.get("last_verified_at"), endpoint["endpoint_id"])
+                if endpoint["status"] == "unconfigured":
+                    self.assertNotIn(endpoint, helpers.configured_endpoints(source))
+
     def test_wechat_markdown_parser_is_deterministic(self) -> None:
         importer = load_module("import_wechat_sources", SCRIPTS / "import_wechat_sources.py")
-        markdown = """## 创投与资本\n\n### C1 每周必查\n\n- 清科研究 `[C1]`\n- 投资界 `[C1]`\n"""
-        first = importer.parse_markdown(markdown)
-        second = importer.parse_markdown(markdown)
-        self.assertEqual(first, second)
-        self.assertEqual({s["independence_group"] for s in first}, {"zero2ipo"})
+        markdown = """## 创投与资本
 
-    def test_no_update_without_checked_at_fails(self) -> None:
-        registry = json.loads((ROOT / "references/source-registry.json").read_text(encoding="utf-8"))
-        active = [s for s in registry["sources"] if s["status"] == "active"]
-        coverage = {"profile": "full_weekly", "sources": [
-            {"source_id": s["source_id"], "scheduled": s["priority"] == "C1", "status": "no_update"}
-            for s in active
-        ]}
+### C1 每周必查
+
+- 清科研究 `[C1]`
+- 投资界 `[C1]`
+"""
+        self.assertEqual(importer.parse_markdown(markdown), importer.parse_markdown(markdown))
+        self.assertEqual({s["independence_group"] for s in importer.parse_markdown(markdown)}, {"zero2ipo"})
+
+    def test_no_update_requires_verified_complete_window(self) -> None:
+        source = next(s for s in self.registry()["sources"] if s["status"] == "active")
+        endpoint = source["endpoints"][0]
+        coverage = {"profile": "full_weekly", "sources": [{
+            "source_id": source["source_id"], "scheduled": True, "checked_at": "2026-09-17T00:00:00Z",
+            "status": "no_update", "account_window_complete": False,
+            "endpoint_attempts": [{"endpoint_id": endpoint["endpoint_id"], "provider_group": endpoint["provider_group"],
+                                   "checked_at": "2026-09-17T00:00:00Z", "status": "ok"}],
+        }]}
         with tempfile.TemporaryDirectory() as raw_tmp:
             tmp = Path(raw_tmp)
             (tmp / "coverage.json").write_text(json.dumps(coverage), encoding="utf-8")
             result = self.run_script(
-                "audit_source_coverage.py",
-                "--registry", ROOT / "references/source-registry.json",
-                "--policy", ROOT / "references/source-policy.json",
-                "--coverage", tmp / "coverage.json", "--profile", "full_weekly",
-                "--as-of", "2026-09-17", "--output", tmp / "qa.json",
+                "audit_source_coverage.py", "--registry", ROOT / "references/source-registry.json",
+                "--policy", ROOT / "references/source-policy.json", "--coverage", tmp / "coverage.json",
+                "--profile", "full_weekly", "--as-of", "2026-09-17", "--output", tmp / "qa.json",
             )
             self.assertEqual(result.returncode, 1)
-            report = json.loads((tmp / "qa.json").read_text(encoding="utf-8"))
-            self.assertTrue(any(x["code"] == "NO_UPDATE_WITHOUT_CHECK" for x in report["issues"]))
+            codes = {item["code"] for item in json.loads((tmp / "qa.json").read_text())["issues"]}
+            self.assertIn("NO_UPDATE_WINDOW_INCOMPLETE", codes)
+
+    def test_unknown_endpoint_attempt_fails(self) -> None:
+        source = next(s for s in self.registry()["sources"] if s["status"] == "active")
+        coverage = {"profile": "full_weekly", "sources": [{
+            "source_id": source["source_id"], "scheduled": True, "checked_at": "2026-09-17T00:00:00Z",
+            "status": "failed", "account_window_complete": False,
+            "endpoint_attempts": [{"endpoint_id": "not-registered", "provider_group": "test",
+                                   "checked_at": "2026-09-17T00:00:00Z", "status": "failed"}],
+        }]}
+        with tempfile.TemporaryDirectory() as raw_tmp:
+            tmp = Path(raw_tmp)
+            (tmp / "coverage.json").write_text(json.dumps(coverage), encoding="utf-8")
+            self.run_script(
+                "audit_source_coverage.py", "--registry", ROOT / "references/source-registry.json",
+                "--policy", ROOT / "references/source-policy.json", "--coverage", tmp / "coverage.json",
+                "--profile", "full_weekly", "--as-of", "2026-09-17", "--output", tmp / "qa.json",
+            )
+            codes = {item["code"] for item in json.loads((tmp / "qa.json").read_text())["issues"]}
+            self.assertIn("ENDPOINT_ATTEMPT_UNKNOWN", codes)
 
     def test_same_parent_accounts_share_independence_group(self) -> None:
-        registry = json.loads((ROOT / "references/source-registry.json").read_text(encoding="utf-8"))
-        by_name = {s["name"]: s for s in registry["sources"]}
-        names = ["36氪", "36氪 Pro", "36氪出海", "硬氪"]
-        self.assertEqual({by_name[name]["independence_group"] for name in names}, {"36kr"})
+        by_name = {s["name"]: s for s in self.registry()["sources"]}
+        self.assertEqual({by_name[name]["independence_group"] for name in ["36氪", "36氪 Pro", "36氪出海", "硬氪"]}, {"36kr"})
 
-    def test_c1_c2_must_be_weekly(self) -> None:
-        registry = json.loads((ROOT / "references/source-registry.json").read_text(encoding="utf-8"))
-        for s in registry["sources"]:
-            if s["priority"] in ("C1", "C2"):
-                self.assertEqual(s["check_frequency"], "weekly",
-                                 f"{s['source_id']} ({s['name']}) is {s['priority']} but check_frequency={s['check_frequency']}")
+    def test_priority_frequency_contract(self) -> None:
+        for source in self.registry()["sources"]:
+            expected = "weekly" if source["priority"] in {"C1", "C2"} else "event_driven"
+            self.assertEqual(source["check_frequency"], expected, source["source_id"])
 
-    def test_c3_must_be_event_driven(self) -> None:
-        registry = json.loads((ROOT / "references/source-registry.json").read_text(encoding="utf-8"))
-        for s in registry["sources"]:
-            if s["priority"] == "C3":
-                self.assertEqual(s["check_frequency"], "event_driven",
-                                 f"{s['source_id']} is C3 but check_frequency={s['check_frequency']}")
-
-    def test_resolver_status_enum_strict(self) -> None:
-        valid = {"stable", "stable_fallback", "candidate_retest", "wechat_only"}
-        registry = json.loads((ROOT / "references/source-registry.json").read_text(encoding="utf-8"))
-        for s in registry["sources"]:
-            st = s.get("resolver", {}).get("primary", {}).get("status")
-            self.assertIn(st, valid, f"{s['source_id']} invalid resolver status: {st}")
-
-    def test_stable_resolver_has_url_and_verified(self) -> None:
-        registry = json.loads((ROOT / "references/source-registry.json").read_text(encoding="utf-8"))
-        for s in registry["sources"]:
-            st = s.get("resolver", {}).get("primary", {}).get("status", "")
-            if st in ("stable", "stable_fallback"):
-                self.assertTrue(s["resolver"]["primary"].get("url"), f"{s['source_id']} stable without URL")
-                self.assertTrue(s.get("last_verified_at"), f"{s['source_id']} stable without last_verified_at")
-
-    def test_no_update_requires_verified_and_complete(self) -> None:
-        """no_update must only be allowed when operator_verified and account_window_complete."""
-        registry = json.loads((ROOT / "references/source-registry.json").read_text(encoding="utf-8"))
-        active = [s for s in registry["sources"] if s["status"] == "active"]
-        # Case: unverified source with no_update -> should fail
-        coverage = {"profile": "full_weekly", "sources": [
-            {"source_id": s["source_id"], "scheduled": True, "status": "no_update",
-             "account_window_complete": False}
-            for s in active[:5]
-        ]}
-        with tempfile.TemporaryDirectory() as raw_tmp:
-            tmp = Path(raw_tmp)
-            (tmp / "coverage.json").write_text(json.dumps(coverage), encoding="utf-8")
-            result = self.run_script(
-                "audit_source_coverage.py",
-                "--registry", ROOT / "references/source-registry.json",
-                "--policy", ROOT / "references/source-policy.json",
-                "--coverage", tmp / "coverage.json", "--profile", "full_weekly",
-                "--as-of", "2026-09-17", "--output", tmp / "qa.json",
-            )
-            # Should fail because no_update without account_window_complete
-            self.assertEqual(result.returncode, 1)
-
-    def test_wechat_count_matches_feishu_list(self) -> None:
-        registry = json.loads((ROOT / "references/source-registry.json").read_text(encoding="utf-8"))
-        wechat = [s for s in registry["sources"] if s["channel"] == "wechat_official_account"]
-        self.assertEqual(len(wechat), 173)
-        # No extra wechat beyond Feishu list
-        intl = [s for s in registry["sources"] if s["channel"] != "wechat_official_account"]
-        self.assertEqual(len(intl), 15)
+    def test_wechat_count_matches_source_list(self) -> None:
+        registry = self.registry()
+        self.assertEqual(sum(s["channel"] == "wechat_official_account" for s in registry["sources"]), 173)
+        self.assertEqual(sum(s["channel"] != "wechat_official_account" for s in registry["sources"]), 15)
 
 
 if __name__ == "__main__":

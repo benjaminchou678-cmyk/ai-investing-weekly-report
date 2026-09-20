@@ -28,14 +28,15 @@
 
 Gate 1 由 `source-registry.json`、`source-policy.json`、`coverage.json` 和生成的 `source-qa.json` 驱动，分为：
 
-1. **注册表完整性**：ID 唯一、枚举合法、分组完整；硬性来源必须已核验且 active。微信硬性来源还必须配置微信号和备用入口。
-2. **采集覆盖率**：**C1 + C2 discovery 全量执行（100% attempt evidence）**，硬性来源成功率达到策略阈值；任一 C1/C2 缺 attempt evidence 即 FAIL。C3 为 event_driven，未触发事件时不要求 attempt evidence，但需在 run-manifest 标注。
+1. **注册表完整性**：source 与 endpoint ID 唯一、枚举合法、分组完整；硬性来源必须已核验、active 且至少有一个可执行 endpoint。C1 没有可执行 endpoint 视为配置缺口。
+2. **采集覆盖率**：**C1 + C2 discovery 全量执行（100% endpoint attempt evidence）**，硬性来源成功率达到策略阈值；任一 C1/C2 缺 attempt evidence 即 FAIL。C3 为 event_driven，未触发事件时不要求 attempt evidence，但需在 run-manifest 标注。
 3. **维度覆盖**：公司一手、资本、政策等核心维度达到最低数量；软性维度不足时 WARN。
-4. **来源独立性**：按 `independence_group` 计算，不得用同集团账号制造多源验证；单一集团占比过高时 WARN。
-5. **新鲜度与访问**：注册信息超过复核周期、Feed 过期、付费墙、备用入口和抓取失败单独记录。
-6. **Resolver status gate**：`resolver.status = stable` 的路径必须同时具备 `evidence URL`（`resolver.primary.url`）与 `last_checked_at` 字段；缺失即 FAIL。`candidate` / `wechat_only` 路径允许缺 `last_checked_at`，但必须在备注中写明受限原因。
+4. **来源独立性**：按 `independence_group` 计算，不得用同集团账号、WeRSS/RSSHub 镜像或多 endpoint 制造多源验证；单一集团占比过高时 WARN。
+5. **采集基础设施集中度**：按 `provider_group` 统计 endpoint 成功记录；单一 WeRSS、RSSHub 或其他服务占比过高时 WARN。
+6. **新鲜度与访问**：注册信息超过复核周期、Feed 过期、付费墙、备用入口和抓取失败单独记录。
+7. **Endpoint status gate**：stable/candidate/fallback 必须有完整地址；stable 还必须有核验日期。空 URL、空 Feed ID 或空账号 ID 只能标记为 `unconfigured`。
 
-`no_update` 只表示成功访问后确认周期内无更新；缺少 `checked_at` 时 FAIL。`unverified` 来源不进入硬门和独立确认。
+`no_update` 只表示已核验主体通过成功 endpoint 完整枚举周期后无更新；缺少 `checked_at`、`operator_verified` 或 `account_window_complete=true` 时 FAIL。`unverified` 来源仍需按 C1/C2 留 attempt evidence，但不参与独立确认。
 
 ## Gate 2：时间窗、去重与历史连续性
 

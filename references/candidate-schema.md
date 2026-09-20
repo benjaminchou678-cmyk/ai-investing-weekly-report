@@ -45,13 +45,18 @@
   "source_id": "openai-news",
   "name": "OpenAI News",
   "url": "https://example.com/article",
+  "original_url": "https://example.com/article",
+  "mirror_url": "",
+  "endpoint_id": "openai-news-official-rss-1",
+  "discovered_via": "official_rss",
+  "collector_provider": "official",
   "source_type": "official",
   "source_provenance": "company_primary",
   "independence_group": "openai"
 }
 ```
 
-不要用一个字段混合来源层级、利益关系、来源数量和核验结果。
+`endpoint_id` 与 `collector_provider` 记录“如何发现”，`source_id` 与 `independence_group` 记录“谁发布、是否独立”。WeRSS、RSSHub、搜索镜像只增加发现路径，不增加独立来源数；正文引用优先使用 `original_url`。不要用一个字段混合来源层级、利益关系、来源数量和核验结果。
 
 ## 发布前必须补齐的字段
 

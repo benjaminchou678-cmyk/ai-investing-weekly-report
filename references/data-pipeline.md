@@ -24,6 +24,7 @@ reports/2026-08-31_to_2026-09-06/
 
 ```text
 原始采集
+→ collect_source_endpoints.py
 → validate_source_registry.py
 → audit_source_coverage.py
 → normalize_candidates.py
@@ -36,6 +37,12 @@ reports/2026-08-31_to_2026-09-06/
 ```bash
 python3 scripts/validate_source_registry.py \
   references/source-registry.json --output registry-qa.json
+
+python3 scripts/collect_source_endpoints.py \
+  --registry references/source-registry.json \
+  --week-start YYYY-MM-DD --week-end YYYY-MM-DD \
+  --output raw/machine-endpoints.json \
+  --coverage-output coverage.json
 
 python3 scripts/audit_source_coverage.py \
   --registry references/source-registry.json \
@@ -65,7 +72,7 @@ python3 scripts/audit_candidates.py candidates-merged.json \
 
 ## 阶段二：内容生成中间层（新增）
 
-旧管线 `normalize → merge → report` 已拆为可校验的六步中间层。所有命令在来源校验通过后执行，只改内容生成层，不碰 Source Resolver。
+旧管线 `normalize → merge → report` 已拆为可校验的六步中间层。所有命令在来源校验通过后执行，只改内容生成层，不碰 Source Endpoint Registry。
 
 ```text
 raw_articles
@@ -134,7 +141,7 @@ python3 scripts/audit_report_structure.py weekly-report.md \
 
 ## coverage 与执行清单
 
-`coverage.json` 必须使用来源注册表中的 `source_id`。`audit_source_coverage.py` 同时检查硬性来源、计划 C1、维度覆盖、来源独立性和注册表新鲜度，输出 `source-qa.json`；`audit_candidates.py` 将其作为 Gate 1 的判定结果。未提供 `source-qa.json` 时只运行兼容性检查，并至少返回 WARN。
+`coverage.json` 必须使用来源注册表中的 `source_id`，并为每个已调度来源保存 `endpoint_attempts`。每条 attempt 的 `endpoint_id` 必须属于该来源，`provider_group` 用于检查采集基础设施集中度。只有主体已核验、endpoint 确实执行成功且完整枚举时间窗时，才可记录 `no_update`。`audit_source_coverage.py` 同时检查硬性来源、C1/C2 endpoint 尝试率、维度覆盖、内容来源独立性、采集商集中度和注册表新鲜度，输出 `source-qa.json`；`audit_candidates.py` 将其作为 Gate 1 的判定结果。未提供 `source-qa.json` 时只运行兼容性检查，并至少返回 WARN。
 
 `run-manifest.json` 至少记录：
 

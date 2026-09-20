@@ -1,11 +1,24 @@
 {
-  "schema_version": "1.1",
+  "schema_version": "2.0",
   "default_profile": "full_weekly",
   "profiles": {
     "full_weekly": {
       "hard_required_success_ratio": 0.7,
       "scheduled_c1_checked_ratio": 1.0,
       "c2_discovery_required": true,
+      "scheduled_source_statuses": ["active", "unverified"],
+      "endpoint_requirements": {
+        "C1": {"min_configured": 1, "hard": true},
+        "C2": {"min_configured": 1, "hard": false},
+        "C3": {"min_configured": 0, "hard": false}
+      },
+      "attempt_requirements": {
+        "C1": {"ratio": 1.0, "hard": true},
+        "C2": {"ratio": 1.0, "hard": true}
+      },
+      "provider_concentration": {
+        "max_success_share": 0.65
+      },
       "registry_max_age_days": {
         "C1": 120,
         "C2": 240,

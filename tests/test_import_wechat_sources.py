@@ -27,7 +27,7 @@ class ImportWechatSourcesTests(unittest.TestCase):
 
     def base_registry(self) -> dict:
         return {
-            "schema_version": "2.0",
+            "schema_version": "3.0",
             "sources": [
                 {"source_id": "web-1", "name": "Web", "channel": "web"},
                 {
@@ -52,7 +52,11 @@ class ImportWechatSourcesTests(unittest.TestCase):
                     "catalog_section": "科技与 AI",
                     "primary_track": "media_business_verification",
                     "secondary_tracks": [],
-                    "resolver": {"level": "L1", "primary": {"url": "https://example.com/feed", "status": "stable"}, "fallbacks": []},
+                    "endpoints": [{
+                        "endpoint_id": "wechat-old-official-rss-1", "type": "official_rss", "status": "stable",
+                        "purpose": ["discovery", "evidence"], "officiality": "official", "provider_group": "official",
+                        "url": "https://example.com/feed", "last_verified_at": "2026-09-18",
+                    }],
                 },
                 {
                     "source_id": "wechat-keep",
@@ -101,9 +105,17 @@ class ImportWechatSourcesTests(unittest.TestCase):
         updated = next(x for x in out["sources"] if x.get("source_id") == "wechat-old")
         self.assertEqual(updated["name"], "新名称")
         self.assertEqual(updated["operator"], "已核验主体")
-        self.assertEqual(updated["resolver"]["primary"]["url"], "https://example.com/feed")
+        self.assertEqual(updated["endpoints"][0]["url"], "https://example.com/feed")
         self.assertEqual(updated["check_frequency"], "weekly")
         self.assertIn("旧名称", updated["aliases"])
+
+    def test_new_source_gets_truthful_unconfigured_endpoint(self) -> None:
+        fresh = self.mod.parse_markdown("## 科技与 AI\n### C1\n- 新公众号 [C1]\n")
+        out = self.mod.merge_wechat_sources({"schema_version": "3.0", "sources": []}, fresh)
+        endpoint = out["sources"][0]["endpoints"][0]
+        self.assertEqual(endpoint["type"], "wechat_machine")
+        self.assertEqual(endpoint["status"], "unconfigured")
+        self.assertFalse(endpoint["url"])
 
     def test_default_keeps_unlisted_and_replace_drops_it(self) -> None:
         fresh = self.mod.parse_markdown("## 科技与 AI\n### C1\n- 新名称 [C1]\n")

@@ -5,7 +5,7 @@ Supports both:
 - Rich normalized candidates (``items`` with structured ``sources``, ``board``, ...)
 - Compact merged-candidates (``events`` with ``cat``/``role``/``materiality``/URL-list sources)
 
-This module is content-layer only; it does not touch the source resolver registry.
+This module is content-layer only; it does not touch the source endpoint registry.
 """
 
 from __future__ import annotations

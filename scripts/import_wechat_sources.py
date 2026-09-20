@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Safely import a tiered WeChat Markdown catalog into source-registry 2.0.
+"""Safely import a tiered WeChat Markdown catalog into source-registry 3.0.
 
 The importer is fail-closed: malformed or empty catalogs never write output.
 Existing WeChat records are merged by stable id, current name, or aliases. By
@@ -173,25 +173,27 @@ def parse_markdown(text: str) -> list[dict[str, Any]]:
             "catalog_section": section,
             "primary_track": TRACK_BY_ROLE[role],
             "secondary_tracks": [],
-            "resolver": {
-                "level": "L5",
-                "primary": {
-                    "type": "wechat_machine",
-                    "url": "",
-                    "status": "wechat_only",
-                    "level": "L5",
-                    "officiality": "unknown",
-                    "auth_required": False,
-                    "browser_required": True,
-                    "date_filterable": False,
-                    "list_enumerable": False,
-                    "content_scope": "metadata",
-                    "last_checked_at": "",
-                    "latest_item_date": None,
-                    "limitations": "账号身份与稳定入口待人工核验",
-                },
-                "fallbacks": [],
-            },
+            "endpoints": [{
+                "endpoint_id": f"{source_id(name)}-wechat-machine-1",
+                "type": "wechat_machine",
+                "status": "unconfigured",
+                "purpose": ["discovery"],
+                "officiality": "unknown",
+                "provider_group": "wechat-platform",
+                "url": "",
+                "base_url": "",
+                "route": "",
+                "account_id": "",
+                "feed_id": "",
+                "auth_required": False,
+                "credential_ref": "",
+                "browser_required": True,
+                "date_filterable": False,
+                "list_enumerable": False,
+                "content_scope": "metadata",
+                "last_verified_at": "",
+                "limitations": "账号身份与稳定入口待人工核验",
+            }],
         })
 
     if not result:
@@ -215,9 +217,9 @@ def _build_existing_index(sources: list[dict[str, Any]]) -> dict[str, dict[str, 
 def merge_wechat_sources(
     registry: dict[str, Any], imported: list[dict[str, Any]], *, replace_wechat: bool = False
 ) -> dict[str, Any]:
-    """Merge imported catalog while preserving verified identities and resolver metadata."""
-    if registry.get("schema_version") != "2.0" or not isinstance(registry.get("sources"), list):
-        raise ImportValidationError("现有注册表不是合法的 source-registry 2.0")
+    """Merge imported catalog while preserving verified identities and endpoint metadata."""
+    if registry.get("schema_version") not in {"2.0", "3.0"} or not isinstance(registry.get("sources"), list):
+        raise ImportValidationError("现有注册表不是合法的 source-registry 2.0/3.0")
 
     current: list[dict[str, Any]] = registry["sources"]
     non_wechat = [dict(s) for s in current if s.get("channel") != "wechat_official_account"]
@@ -289,7 +291,7 @@ def _atomic_write_json(path: Path, payload: dict[str, Any]) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("markdown")
-    parser.add_argument("--registry", required=True, help="现有 2.0 注册表")
+    parser.add_argument("--registry", required=True, help="现有 2.0/3.0 注册表")
     parser.add_argument("--output", "-o", required=True)
     parser.add_argument(
         "--replace-wechat", action="store_true",

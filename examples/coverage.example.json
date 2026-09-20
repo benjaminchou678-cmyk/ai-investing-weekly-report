@@ -1,21 +1,65 @@
 {
+  "schema_version": "2.0",
   "week_start": "2026-08-31",
   "week_end": "2026-09-06",
   "timezone": "Asia/Shanghai",
   "profile": "full_weekly",
   "sources": [
-    {"source_id": "openai-news", "scheduled": true, "checked_at": "2026-09-06T20:00:00+08:00", "status": "no_update", "access_method": "web", "new_items": 0, "latest_item_at": "", "fallback_used": false, "failure_code": "", "notes": ""},
-    {"source_id": "google-ai-blog", "scheduled": true, "checked_at": "2026-09-06T20:02:00+08:00", "status": "ok", "access_method": "web", "new_items": 1, "latest_item_at": "2026-09-03T09:00:00Z", "fallback_used": false, "failure_code": "", "notes": ""},
-    {"source_id": "deepmind-blog", "scheduled": true, "checked_at": "2026-09-06T20:04:00+08:00", "status": "no_update", "access_method": "web", "new_items": 0, "latest_item_at": "", "fallback_used": false, "failure_code": "", "notes": ""},
-    {"source_id": "anthropic-news", "scheduled": true, "checked_at": "2026-09-06T20:06:00+08:00", "status": "ok", "access_method": "web", "new_items": 1, "latest_item_at": "2026-09-04T09:00:00Z", "fallback_used": false, "failure_code": "", "notes": ""},
-    {"source_id": "meta-ai-blog", "scheduled": true, "checked_at": "2026-09-06T20:08:00+08:00", "status": "no_update", "access_method": "web", "new_items": 0, "latest_item_at": "", "fallback_used": false, "failure_code": "", "notes": ""},
-    {"source_id": "aws-news", "scheduled": true, "checked_at": "2026-09-06T20:10:00+08:00", "status": "ok", "access_method": "web", "new_items": 2, "latest_item_at": "2026-09-05T09:00:00Z", "fallback_used": false, "failure_code": "", "notes": ""},
-    {"source_id": "reuters-tech", "scheduled": true, "checked_at": "2026-09-06T20:12:00+08:00", "status": "ok", "access_method": "web", "new_items": 3, "latest_item_at": "2026-09-06T09:00:00Z", "fallback_used": false, "failure_code": "", "notes": ""},
-    {"source_id": "sec-edgar", "scheduled": true, "checked_at": "2026-09-06T20:14:00+08:00", "status": "no_update", "access_method": "database", "new_items": 0, "latest_item_at": "", "fallback_used": false, "failure_code": "", "notes": ""},
-    {"source_id": "36kr-ai", "scheduled": true, "checked_at": "2026-09-06T20:16:00+08:00", "status": "ok", "access_method": "web", "new_items": 2, "latest_item_at": "2026-09-06T08:00:00+08:00", "fallback_used": false, "failure_code": "", "notes": ""},
-    {"source_id": "geekpark", "scheduled": true, "checked_at": "2026-09-06T20:18:00+08:00", "status": "ok", "access_method": "web", "new_items": 1, "latest_item_at": "2026-09-05T08:00:00+08:00", "fallback_used": false, "failure_code": "", "notes": ""},
-    {"source_id": "builder-x", "scheduled": true, "checked_at": "2026-09-06T20:20:00+08:00", "status": "ok", "access_method": "feed", "new_items": 4, "latest_item_at": "2026-09-06T07:00:00Z", "fallback_used": false, "failure_code": "", "notes": "generatedAt within 48h"},
-    {"source_id": "builder-podcasts", "scheduled": true, "checked_at": "2026-09-06T20:22:00+08:00", "status": "no_update", "access_method": "feed", "new_items": 0, "latest_item_at": "", "fallback_used": false, "failure_code": "", "notes": "generatedAt within 48h"},
-    {"source_id": "builder-blogs", "scheduled": true, "checked_at": "2026-09-06T20:24:00+08:00", "status": "ok", "access_method": "feed", "new_items": 2, "latest_item_at": "2026-09-06T06:00:00Z", "fallback_used": false, "failure_code": "", "notes": "generatedAt within 48h"}
+    {
+      "source_id": "openai-news",
+      "scheduled": true,
+      "checked_at": "2026-09-06T20:00:00+08:00",
+      "status": "ok",
+      "new_items": 2,
+      "latest_item_at": "2026-09-05T09:00:00Z",
+      "account_window_complete": false,
+      "failure_code": "",
+      "notes": "HTML 列表未证明完整覆盖全部分页",
+      "endpoint_attempts": [
+        {
+          "endpoint_id": "openai-news-official-html-list-1",
+          "provider_group": "official",
+          "checked_at": "2026-09-06T20:00:00+08:00",
+          "status": "ok",
+          "items_found": 2,
+          "window_complete": false,
+          "failure_code": ""
+        }
+      ]
+    },
+    {
+      "source_id": "builder-blogs",
+      "scheduled": true,
+      "checked_at": "2026-09-06T20:05:00+08:00",
+      "status": "no_update",
+      "new_items": 0,
+      "latest_item_at": "",
+      "account_window_complete": true,
+      "failure_code": "",
+      "notes": "Feed 时间窗完整",
+      "endpoint_attempts": [
+        {
+          "endpoint_id": "builder-blogs-official-rss-1",
+          "provider_group": "official",
+          "checked_at": "2026-09-06T20:05:00+08:00",
+          "status": "ok",
+          "items_found": 0,
+          "window_complete": true,
+          "failure_code": ""
+        }
+      ]
+    },
+    {
+      "source_id": "wechat-example",
+      "scheduled": false,
+      "checked_at": "",
+      "status": "not_scheduled",
+      "new_items": 0,
+      "latest_item_at": "",
+      "account_window_complete": false,
+      "failure_code": "no_configured_endpoint",
+      "notes": "WeRSS account_id 尚未核验",
+      "endpoint_attempts": []
+    }
   ]
 }
