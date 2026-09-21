@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "window": {
+    "timezone": "Asia/Shanghai",
+    "week_start": "2026-09-14",
+    "next_week_start_exclusive": "2026-09-21"
+  },
+  "complete_for_window": true,
+  "reviewed_by": "human",
+  "items": [
+    {
+      "source_id": "wechat-6b999bbf",
+      "title": "人工核对的文章标题",
+      "url": "https://mp.weixin.qq.com/s/example",
+      "published_at": "2026-09-18T09:00:00+08:00"
+    }
+  ]
+}

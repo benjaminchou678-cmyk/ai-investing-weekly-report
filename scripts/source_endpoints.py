@@ -52,7 +52,8 @@ def is_configured_endpoint(endpoint: dict[str, Any]) -> bool:
 def endpoint_priority(endpoint: dict[str, Any], channel: str = "") -> int:
     """Return resolver order; lower values run first.
 
-    微信来源优先官网，其次是本地 mpScraper。RSS/WeRSS/RSSHub 仅作备用。
+    微信来源优先官网，其次是本地 mpScraper。搜索发现先于 RSS 备用。
+    wechat_article 属于拿到 URL 后的正文增强步骤，不参与列表发现排序。
     非微信来源仍优先官方结构化入口，不受微信反爬策略影响。
     """
     endpoint_type = str(endpoint.get("type") or "")
@@ -61,14 +62,14 @@ def endpoint_priority(endpoint: dict[str, Any], channel: str = "") -> int:
             "official_api": 10,
             "official_html_list": 20,
             "mpscraper_mcp": 30,
-            "wechat_article": 40,
+            "search": 40,
             "official_rss": 50,
             "official_atom": 50,
             "werss_api": 60,
             "werss_rss": 60,
             "rsshub": 70,
-            "search": 80,
             "manual": 90,
+            "wechat_article": 95,
             "wechat_machine": 95,
         }
     else:

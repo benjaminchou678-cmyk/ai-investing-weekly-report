@@ -155,6 +155,13 @@ def parse_markdown(text: str) -> list[dict[str, Any]]:
             "channel": "wechat_official_account",
             "url": "",
             "wechat_id": "",
+            "wechat_biz_ids": [],
+            "official_domains": [],
+            "identity_status": "unverified",
+            "identity_last_verified_at": "",
+            "discovery_state": {
+                "last_seen_published_at": "", "last_seen_title": "", "last_seen_url": "",
+            },
             "fallback_url": "",
             "operator": "",
             "operator_verified": False,

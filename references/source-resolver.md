@@ -8,20 +8,22 @@
 |---|---|---|
 | P1 | 微信来源的官方网页/API | 发现与证据 |
 | P2 | 本地 mpScraper MCP | 微信原生内容持续发现 |
-| P3 | RSS、WeRSS、RSSHub | 备用发现 |
-| P4 | 搜索 | 查漏与反查 |
-| P5 | 人工输入 | 封闭来源降级 |
+| P3 | 规范名/别名/微信号多查询 | 查漏与反查；结果取并集 |
+| P4 | 微信原文读取与身份/日期核验 | 候选增强与后过滤，不是列表发现 |
+| P5 | RSS、WeRSS、RSSHub | 备用发现 |
+| P6 | C1 人工基准 | 补漏与召回率评估 |
 
 上述层级针对微信公众号。非微信来源仍按官方 API/RSS/Atom → 官方网页 → 其他降级路径执行。
 
 ## Resolver 决策
 
 1. 只调度 `stable`、`candidate`、`fallback` 且地址完整的 endpoint。
-2. 微信来源先尝试官网网页/API，再尝试 mpScraper；RSS、WeRSS、RSSHub 只作备用。
+2. 微信来源先尝试官网网页/API，再尝试 mpScraper，然后执行不含日期词的多查询搜索；RSS、WeRSS、RSSHub 只作备用。
 3. mpScraper 或 WeRSS 成功时保留原始 `mp.weixin.qq.com` 链接；采集服务地址只记录为 `mirror_url`。
 4. mpScraper、RSSHub 与搜索不能提升来源独立性。
-5. primary 路径成功发现有效条目后可停止；零条目只有在时间窗完整时才可停止，否则继续 fallback。
-6. 登录、验证码、凭据缺失分别记录 `blocked` 或具体失败码，不无限重试。
+5. 候选 URL 必须回到微信原文，按 `__biz` → `wechat_id` → 规范名称/别名的顺序核验身份，再按自然周过滤发布日期。
+6. primary 路径成功发现有效条目后可停止；零条目只有在时间窗完整时才可停止，否则继续 fallback。搜索零命中永远不证明 `no_update`。
+7. 登录、验证码、凭据缺失分别记录 `blocked` 或具体失败码，不无限重试。
 
 ## 状态必须区分（不得混为一谈）
 

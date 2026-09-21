@@ -11,6 +11,8 @@
 - `unverified` 仍进入 C1/C2 调度，但不能作为独立确认或 `no_update` 的依据；
 - `hard_required` 来源至少配置一个可执行 endpoint，并自动进入调度范围，不完全依赖手工 pilot 名单。
 
+微信公众号另外保留身份指纹：`aliases`、`wechat_id`、`wechat_biz_ids`、`official_domains`、`identity_status`、`identity_last_verified_at` 与 `discovery_state.last_seen_*`。`__biz`/`wechat_id` 用于严格身份匹配，名称只允许作推断；这些字段与 endpoint 地址不可混用。
+
 ## 独立性字段（证据门用）
 
 每条候选/证据必须能回溯独立性。`independence_status` 取值：
@@ -60,13 +62,16 @@
 
 1. 官方网页列表或官方 API；
 2. 已完成本机鉴权和账号心跳核验的 mpScraper；
-3. RSS、WeRSS、RSSHub 备用入口；
-4. 搜索；
-5. 人工输入。
+3. 规范名、别名、微信号多查询并集；
+4. 微信原文读取、账号身份验证和自然周后过滤；
+5. RSS、WeRSS、RSSHub 备用入口；
+6. C1 人工基准输入。
 
 非微信来源继续优先官方 API/RSS/Atom，再使用官方网页和其他降级路径。RSS 的降级只针对微信公众号发现链路，不降低公司官方 Feed、监管 Feed 等一手结构化来源的权重。
 
 mpScraper、WeRSS、RSSHub 和搜索是采集或发现基础设施。正式 claim 应尽量引用原始微信文章或发布主体网页；镜像不得被算作独立内容来源。
+
+`wechat_article` 是已取得 URL 后的正文增强能力，不是列表发现 endpoint。搜索查询不包含日期，时间窗只用于原文 `published_at` 后过滤。搜索无命中不得生成 `no_update`。
 
 ## Runtime coverage
 

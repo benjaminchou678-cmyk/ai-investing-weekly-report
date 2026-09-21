@@ -47,6 +47,20 @@ class SourceQualityTests(unittest.TestCase):
             self.assertIsInstance(source.get("endpoints"), list)
             self.assertTrue(source["endpoints"], source["source_id"])
 
+    def test_every_wechat_source_has_identity_and_discovery_state(self) -> None:
+        for source in self.registry()["sources"]:
+            if source.get("channel") != "wechat_official_account":
+                continue
+            self.assertIsInstance(source.get("aliases"), list, source["source_id"])
+            self.assertIsInstance(source.get("wechat_biz_ids"), list, source["source_id"])
+            self.assertIsInstance(source.get("official_domains"), list, source["source_id"])
+            self.assertIn(source.get("identity_status"), {"verified", "inferred", "unverified", "conflict"})
+            self.assertEqual(
+                set(source.get("discovery_state", {})),
+                {"last_seen_published_at", "last_seen_title", "last_seen_url"},
+                source["source_id"],
+            )
+
     def test_endpoint_status_and_stable_metadata(self) -> None:
         helpers = load_module("source_endpoints_test", SCRIPTS / "source_endpoints.py")
         valid = {"stable", "candidate", "fallback", "unconfigured", "blocked", "inactive"}

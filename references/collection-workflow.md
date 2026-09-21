@@ -58,7 +58,7 @@ endpoint、provider、原始 URL 与镜像 URL 必须保留到下游（`provenan
 
 合法状态：`ok`、`no_update`、`failed`、`blocked`、`stale`、`not_scheduled`。`no_update` 仅在成功访问且周期内确无更新时使用；抓取失败写 `failed`，登录或反爬限制写 `blocked`。`not_scheduled` 只适用于本轮未计划检查的非硬性来源。
 
-Builder Feed 记录 `generatedAt`，超过48小时标为陈旧。微信公众号采集顺序为官方网页/API → 本地 mpScraper → RSS/WeRSS/RSSHub 备用 → 搜索/人工；其他来源仍优先官方 API/RSS/Atom。微信公众号主体、mpScraper账号、WeRSS Feed ID 或入口不明时保持 `unverified` / `unconfigured`，不猜测工具、路径或运营主体。
+Builder Feed 记录 `generatedAt`，超过48小时标为陈旧。微信公众号执行独立链路：官方网页/API → 本地 mpScraper → 规范名/别名/微信号多查询并集 → 微信原文身份与发布日期核验 → 自然周后过滤 → RSS 备用 → C1 人工基准补漏。搜索查询不加入日期；`published_at` 只在原文读取后用于半开周窗过滤。其他来源仍优先官方 API/RSS/Atom。微信公众号主体、mpScraper账号、WeRSS Feed ID 或入口不明时保持 `unverified` / `unconfigured`，不猜测工具、路径或运营主体。具体契约见 [微信发现与身份核验](wechat-discovery.md)。
 
 mpScraper、WeRSS、RSSHub 与搜索仅用于采集或 discovery；同一主体通过多个 endpoint 被发现仍只算一个来源。候选保留 `discovered_via`、`collector_provider`、`canonical_url` 和可选 `mirror_url`，正式证据优先回到原始微信文章或发布主体官网。mpScraper 实时鉴权与查询由 MCP 适配层完成，核心采集器只接收本地 JSON 快照，避免把登录令牌、Cookie 或证书写入仓库。
 
@@ -72,7 +72,7 @@ mpScraper、WeRSS、RSSHub 与搜索仅用于采集或 discovery；同一主体�
 
 ## 网页降级
 
-1. 搜索具体标题、域名和日期；
+1. 搜索具体标题、规范主体名、别名或域名；微信公众号搜索不得加入日期词；
 2. 使用可用正文提取；
 3. 使用动态浏览器；
 4. 寻找同一事件的一手替代来源。

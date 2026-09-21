@@ -1,6 +1,15 @@
 {
   "schema_version": "2.0",
   "default_profile": "full_weekly",
+  "wechat_discovery": {
+    "primary_order": ["official_web_or_api", "mpscraper", "multi_query_search", "rss_fallback", "manual_ground_truth"],
+    "search_query_date_terms_forbidden": true,
+    "search_no_hit_confirms_no_update": false,
+    "identity_required_for_selection": true,
+    "published_at_required_for_automatic_selection": true,
+    "c1_ground_truth_min_sources": 5,
+    "c1_ground_truth_recommended_sources": 10
+  },
   "profiles": {
     "full_weekly": {
       "hard_required_success_ratio": 0.7,

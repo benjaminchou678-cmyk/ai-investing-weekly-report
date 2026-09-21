@@ -38,6 +38,11 @@ ENDPOINT_REQUIRED = {
     "auth_required", "credential_ref", "browser_required", "date_filterable",
     "list_enumerable", "content_scope", "last_verified_at", "limitations",
 }
+WECHAT_IDENTITY_STATUSES = {"verified", "inferred", "unverified", "conflict"}
+WECHAT_IDENTITY_FIELDS = {
+    "aliases", "wechat_id", "wechat_biz_ids", "official_domains",
+    "identity_status", "identity_last_verified_at", "discovery_state",
+}
 
 
 def issue(severity: str, code: str, message: str, source_id: str = "", endpoint_id: str = "") -> dict[str, str]:
@@ -98,6 +103,31 @@ def validate(payload: Any) -> list[dict[str, str]]:
                 date.fromisoformat(value)
             except ValueError:
                 issues.append(issue("FAIL", "VERIFIED_DATE_INVALID", "last_verified_at 必须为 YYYY-MM-DD 或空字符串", source_id))
+
+        if source.get("channel") == "wechat_official_account":
+            missing_identity = sorted(WECHAT_IDENTITY_FIELDS - source.keys())
+            if missing_identity:
+                issues.append(issue("FAIL", "WECHAT_IDENTITY_FIELDS_MISSING",
+                                    f"微信来源缺少身份字段: {', '.join(missing_identity)}", source_id))
+            if not isinstance(source.get("aliases"), list) or not isinstance(source.get("wechat_biz_ids"), list):
+                issues.append(issue("FAIL", "WECHAT_IDENTITY_ARRAY_INVALID",
+                                    "aliases 与 wechat_biz_ids 必须是数组", source_id))
+            if not isinstance(source.get("official_domains"), list):
+                issues.append(issue("FAIL", "WECHAT_DOMAINS_INVALID", "official_domains 必须是数组", source_id))
+            if source.get("identity_status") not in WECHAT_IDENTITY_STATUSES:
+                issues.append(issue("FAIL", "WECHAT_IDENTITY_STATUS_INVALID", "identity_status 不合法", source_id))
+            identity_date = str(source.get("identity_last_verified_at") or "")
+            if identity_date:
+                try:
+                    date.fromisoformat(identity_date)
+                except ValueError:
+                    issues.append(issue("FAIL", "WECHAT_IDENTITY_DATE_INVALID",
+                                        "identity_last_verified_at 必须为 YYYY-MM-DD 或空字符串", source_id))
+            state = source.get("discovery_state")
+            state_fields = {"last_seen_published_at", "last_seen_title", "last_seen_url"}
+            if not isinstance(state, dict) or not state_fields.issubset(state):
+                issues.append(issue("FAIL", "WECHAT_DISCOVERY_STATE_INVALID",
+                                    "discovery_state 缺少 last_seen_* 字段", source_id))
 
         endpoints = source.get("endpoints")
         if not isinstance(endpoints, list) or not endpoints:
