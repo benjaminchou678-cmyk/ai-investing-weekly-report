@@ -34,13 +34,13 @@
 | 字段 | 含义 |
 |---|---|
 | `endpoint_id` | 全局唯一入口 ID |
-| `type` | `official_rss`、`official_atom`、`official_api`、`official_html_list`、`mpscraper_mcp`、`werss_api`、`werss_rss`、`rsshub`、`wechat_article`、`wechat_machine`、`search`、`manual` |
+| `type` | `official_rss`、`official_atom`、`official_api`、`official_html_list`、`werss_api`、`werss_rss`、`rsshub`、`wechat_article`、`wechat_machine`、`search`、`manual` |
 | `status` | `stable`、`candidate`、`fallback`、`unconfigured`、`blocked`、`inactive` |
 | `purpose` | `discovery`、`evidence`、`fallback_discovery` 的非空数组 |
 | `officiality` | `official`、`official_proxy`、`third_party`、`unknown` |
 | `provider_group` | 采集基础设施故障域，例如 `official`、`werss`、`rsshub` |
 | `url` / `base_url` / `route` | 实际访问路径 |
-| `account_name` / `account_id` / `feed_id` | mpScraper、WeRSS 等机器服务中的账号标识 |
+| `account_id` / `feed_id` | WeRSS 等机器服务中的账号标识 |
 | `credential_ref` | 环境变量名；不得保存真实密钥 |
 | `date_filterable` / `list_enumerable` | 能否按日期过滤、并完整枚举该时间窗；两者均为真才允许自动确认 `no_update` |
 | `content_scope` | `full_text`、`metadata`、`headline_only`、`snippet` |
@@ -61,15 +61,14 @@
 微信公众号：
 
 1. 官方网页列表或官方 API；
-2. 已完成本机鉴权和账号心跳核验的 mpScraper；
-3. 规范名、别名、微信号多查询并集；
-4. 微信原文读取、账号身份验证和自然周后过滤；
-5. RSS、WeRSS、RSSHub 备用入口；
-6. C1 人工基准输入。
+2. 规范名、别名、微信号多查询并集；
+3. 微信原文读取、账号身份验证和自然周后过滤；
+4. RSS、WeRSS、RSSHub 备用入口；
+5. C1 人工基准输入。
 
 非微信来源继续优先官方 API/RSS/Atom，再使用官方网页和其他降级路径。RSS 的降级只针对微信公众号发现链路，不降低公司官方 Feed、监管 Feed 等一手结构化来源的权重。
 
-mpScraper、WeRSS、RSSHub 和搜索是采集或发现基础设施。正式 claim 应尽量引用原始微信文章或发布主体网页；镜像不得被算作独立内容来源。
+WeRSS、RSSHub 和搜索是采集或发现基础设施。正式 claim 应尽量引用原始微信文章或发布主体网页；镜像不得被算作独立内容来源。
 
 `wechat_article` 是已取得 URL 后的正文增强能力，不是列表发现 endpoint。搜索查询不包含日期，时间窗只用于原文 `published_at` 后过滤。搜索无命中不得生成 `no_update`。
 

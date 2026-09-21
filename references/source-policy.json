@@ -2,7 +2,7 @@
   "schema_version": "2.0",
   "default_profile": "full_weekly",
   "wechat_discovery": {
-    "primary_order": ["official_web_or_api", "mpscraper", "multi_query_search", "rss_fallback", "manual_ground_truth"],
+    "primary_order": ["official_web_or_api", "multi_query_search", "wechat_article_verification", "rss_fallback", "manual_ground_truth"],
     "search_query_date_terms_forbidden": true,
     "search_no_hit_confirms_no_update": false,
     "identity_required_for_selection": true,

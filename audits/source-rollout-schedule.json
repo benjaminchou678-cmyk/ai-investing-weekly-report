@@ -198,6 +198,7 @@
       "priority": "C1",
       "mode": "weekly_lightweight",
       "configured_endpoint_ids": [
+        "wechat-664c57ad-official-html-list-1",
         "wechat-664c57ad-official-rss-1"
       ],
       "runnable": true

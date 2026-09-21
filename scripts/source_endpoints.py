@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 
 ENDPOINT_TYPES = {
     "official_rss", "official_atom", "official_api", "official_html_list",
-    "mpscraper_mcp", "werss_api", "werss_rss", "rsshub",
+    "werss_api", "werss_rss", "rsshub",
     "wechat_article", "wechat_machine",
     "search", "manual",
 }
@@ -40,8 +40,6 @@ def endpoint_address_ready(endpoint: dict[str, Any]) -> bool:
         return valid_http_url(endpoint.get("url")) and bool(
             endpoint.get("account_id") or endpoint.get("feed_id")
         )
-    if endpoint_type == "mpscraper_mcp":
-        return valid_http_url(endpoint.get("url")) and bool(endpoint.get("account_name"))
     return valid_http_url(endpoint.get("url"))
 
 
@@ -52,7 +50,7 @@ def is_configured_endpoint(endpoint: dict[str, Any]) -> bool:
 def endpoint_priority(endpoint: dict[str, Any], channel: str = "") -> int:
     """Return resolver order; lower values run first.
 
-    微信来源优先官网，其次是本地 mpScraper。搜索发现先于 RSS 备用。
+    微信来源优先官网，其次是多查询搜索。RSS/WeRSS/RSSHub 仅作备用。
     wechat_article 属于拿到 URL 后的正文增强步骤，不参与列表发现排序。
     非微信来源仍优先官方结构化入口，不受微信反爬策略影响。
     """
@@ -61,8 +59,7 @@ def endpoint_priority(endpoint: dict[str, Any], channel: str = "") -> int:
         order = {
             "official_api": 10,
             "official_html_list": 20,
-            "mpscraper_mcp": 30,
-            "search": 40,
+            "search": 30,
             "official_rss": 50,
             "official_atom": 50,
             "werss_api": 60,
@@ -78,7 +75,6 @@ def endpoint_priority(endpoint: dict[str, Any], channel: str = "") -> int:
             "official_rss": 20,
             "official_atom": 20,
             "official_html_list": 30,
-            "mpscraper_mcp": 40,
             "werss_api": 50,
             "werss_rss": 50,
             "rsshub": 60,

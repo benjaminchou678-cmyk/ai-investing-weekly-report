@@ -113,10 +113,10 @@ class ImportWechatSourcesTests(unittest.TestCase):
         fresh = self.mod.parse_markdown("## 科技与 AI\n### C1\n- 新公众号 [C1]\n")
         out = self.mod.merge_wechat_sources({"schema_version": "3.0", "sources": []}, fresh)
         endpoint = out["sources"][0]["endpoints"][0]
-        self.assertEqual(endpoint["type"], "mpscraper_mcp")
+        self.assertEqual(endpoint["type"], "search")
         self.assertEqual(endpoint["status"], "unconfigured")
-        self.assertEqual(endpoint["account_name"], "新公众号")
-        self.assertEqual(endpoint["url"], "http://127.0.0.1:8082/mcp")
+        self.assertIn("新公众号", endpoint["query_template"])
+        self.assertEqual(endpoint["provider_group"], "agent-search")
 
     def test_default_keeps_unlisted_and_replace_drops_it(self) -> None:
         fresh = self.mod.parse_markdown("## 科技与 AI\n### C1\n- 新名称 [C1]\n")

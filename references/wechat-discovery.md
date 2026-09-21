@@ -5,13 +5,12 @@
 ## 最终链路
 
 1. **官方网页/API**：先检查已配置的官网列表、公司新闻或官方 API。
-2. **mpScraper**：仅在本机完成鉴权、账号导入和心跳核验后运行；输出可审计快照。
-3. **多查询并集搜索**：对规范名称、别名和 `wechat_id` 分别查询，同时使用普通网页的 `site:mp.weixin.qq.com/s` 查询。查询中不加入日期。
-4. **微信原文增强**：拿到 `mp.weixin.qq.com` URL 后读取正文、作者/账号、原始发布日期和可取得的身份字段。现有 `wechat-article-fetch` 可承担正文读取；若它不能返回身份/日期，候选进入人工复核队列，不得猜测。
-5. **身份严格验证**：优先 `__biz`，其次 `wechat_id`，最后才是规范账号名/别名精确匹配。标题或正文提及账号名不构成身份匹配。
-6. **自然周后过滤**：统一转换到 `Asia/Shanghai`，使用半开区间 `week_start <= published_at < next_week_start`。
-7. **RSS 备用**：RSS、WeRSS、RSSHub 只作备用发现与历史留存，不证明账号本周无更新。
-8. **C1 人工基准补漏**：每周人工完整核对 5–10 个代表性 C1 来源，衡量官网、mpScraper 和搜索的真实召回。
+2. **多查询并集搜索**：对规范名称、别名和 `wechat_id` 分别查询，同时使用普通网页的 `site:mp.weixin.qq.com/s` 查询。查询中不加入日期。
+3. **微信原文增强**：拿到 `mp.weixin.qq.com` URL 后读取正文、作者/账号、原始发布日期和可取得的身份字段。现有 `wechat-article-fetch` 可承担正文读取；若它不能返回身份/日期，候选进入人工复核队列，不得猜测。
+4. **身份严格验证**：优先 `__biz`，其次 `wechat_id`，最后才是规范账号名/别名精确匹配。标题或正文提及账号名不构成身份匹配。
+5. **自然周后过滤**：统一转换到 `Asia/Shanghai`，使用半开区间 `week_start <= published_at < next_week_start`。
+6. **RSS 备用**：RSS、WeRSS、RSSHub 只作备用发现与历史留存，不证明账号本周无更新。
+7. **C1 人工基准补漏**：每周人工完整核对 5–10 个代表性 C1 来源，衡量官网和搜索的真实召回。
 
 ## 账号身份层
 
@@ -40,7 +39,7 @@ python3 scripts/build_wechat_search_plan.py \
 
 ## 原文核验与后过滤
 
-搜索、mpScraper 或人工发现结果先整理成 `items[]`。每条至少包含 `source_id`、`title`、`url`，尽量包含 `account_name`、`wechat_id`、`biz_id`、`published_at` 和 discovery provenance。
+搜索或人工发现结果先整理成 `items[]`。每条至少包含 `source_id`、`title`、`url`，尽量包含 `account_name`、`wechat_id`、`biz_id`、`published_at` 和 discovery provenance。
 
 ```bash
 python3 scripts/verify_wechat_candidates.py \
