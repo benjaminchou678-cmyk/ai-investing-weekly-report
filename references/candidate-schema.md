@@ -1,6 +1,6 @@
 # 候选与入选数据结构
 
-本文件定义脚本共享的数据契约。采集阶段使用候选字段；编辑完成后补齐发布字段并保存为 `selected-items.json`。
+本文件定义脚本共享的候选数据契约。采集、标准化与聚类阶段使用候选字段；Agent 完成核验后，把发布字段和候选去向直接写入权威 `final_weekly_report.json`。旧 `selected-items.json` 仅为兼容输入，不再是正式发布状态。
 
 ## 顶层结构
 
@@ -32,7 +32,7 @@
 | `entity_type` | `public_company` / `private_company` / `nonprofit` / `government` / `unknown` |
 | `tickers` | 市场与代码，如 `NASDAQ:NVDA`；不能确定时为空 |
 | `event_type` | 产品、财报、融资、组织、并购、监管、供应链等 |
-| `board` | 最终三个新闻板块之一：`产品与模型`、`组织与人事`、`投融资`；候选阶段可为空，Release 阶段必填 |
+| `board` | 后台分类标签，如产品与模型、组织与人事、投融资、政策、算力、安全、人才或其他；候选阶段可为空，不构成正文配额 |
 | `summary` | 仅包含来源支持的内容 |
 | `discovered_via` | 发现轨道或文件来源 |
 | `sources` | 来源对象数组 |
@@ -64,6 +64,7 @@
 {
   "selected": true,
   "signal_level": "A",
+  "signal_reason": "新增事实直接影响企业采购流程，且已核验原始披露",
   "verification_status": "verified_primary",
   "claim_confidence": "high",
   "business_signals": ["收入", "企业工作流"],
@@ -97,7 +98,7 @@
 
 合法 `verification_status`：`unverified`、`company_disclosure`、`single_source`、`verified_primary`、`independently_verified`、`conflicting`。
 
-合法 `signal_level`：`S`、`A`、`B`、`noise`、`unrated`。
+合法 `signal_level`：`S`、`A`、`B`、`noise`、`unrated`。评级由 Agent 在核验后给出，并必须同时填写 `signal_reason`。脚本不得从百分制、关键词或金额自动换算；`unrated` 进入复核队列，不等于 `noise`。
 
 `multi-source` 只有在不同 `independence_group` 的来源支持同一 claim 时才能成立。多个转载站、同一通讯社转载或公司与创始人账号不视为独立来源。
 

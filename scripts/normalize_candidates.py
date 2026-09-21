@@ -21,7 +21,6 @@ from _candidate_io import (
     wrap_items,
     write_json,
 )
-from datetime import datetime, timezone
 
 BOARD_ALIASES = {
     "产品": "产品与模型", "模型": "产品与模型", "产品与模型": "产品与模型",
@@ -84,12 +83,19 @@ def normalize_sources(item: dict[str, Any], source_name: str, url: str, source_t
                 source_id = text_value(source.get("source_id"))
                 provenance = text_value(source.get("source_provenance"))
                 independence_group = text_value(source.get("independence_group"))
+                original_url = text_value(source.get("original_url"))
+                mirror_url = text_value(source.get("mirror_url"))
+                endpoint_id = text_value(source.get("endpoint_id"))
+                collector_provider = text_value(first_value(source, "collector_provider", "provider_group"))
             else:
                 name, link, kind = text_value(source), "", "unknown"
                 source_id, provenance, independence_group = "", "", ""
-            if name or link:
+                original_url, mirror_url, endpoint_id, collector_provider = "", "", "", ""
+            if name or link or original_url:
                 result.append({
                     "source_id": source_id, "name": name, "url": link,
+                    "original_url": original_url, "mirror_url": mirror_url,
+                    "endpoint_id": endpoint_id, "collector_provider": collector_provider,
                     "source_type": kind or "unknown", "source_provenance": provenance,
                     "independence_group": independence_group,
                 })
@@ -147,6 +153,11 @@ def normalize_item(item: dict[str, Any], origin: str, preserve_raw: bool) -> dic
         "claim_confidence": text_value(first_value(item, "claim_confidence", default="unrated")),
         "business_signals": business_signals,
         "signal_level": text_value(first_value(item, "signal_level", "signal", default="unrated")),
+        "signal_reason": text_value(item.get("signal_reason")),
+        "date_status": text_value(item.get("date_status")),
+        "identity_status": text_value(item.get("identity_status")),
+        "independence_status": text_value(item.get("independence_status")),
+        "review_reasons": as_list(item.get("review_reasons")),
         "materiality": text_value(item.get("materiality")),
         "time_horizon": text_value(item.get("time_horizon")),
         "thesis": item.get("thesis") if isinstance(item.get("thesis"), dict) else {},

@@ -9,7 +9,9 @@
 - 追踪跨周事件、投资假设、催化剂和反方证据；
 - 产品与模型、组织与人事、投融资，以及政策、算力、安全、人才等作为后台检索/分类/审计标签，不再是前台强制栏目；
 - 动态输出 0–3 条可发布、可证伪的产业判断（正常周 1–3，证据不足允许 0 条并明示），解释最重要事件及其后续影响；
-- 以 `final_weekly_report.json` 为唯一权威产物，Markdown/HTML 均从该 JSON 渲染；候选池分层保留供人判断；
+- 由 Agent 在阅读全文和核验后使用 `S/A/B/noise` 评价事件，脚本不计算或换算百分制；
+- 先分离待复核事件，再选择正文；每个输入事件必须有唯一去向，正文额度外的有效候选完整保留；
+- 以 Agent 编辑后的 `final_weekly_report.json` 为唯一权威定稿，先审核同一 JSON，再按需纯渲染 Markdown 和/或 HTML；
 - 单周判断不冒充长期趋势，连续 2–3 周验证后才允许升级；
 - 提供采编前 QA 与发布前 QA；
 - 使用 source + endpoints 机器注册表检查硬性来源、C1/C2 调度、入口健康度、基础设施集中度、来源独立性和新鲜度；
@@ -39,12 +41,12 @@ $ai-investing-weekly-report
 → 官网网页/API → 多查询搜索 → 微信原文身份/日期核验 → RSS 备用
 → 来源注册表校验与 Source QA
 → 标准化与 URL 审计
-→ 保守去重
-→ Pre-edit QA
-→ 事实核验与投资假设判断
-→ Release QA
-→ final_weekly_report.json（唯一权威产物）
-→ Markdown / HTML（从同一 JSON 渲染）
+→ 保守去重与事件聚类
+→ Agent 核验并填写 S/A/B/noise 与评级理由
+→ 先分离待复核事件，再完整分流候选
+→ Agent 直接编辑 final_weekly_report.json（唯一权威定稿）
+→ 审核同一 JSON 的来源、事实、候选完整性与发布契约
+→ 按需纯渲染 Markdown 和/或 HTML，并核对展示一致性
 ```
 
 详细说明：
@@ -63,6 +65,7 @@ $ai-investing-weekly-report
 ## 验证
 
 ```bash
+python3 -m pip install -r requirements.txt
 python3 -m unittest discover -s tests -v
 ```
 
@@ -98,7 +101,7 @@ python3 scripts/collect_source_endpoints.py \
 - `audits/source-rollout-schedule.json`：实际可运行数量与缺口；
 - `reports/source-pilot/two-week-comparison.json`：两周回填对比。
 
-仓库中的示例均为占位内容，不代表真实新闻或投资结论。
+仓库中的 `examples/final_weekly_report.example.json` 与由它渲染的 `examples/report.example.md` 仅演示 v4 结构，所有事件和链接均为占位内容，不代表真实新闻或投资结论。
 
 ## 免责声明
 

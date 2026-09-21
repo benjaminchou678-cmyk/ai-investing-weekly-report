@@ -1,138 +1,65 @@
-#!/usr/bin/env python3
-"""Four scenario tests for the v3 refactor (dynamic 0-3 theses, JSON as authority,
-layered candidate pool, Shanghai-timezone half-open window)."""
-
-from __future__ import annotations
-
-import sys
+"""四场景及候选完整性回归；使用合成数据，不做事实正确性的自证。"""
 import unittest
-from pathlib import Path
-
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "scripts"))
-
-import build_theses as BT          # noqa: E402
-import editorial_pass as EP        # noqa: E402
-import collect_source_endpoints as CS  # noqa: E402
-import rank_events as RE           # noqa: E402
+from report_fixtures import event, final_report, thesis
+import editorial_pass as EP
+import audit_report_structure as AR
+import collect_source_endpoints as CS
+from _report_contract import LAYERS, event_id, week_meta
 
 
-def _ev(cid, score, groups, title="事件", board="产品与模型", independence_status="verified"):
-    keys = ["industry_competitive", "long_term_direction", "commercial_capital",
-            "lasting_impact", "source_credibility", "incremental"]
-    w = [25, 25, 20, 15, 10, 5]
-    bd = {k: int(round(score * x / 100.0)) for k, x in zip(keys, w)}
-    bd[keys[0]] += score - sum(bd.values())
-    return {
-        "cluster_id": cid, "representative_title": title, "companies": [title],
-        "board": board, "article_ids": [cid], "dates": ["2026-09-15"],
-        "independence_groups": groups, "independence_status": independence_status,
-        "source_ids": [f"s_{cid}"], "source_urls": ["https://x.example.com"],
-        "sources": [{"url": "https://x.example.com"}], "summary": "摘要",
-        "all_titles": [title], "related_events": [],
-        "earliest_date": "2026-09-15", "latest_date": "2026-09-15",
-        "score_breakdown": bd, "score_reasons": {k: "r" for k in bd},
-        "importance_score": score, "tier": RE.tier_for(score),
-    }
-
-
-class ScenarioASparseWeek(unittest.TestCase):
-    """0 theses, <5 core, evidence insufficient -> still produces a valid report."""
-
-    def test_zero_theses_sparse_week_renders(self):
-        ranked = [_ev("c1", 55, ["g1"], title="单一观察事件")]  # watchlist tier only
-        theses, watch = BT.build_theses(ranked)
-        self.assertEqual(theses, [])
-        plan, report = EP.editorial_pass(ranked, theses, watch, "2026-09-14—2026-09-20")
-        self.assertEqual(plan["thesis_count"], 0)
-        final = EP.build_final_report(plan, report)
-        self.assertEqual(final["theses"], [])
-        # Must not claim a formed trend in the lead.
-        self.assertNotIn("趋势", final["weekly_lead"])
-        # md/html render without error
-        md = EP.render_markdown(final)
-        html = EP.render_html(final)
-        self.assertIn("未形成", md)
-        self.assertIn("<!doctype html>", html.lower())
-        # candidate layers present
-        self.assertIn("human_review_queue", final)
-        self.assertIn("excluded_events", final)
-
-
-class ScenarioBNormalWeek(unittest.TestCase):
-    """2 cross-board theses, 5-7 core, 3-5 watchlist."""
-
-    def test_two_cross_board_theses(self):
-        ranked = [
-            _ev("p1", 85, ["g1"], title="OpenAI 新模型", board="产品与模型"),
-            _ev("p2", 70, ["g2"], title="DeepSeek 新模型", board="产品与模型"),
-            _ev("o1", 82, ["g3"], title="Anthropic 负责人变动", board="组织与人事"),
-            _ev("o2", 68, ["g4"], title="Google AI 架构调整", board="组织与人事"),
-        ]
-        theses, watch = BT.build_theses(ranked)
-        self.assertGreaterEqual(len(theses), 2)
-        boards = {tuple(t["related_boards"]) for t in theses}
-        self.assertTrue(any("组织与人事" in b for b in boards))
-
-
-class ScenarioCMajorWeek(unittest.TestCase):
-    """3 theses, each passing the evidence gate, no shared-group double counting."""
-
-    def test_three_theses_each_pairwise_independent(self):
-        ranked = [
-            _ev("a1", 85, ["g1"], title="前沿模型 A"),
-            _ev("a2", 70, ["g2"], title="前沿模型 B"),
-            _ev("b1", 84, ["g3"], title="融资 A"),
-            _ev("b2", 69, ["g4"], title="融资 B"),
-            _ev("c1", 83, ["g5"], title="组织 A"),
-            _ev("c2", 67, ["g6"], title="组织 B"),
-        ]
-        theses, _ = BT.build_theses(ranked)
-        self.assertGreaterEqual(len(theses), 2)
-        for t in theses:
-            self.assertLessEqual(len(t["key_evidence"]), 3)
-            groups = [set(e["independence_groups"]) for e in t["key_evidence"]]
-            for i in range(len(groups)):
-                for j in range(i + 1, len(groups)):
-                    self.assertFalse(groups[i] & groups[j])
-
-
-class ScenarioDTimeAndSourceAnomalies(unittest.TestCase):
-    """Date unknown -> review queue; unknown independence fails gate;
-    Shanghai half-open window boundary correct."""
-
-    def test_unknown_independence_cannot_form_thesis(self):
-        ranked = [
-            _ev("u1", 85, [], title="事件一", independence_status="unknown"),
-            _ev("u2", 70, [], title="事件二", independence_status="unknown"),
-        ]
-        theses, _ = BT.build_theses(ranked)
-        self.assertEqual(theses, [])
-
-    def test_shared_group_blocks(self):
-        ranked = [
-            _ev("s1", 85, ["shared"], title="事件一"),
-            _ev("s2", 70, ["shared"], title="事件二"),
-        ]
-        theses, _ = BT.build_theses(ranked)
-        self.assertEqual(theses, [])
-
+class RefactorScenarios(unittest.TestCase):
+    def test_sparse_zero_theses_is_warn_not_fail(self):
+        final, events = final_report([event("c0")], [])
+        qa = AR.audit_report(final, events, EP.render_markdown(final), EP.render_html(final))
+        self.assertEqual(qa["overall_status"], "WARN")
+    def test_normal_two_cross_board_theses(self):
+        final, events = final_report(theses=[thesis("t1",["c0","c1"]),thesis("t2",["c2","c3"])])
+        qa = AR.audit_report(final, events)
+        self.assertEqual(qa["overall_status"], "PASS")
+        self.assertEqual(len(final["theses"]),2)
+    def test_major_week_three_theses(self):
+        final, events = final_report(theses=[thesis("t1",["c0"]),thesis("t2",["c1","c2"]),thesis("t3",["c3","c4"])])
+        self.assertEqual(AR.audit_report(final,events)["overall_status"],"PASS")
+    def test_all_overflow_preserved(self):
+        events = [event(f"c{i}","S") for i in range(8)] + [event(f"w{i}","B") for i in range(6)]
+        final = EP.prepare_report(events,week_meta("2026-09-14","2026-09-20"))
+        ids = [event_id(e) for layer in LAYERS for e in final[layer]]
+        self.assertEqual(len(ids),14)
+        self.assertEqual(len(set(ids)),14)
+        self.assertEqual(len(final["editorial_candidate_pool"]),2)
+    def test_date_unknown_before_body_selection(self):
+        events = [event("unknown","S",dates=[],earliest_date="",event_date="",date_status="unknown")]
+        final = EP.prepare_report(events,week_meta("2026-09-14","2026-09-20"))
+        self.assertEqual(final["core_events"],[])
+        self.assertEqual(len(final["human_review_queue"]),1)
+    def test_unknown_independence_and_unrated_not_noise(self):
+        events = [event("u","S",independence_status="unknown"),event("r","unrated"),event("n","noise")]
+        final = EP.prepare_report(events,week_meta("2026-09-14","2026-09-20"))
+        self.assertEqual({e["cluster_id"] for e in final["human_review_queue"]},{"u","r"})
+        self.assertEqual([e["cluster_id"] for e in final["appendix_events"]],["n"])
+    def test_thesis_evidence_candidate_not_removed(self):
+        events = [event(f"c{i}") for i in range(8)]
+        final, events = final_report(events,[thesis("t1",["c7"])])
+        self.assertEqual(final["editorial_candidate_pool"][0]["cluster_id"],"c7")
+        self.assertNotEqual(AR.audit_report(final,events)["overall_status"],"FAIL")
+    def test_review_reason_recomputed_after_agent_fix(self):
+        fixed = event("fixed", "A", review_reasons=["signal_unrated", "date_unknown"])
+        final = EP.prepare_report([fixed], week_meta("2026-09-14", "2026-09-20"))
+        self.assertEqual([e["cluster_id"] for e in final["core_events"]], ["fixed"])
+        self.assertEqual(final["human_review_queue"], [])
     def test_shanghai_half_open_window(self):
-        ws, we = "2026-09-14", "2026-09-20"  # Mon..Sun
-        items = [
-            {"title": "before", "published_at": "2026-09-13T23:30:00+00:00"},  # =09-14 07:30 +08 -> in
-            {"title": "in", "published_at": "2026-09-15T01:00:00+08:00"},
-            {"title": "after", "published_at": "2026-09-20T17:00:00+00:00"},   # =09-21 01:00 +08 -> out
-            {"title": "nodate", "published_at": ""},
-        ]
-        out = CS.filter_week(items, ws, we)
-        statuses = {o["title"]: o["date_status"] for o in out}
-        self.assertEqual(statuses["in"], "in_window")
-        self.assertNotIn("after", statuses)
-        self.assertEqual(statuses["nodate"], "unknown")  # routed, not dropped
-        # before-midnight UTC is already Monday morning Shanghai -> in window
-        self.assertIn("before", statuses)
+        items=[{"title":"in","published_at":"2026-09-13T23:30:00+00:00"},
+               {"title":"out","published_at":"2026-09-20T17:00:00+00:00"},
+               {"title":"unknown","published_at":""}]
+        out=CS.filter_week(items,"2026-09-14","2026-09-20")
+        self.assertEqual({e["title"] for e in out},{"in","unknown"})
+    def test_out_of_window_reviewed_before_body(self):
+        f=EP.prepare_report([event("old",dates=["2026-08-01"])],week_meta("2026-09-14","2026-09-20"))
+        self.assertEqual(f["core_events"],[])
+        self.assertIn("out_of_window",f["human_review_queue"][0]["review_reasons"])
+    def test_missing_reason_review_not_auto_filled(self):
+        f=EP.prepare_report([event("x",signal_reason="")],week_meta("2026-09-14","2026-09-20"))
+        self.assertIn("signal_reason_missing",f["human_review_queue"][0]["review_reasons"])
 
 
-if __name__ == "__main__":
-    unittest.main()
+if __name__=="__main__": unittest.main()

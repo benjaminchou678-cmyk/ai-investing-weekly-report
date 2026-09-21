@@ -1,210 +1,274 @@
 #!/usr/bin/env python3
-"""Audit the authoritative final_weekly_report.json (schema v3).
-
-The JSON is the single source of truth. Markdown / HTML are renderings and are
-only checked for consistency against the JSON when supplied.
-
-Dynamic rules (replaces the old fixed three-judgment regex audit):
-- theses: 0-3. >3 is FAIL. 0 is allowed when evidence is insufficient; but if
-  the lead still claims a formed trend, that is FAIL.
-- every published thesis must carry all required fields.
-- independence_status=unknown evidence cannot pass the independent-evidence gate;
-  same-group / republished sources must not be double-counted.
-- core_events <= 7; watchlist <= 5; candidate layers must not duplicate ids.
-- when md/html are provided, their counts must match the JSON.
-"""
-
+"""审核权威 JSON 的发布契约，并按需核对实际交付的 Markdown/HTML。"""
 from __future__ import annotations
 
 import argparse
+import html
 import json
 import re
 import sys
+from collections import Counter
+from html.parser import HTMLParser
 from pathlib import Path
-from typing import Any
 
 try:
     import jsonschema
-except ImportError:  # pragma: no cover
+except ImportError:
     jsonschema = None
 
-THESIS_MAX = 3
-CORE_MAX = 7
-WATCH_MAX = 5
-THESIS_REQUIRED = (
-    "thesis_id", "statement", "structural_change", "key_evidence",
-    "why_it_matters", "investment_readthrough", "counter_evidence",
-    "falsification_conditions", "confidence", "related_boards",
-)
-ALLOWED_CONFIDENCE = {"low", "medium", "high"}
+from _report_contract import (LAYERS, THESIS_FIELDS, EVENT_FIELDS, event_id, review_reasons, fingerprint,
+                              source_links, safe_url, all_events, public_events, week_meta)
+from rank_events import LEGACY_FIELDS
 
-_SCHEMA_PATH = Path(__file__).resolve().parent.parent / "schemas" / "final_weekly_report.schema.json"
+_SCHEMA_PATH = Path(__file__).resolve().parents[1] / "schemas/final_weekly_report.schema.json"
 
 
-def add_issue(issues: list[dict[str, Any]], severity: str, code: str, message: str, **details: Any) -> None:
+def issue(issues, code, message, severity="FAIL", **details):
     issues.append({"severity": severity, "code": code, "message": message, **details})
 
 
-def _cluster_id(item: dict[str, Any]) -> str:
-    return str(item.get("cluster_id") or item.get("event_cluster_id") or item.get("event_id") or "")
+def load_validator():
+    if jsonschema is None:
+        raise ValueError("缺少 jsonschema；请按 requirements.txt 安装，禁止降级为不完整校验")
+    schema = json.loads(_SCHEMA_PATH.read_text(encoding="utf-8"))
+    jsonschema.Draft202012Validator.check_schema(schema)
+    return jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker())
 
 
-def audit_json(data: dict[str, Any]) -> dict[str, Any]:
-    issues: list[dict[str, Any]] = []
+def audit_json(data: dict, ranked: list[dict] | None = None) -> dict:
+    issues = []
+    counts = {}
+    try:
+        validator = load_validator()
+        errors = sorted(validator.iter_errors(data), key=lambda e: str(list(e.absolute_path)))
+    except (OSError, ValueError) as exc:
+        issue(issues, "SCHEMA_UNAVAILABLE", str(exc))
+        return {"issues": issues, "counts": counts}
+    for error in errors:
+        issue(issues, "SCHEMA_VIOLATION", error.message, json_path="/".join(map(str, error.absolute_path)))
+    if errors:
+        return {"issues": issues, "counts": counts}
+    meta = data["report_meta"]
+    try:
+        expected = week_meta(meta["week_start"], meta["week_end"])
+        if meta["week_label"] != expected["week_label"]:
+            issue(issues, "WEEK_LABEL_MISMATCH", "周报标题日期与结构化日期不一致")
+    except ValueError as exc:
+        issue(issues, "WEEK_RANGE_INVALID", str(exc))
+        return {"issues": issues, "counts": counts}
 
-    # Structural shape is delegated to the real JSON Schema (single source of
-    # truth); the checks below are the second, semantic layer.
-    if jsonschema is not None and _SCHEMA_PATH.exists():
-        schema = json.loads(_SCHEMA_PATH.read_text(encoding="utf-8"))
-        try:
-            jsonschema.validate(instance=data, schema=schema)
-        except jsonschema.ValidationError as exc:
-            path = "/".join(str(p) for p in exc.absolute_path) or "<root>"
-            add_issue(issues, "FAIL", "SCHEMA_VIOLATION",
-                      f"不符合 final_weekly_report.schema.json: {exc.message}", json_path=path)
+    def legacy(value, path=""):
+        if isinstance(value, dict):
+            for key, child in value.items():
+                if key in LEGACY_FIELDS:
+                    issue(issues, "LEGACY_SCORE_FIELD", f"新契约不接受百分制字段：{path}/{key}")
+                legacy(child, f"{path}/{key}")
+        elif isinstance(value, list):
+            for index, child in enumerate(value):
+                legacy(child, f"{path}/{index}")
+    legacy(data)
+
+    ids = []
+    locations = {}
+    for layer in LAYERS:
+        counts[layer] = len(data[layer])
+        for event in data[layer]:
+            cid = event_id(event)
+            ids.append(cid)
+            locations[cid] = layer
+            reasons = review_reasons(event, meta)
+            if layer not in {"human_review_queue", "excluded_events"} and reasons:
+                issue(issues, "UNREVIEWED_EVENT_OUTSIDE_QUEUE", f"事件 {cid} 应先进入复核队列", reasons=reasons)
+            if layer == "core_events" and event["signal_level"] not in {"S", "A"}:
+                if not (event.get("editorial_override") is True and event.get("override_reason") and event["signal_level"] == "B"):
+                    issue(issues, "CORE_LEVEL_INVALID", f"事件 {cid} 核心选择需 S/A，B 级须显式编辑理由")
+            if layer == "watchlist" and event["signal_level"] not in {"S", "A", "B"}:
+                issue(issues, "WATCH_LEVEL_INVALID", f"事件 {cid} 非有效观察项")
+            if layer == "editorial_candidate_pool" and event["signal_level"] not in {"S", "A", "B"}:
+                issue(issues, "CANDIDATE_LEVEL_INVALID", f"事件 {cid} 应进入来源池或复核队列")
+            if layer == "appendix_events" and event["signal_level"] != "noise":
+                issue(issues, "APPENDIX_LEVEL_INVALID", f"事件 {cid} 有效候选应留备选池")
+    duplicate = [cid for cid, count in Counter(ids).items() if count > 1]
+    if duplicate:
+        issue(issues, "DUPLICATE_EVENT", "每个事件只能归入一个去向", event_ids=duplicate)
+    declared = set(data["input_event_ids"])
+    if set(ids) != declared:
+        issue(issues, "EVENT_RETENTION_MISMATCH", "候选去向与输入清单不一致", missing=sorted(declared-set(ids)), unexpected=sorted(set(ids)-declared))
+    if ranked is None:
+        issue(issues, "INPUT_BASELINE_MISSING", "缺少 --ranked，无法证明原始候选全部保留")
     else:
-        for key in ("report_meta", "weekly_lead", "theses", "core_events", "watchlist",
-                    "editorial_candidate_pool", "human_review_queue", "appendix_events",
-                    "excluded_events", "source_audit", "quality_status"):
-            if key not in data:
-                add_issue(issues, "FAIL", "TOP_LEVEL_KEY_MISSING", f"缺少顶层字段：{key}", field=key)
+        original = [event_id(e) for e in ranked]
+        if len(set(original)) != len(original) or "" in original:
+            issue(issues, "INPUT_BASELINE_INVALID", "原始事件标识缺失或重复")
+        if set(original) != declared:
+            issue(issues, "INPUT_BASELINE_CHANGED", "权威 JSON 的输入事件清单与 ranked_events 不一致")
 
-    theses = data.get("theses", [])
-    if not isinstance(theses, list):
-        theses = []
-    if len(theses) > THESIS_MAX:
-        add_issue(issues, "FAIL", "THESIS_COUNT_TOO_HIGH",
-                  f"判断数量 {len(theses)} 超过上限 {THESIS_MAX}", count=len(theses))
-
-    used_ids: dict[str, str] = {}
-
-    for t in theses:
-        tid = t.get("thesis_id", "")
-        for field in THESIS_REQUIRED:
-            if t.get(field) in (None, "", []):
-                add_issue(issues, "FAIL", "THESIS_FIELD_MISSING",
-                          f"判断 {tid} 缺少字段：{field}", thesis_id=tid)
-        conf = t.get("confidence", "")
-        if conf not in ALLOWED_CONFIDENCE:
-            add_issue(issues, "FAIL", "THESIS_CONFIDENCE_INVALID",
-                      f"判断 {tid} 置信度非法：{conf}", thesis_id=tid)
-
-        evidence = t.get("key_evidence", [])
-        groups: set[str] = set()
-        for ev in evidence:
-            eid = str(ev.get("cluster_id", ""))
-            if ev.get("independence_status") == "unknown":
-                add_issue(issues, "FAIL", "THESIS_EVIDENCE_INDEPENDENCE_UNKNOWN",
-                          f"判断 {tid} 含独立性未知证据 {eid}，不得通过独立证据门", thesis_id=tid, cluster_id=eid)
-            ev_groups = set(ev.get("independence_groups", []))
-            if groups & ev_groups:
-                add_issue(issues, "FAIL", "THESIS_EVIDENCE_SHARED_GROUP",
-                          f"判断 {tid} 两条证据共享独立组，疑似转载/同源", thesis_id=tid, cluster_id=eid)
-            groups |= ev_groups
-
-    # 0 theses: allowed if evidence-insufficient; FAIL if lead still claims a trend.
-    lead = str(data.get("weekly_lead", ""))
-    if len(theses) == 0:
-        claims_trend = ("判断" in lead or "趋势" in lead) and not re.search(r"未形成|不足|暂不|不构成", lead)
-        if claims_trend:
-            add_issue(issues, "FAIL", "ZERO_THESIS_BUT_CLAIMS_TREND",
-                      "本周未形成判断，但周报导语仍声称形成趋势")
+    events = all_events(data)
+    thesis_ids = []
+    for thesis in data["theses"]:
+        thesis_ids.append(thesis["thesis_id"])
+        evidence_ids = [e["cluster_id"] for e in thesis["key_evidence"]]
+        if len(set(evidence_ids)) != len(evidence_ids):
+            issue(issues, "DUPLICATE_THESIS_EVIDENCE", "同一判断重复引用同一事件")
+        for cid in evidence_ids:
+            if cid not in events or locations.get(cid) not in {"core_events", "watchlist", "editorial_candidate_pool"}:
+                issue(issues, "THESIS_EVENT_INVALID", f"判断引用了缺失、待复核、noise 或排除事件 {cid}")
+    if len(thesis_ids) != len(set(thesis_ids)):
+        issue(issues, "DUPLICATE_THESIS", "判断标识重复")
+    counts["theses"] = len(data["theses"])
+    public = list(data["core_events"] + data["watchlist"])
+    public_ids = {event_id(e) for e in public}
+    for thesis in data["theses"]:
+        for evidence in thesis["key_evidence"]:
+            cid = evidence["cluster_id"]
+            if cid in events and cid not in public_ids:
+                public.append(events[cid])
+                public_ids.add(cid)
+    for event in public:
+        cid = event_id(event)
+        # 判断引用的候选也须通过与正文相同的事实审核。
+        sub_schema = {"$ref": "#/$defs/published_event", "$defs": validator.schema["$defs"]}
+        for error in jsonschema.Draft202012Validator(sub_schema).iter_errors(event):
+            issue(issues, "PUBLISHED_EVENT_INVALID", f"{cid}: {error.message}")
+        source_ids = [s.get("source_id") for s in event.get("sources", [])]
+        if len(source_ids) != len(set(source_ids)):
+            issue(issues, "SOURCE_ID_DUPLICATED", f"事件 {cid} 来源 ID 重复，claim 映射不明确")
+        if not source_links(event) or any(not safe_url(url) for _, url in source_links(event)):
+            issue(issues, "SOURCE_URL_INVALID", f"事件 {cid} 缺少合法原文链接")
+        for claim in event.get("claims", []):
+            if not set(claim.get("source_ids", [])).issubset(set(source_ids)):
+                issue(issues, "CLAIM_SOURCE_UNRESOLVED", f"事件 {cid} claim 引用不存在的来源")
+    qs = data["quality_status"]
+    if not data["theses"]:
+        if not re.search(r"未形成|不足|暂不", qs["zero_thesis_reason"]):
+            issue(issues, "ZERO_THESIS_UNDISCLOSED", "零判断必须明确披露未形成判断或证据不足")
         else:
-            add_issue(issues, "WARN", "ZERO_THESIS",
-                      "本周形成 0 条判断：未达到证据门槛（已显式披露）")
-
-    core = data.get("core_events", []) or []
-    if len(core) > CORE_MAX:
-        add_issue(issues, "FAIL", "CORE_COUNT_TOO_HIGH",
-                  f"核心事件 {len(core)} 超过上限 {CORE_MAX}", count=len(core))
-    watchlist = data.get("watchlist", []) or []
-    if len(watchlist) > WATCH_MAX:
-        add_issue(issues, "FAIL", "WATCH_COUNT_TOO_HIGH",
-                  f"Watchlist {len(watchlist)} 超过上限 {WATCH_MAX}", count=len(watchlist))
-
-    # No duplicate cluster ids across the body layers.
-    for layer_name, layer in (
-        ("core", core), ("watchlist", watchlist),
-        ("candidate", data.get("editorial_candidate_pool", []) or []),
-        ("review", data.get("human_review_queue", []) or []),
-        ("appendix", data.get("appendix_events", []) or []),
-    ):
-        for item in layer:
-            cid = _cluster_id(item)
-            if not cid:
-                continue
-            if cid in used_ids:
-                add_issue(issues, "WARN", "EVENT_DUPLICATED_ACROSS_LAYERS",
-                          f"事件 {cid} 同时出现在 {used_ids[cid]} 与 {layer_name}", cluster_id=cid)
-            else:
-                used_ids[cid] = layer_name
-
-    # quality_status consistency
-    qs = data.get("quality_status", {}) or {}
-    if qs.get("thesis_count") is not None and qs["thesis_count"] != len(theses):
-        add_issue(issues, "FAIL", "QUALITY_THESIS_COUNT_MISMATCH",
-                  "quality_status.thesis_count 与 theses 数量不一致")
-    if qs.get("core_count") is not None and qs["core_count"] != len(core):
-        add_issue(issues, "WARN", "QUALITY_CORE_COUNT_MISMATCH",
-                  "quality_status.core_count 与 core_events 数量不一致")
-
-    return {"issues": issues, "counts": {
-        "thesis_count": len(theses), "core_count": len(core),
-        "watchlist_count": len(watchlist),
-        "candidate_count": len(data.get("editorial_candidate_pool", []) or []),
-        "review_count": len(data.get("human_review_queue", []) or []),
-        "appendix_count": len(data.get("appendix_events", []) or []),
-    }}
+            issue(issues, "ZERO_THESIS", "本期无可发布产业判断，已披露", "WARN")
+        if re.search(r"趋势|判断|主线已形成", data["weekly_lead"]) and not re.search(r"未形成|不足|暂不|不构成", data["weekly_lead"]):
+            issue(issues, "ZERO_THESIS_BUT_CLAIMS_TREND", "零判断时导语不得宣称形成明确产业趋势")
+    if len(data["core_events"]) < 5 or len(data["watchlist"]) < 3:
+        if not qs["sparse_note"].strip():
+            issue(issues, "SPARSE_UNDISCLOSED", "正文低于建议数量，需解释证据或编辑原因，不得凑数")
+        else:
+            issue(issues, "SPARSE_WEEK", "正文数量低于建议范围，已披露", "WARN")
+    source_status = data["source_audit"]["overall_status"]
+    if source_status == "FAIL":
+        issue(issues, "SOURCE_AUDIT_FAILED", "来源审核失败，不得发布")
+    elif source_status == "WARN":
+        if not qs["disclosures"] or not data["source_audit"]["limitations"]:
+            issue(issues, "SOURCE_WARN_UNDISCLOSED", "来源 WARN 必须记录限制并在展示中披露")
+        else:
+            issue(issues, "SOURCE_AUDIT_WARN", "来源覆盖有限，已披露", "WARN")
+    return {"issues": issues, "counts": counts}
 
 
-def _count_md_sections(md: str) -> dict[str, int]:
-    return {
-        "theses": len(re.findall(r"^###\s+判断｜", md, re.MULTILINE)),
-        "core": len(re.findall(r"^\*\*.+?\*\*（\d+\s*/", md, re.MULTILINE)),
-    }
+class VisibleHTML(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.parts, self.links, self.headings = [], [], []
+        self.hidden = 0
+        self.heading = None
+    def handle_starttag(self, tag, attrs):
+        if tag in {"script", "style", "head"}:
+            self.hidden += 1
+        if tag == "a" and not self.hidden:
+            self.links.append(dict(attrs).get("href", ""))
+        if tag in {"h1", "h2", "h3", "h4", "h5", "h6"} and not self.hidden:
+            self.heading = []
+    def handle_endtag(self, tag):
+        if tag in {"script", "style", "head"}:
+            self.hidden = max(0, self.hidden-1)
+        if tag in {"h1", "h2", "h3", "h4", "h5", "h6"} and self.heading is not None:
+            self.headings.append("".join(self.heading))
+            self.heading = None
+    def handle_data(self, text):
+        if not self.hidden:
+            self.parts.append(text)
+            if self.heading is not None:
+                self.heading.append(text)
+
+
+def normalized(text):
+    return re.sub(r"\s+", "", html.unescape(str(text)))
+
+
+def audit_display(final, text: str, kind: str) -> list[dict]:
+    issues = []
+    if kind == "HTML":
+        parser = VisibleHTML()
+        parser.feed(text)
+        visible, links, headings = " ".join(parser.parts), parser.links, parser.headings
+    else:
+        text = re.sub(r"<!--.*?-->", "", text, flags=re.S)
+        text = re.sub(r"\\([\\`*_\[\]<>#|])", r"\1", text)
+        links = re.findall(r"\]\(<?(https?://[^\s>]+)>?\)", text)
+        visible = text
+        headings = re.findall(r"^#{1,6}\s+(.+)$", text, re.M)
+    expected = [final["report_meta"]["week_label"], final["weekly_lead"]]
+    titles = [t["theme"] for t in final["theses"]] + [e["title"] for e in final["core_events"]+final["watchlist"]]
+    if len(headings) != 5 + len(titles):
+        issue(issues, f"{kind}_COUNT_MISMATCH", "展示的标题/条目数量与 JSON 不一致")
+    for title in titles:
+        if sum(normalized(title) in normalized(h) for h in headings) != 1:
+            issue(issues, f"{kind}_TITLE_MISMATCH", f"标题缺失或重复：{title}")
+    for thesis in final["theses"]:
+        expected += [thesis[k] for _, k in THESIS_FIELDS]
+        expected += [thesis["confidence"], "、".join(thesis["related_boards"])]
+    for event in public_events(final):
+        expected += [event["title"], event["signal_level"]]
+        for _, url in source_links(event):
+            if url not in links:
+                issue(issues, f"{kind}_SOURCE_MISSING", f"缺少来源链接：{url}")
+    for event in final["core_events"]+final["watchlist"]:
+        expected += [event[k] for _, k in EVENT_FIELDS] + [event["signal_reason"], event["verification_status"]]
+    qs = final["quality_status"]
+    expected += [qs["sparse_note"], *qs["disclosures"]]
+    if not final["theses"]:
+        expected.append(qs["zero_thesis_reason"])
+    for value in expected:
+        if value and normalized(value) not in normalized(visible):
+            issue(issues, f"{kind}_CONTENT_MISSING", f"缺少或改写了 JSON 内容：{str(value)[:100]}")
+    return issues
+
+
+def audit_report(data, ranked=None, md=None, html_text=None):
+    result = audit_json(data, ranked)
+    issues = result["issues"]
+    if not any(i["severity"] == "FAIL" for i in issues):
+        if md is not None:
+            issues.extend(audit_display(data, md, "MD"))
+        if html_text is not None:
+            issues.extend(audit_display(data, html_text, "HTML"))
+    status = "FAIL" if any(i["severity"] == "FAIL" for i in issues) else "WARN" if issues else "PASS"
+    return {"schema_version": "4.0", "overall_status": status, "json_sha256": fingerprint(data),
+            "checked_formats": [k for k, v in (("md", md), ("html", html_text)) if v is not None],
+            "counts": result["counts"], "issues": issues,
+            "limitations": ["机械检查不替代 Agent 对事实、来源独立性与推理的核验。"]}
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--json", dest="json_path", help="authoritative final_weekly_report.json")
-    parser.add_argument("--md", dest="md_path", default="")
-    parser.add_argument("--html", dest="html_path", default="")
+    parser.add_argument("--json", required=True)
+    parser.add_argument("--ranked", required=True)
+    parser.add_argument("--md")
+    parser.add_argument("--html")
     parser.add_argument("--output", "-o", required=True)
     parser.add_argument("--strict", action="store_true")
     args = parser.parse_args()
-
-    issues: list[dict[str, Any]] = []
-    counts: dict[str, int] = {}
     try:
-        if not args.json_path:
-            raise SystemExit("错误: 必须提供 --json final_weekly_report.json")
-        data = json.loads(Path(args.json_path).expanduser().read_text(encoding="utf-8"))
-        res = audit_json(data)
-        issues.extend(res["issues"])
-        counts = res["counts"]
-    except (OSError, json.JSONDecodeError) as exc:
-        print(f"错误: {exc}", file=sys.stderr)
-        return 2
-
-    if args.md_path:
-        md = Path(args.md_path).expanduser().read_text(encoding="utf-8")
-        md_counts = _count_md_sections(md)
-        if md_counts["theses"] != counts["thesis_count"]:
-            add_issue(issues, "FAIL", "MD_THESIS_COUNT_MISMATCH",
-                      f"Markdown 判断数 {md_counts['theses']} 与 JSON {counts['thesis_count']} 不一致")
-        if md_counts["core"] != counts["core_count"]:
-            add_issue(issues, "WARN", "MD_CORE_COUNT_MISMATCH",
-                      f"Markdown 核心事件数 {md_counts['core']} 与 JSON {counts['core_count']} 不一致")
-
-    status = "FAIL" if any(x["severity"] == "FAIL" for x in issues) else "WARN" if issues else "PASS"
-    report = {
-        "schema_version": "3.0", "overall_status": status,
-        "counts": counts, "issues": issues,
-    }
-    Path(args.output).expanduser().write_text(
-        json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"周报结构审计(JSON): {status} -> {args.output}", file=sys.stderr)
-    return 1 if status == "FAIL" or (args.strict and status == "WARN") else 0
+        paths = [Path(p).resolve() for p in (args.json, args.ranked, args.md, args.html, args.output) if p]
+        if len(paths) != len(set(paths)):
+            raise ValueError("输入与输出路径不得重合")
+        data = json.loads(Path(args.json).read_text(encoding="utf-8"))
+        ranked = json.loads(Path(args.ranked).read_text(encoding="utf-8"))["ranked_events"]
+        md = Path(args.md).read_text(encoding="utf-8") if args.md else None
+        html_text = Path(args.html).read_text(encoding="utf-8") if args.html else None
+        report = audit_report(data, ranked, md, html_text)
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        report = {"overall_status": "FAIL", "issues": [{"severity": "FAIL", "code": "INPUT_ERROR", "message": str(exc)}]}
+    Path(args.output).write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"权威 JSON 审核：{report['overall_status']}", file=sys.stderr)
+    return 1 if report["overall_status"] == "FAIL" or (args.strict and report["overall_status"] == "WARN") else 0
 
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run pre-edit or release QA for an AI investing weekly report."""
+"""候选阶段 QA；release 模式仅兼容旧 selected-items，正式发布使用 audit_report_structure.py。"""
 
 from __future__ import annotations
 
@@ -15,8 +15,8 @@ from zoneinfo import ZoneInfo
 from _candidate_io import as_list, read_json_items, write_json
 from merge_candidates import canonical_url, title_similarity
 
-ALLOWED_BOARDS = {"产品与模型", "组织与人事", "投融资"}
-EDITORIAL_TARGETS = {"产品与模型": "4-6", "组织与人事": "2-3", "投融资": "3-5"}
+# 板块仅作标签/覆盖统计，不再构成正文配额。
+ALLOWED_BOARDS = {"产品与模型", "组织与人事", "投融资", "政策", "算力", "安全", "人才", "其他"}
 ALLOWED_SIGNALS = {"S", "A", "B"}
 ALLOWED_THESIS_IMPACTS = {"new", "strengthen", "weaken", "invalidate", "neutral"}
 REQUIRED_STEPS = {"official_and_media", "builder_feeds", "supplemental_search", "normalize", "url_audit", "dedup"}
@@ -184,24 +184,13 @@ def main() -> int:
     gates["gate3_signal_thesis"] = gate("PASS" if not signal_issues else "FAIL", {"phase": args.phase, "distribution": distribution}, signal_issues)
     gates["gate4_evidence"] = gate("PASS" if not evidence_issues else "FAIL", {"phase": args.phase}, evidence_issues)
 
-    completeness_issues: list[dict[str, Any]] = []
-    for index, item in enumerate(items):
-        board = str(item.get("board") or "")
-        boards[board or "未分类"] = boards.get(board or "未分类", 0) + 1
-        if args.phase == "release" and not board:
-            completeness_issues.append({"index": index, "issue": "Release 条目必须归入三个核心新闻板块之一"})
-        elif board and board not in ALLOWED_BOARDS:
-            completeness_issues.append({"index": index, "board": board, "issue": "未知板块"})
-    if args.phase == "release":
-        for board in sorted(ALLOWED_BOARDS):
-            if boards.get(board, 0) == 0:
-                completeness_issues.append({"board": board, "issue": "该核心板块没有入选条目；需确认是信息稀疏而非漏采"})
-        if not 5 <= len(items) <= 15:
-            completeness_issues.append({"issue": "核心新闻少于 5 条或超过 15 条；需在正文解释", "count": len(items)})
+    # 兼容旧 selected-items 审核；新流程以 final_weekly_report.json 的审核为准。
+    for item in items:
+        board = str(item.get("board") or "未分类")
+        boards[board] = boards.get(board, 0) + 1
     gates["gate5_completeness"] = gate(
-        "PASS" if not completeness_issues else "WARN",
-        {"phase": args.phase, "board_distribution": boards, "editorial_targets": EDITORIAL_TARGETS, "normal_total_target": "9-14"},
-        completeness_issues,
+        "PASS", {"phase": args.phase, "board_distribution": boards,
+                 "note": "标签分布仅作审计，不设板块配额；正文数量与候选完整性由权威 JSON 审计。"}, [],
     )
 
     statuses = [entry["status"] for entry in gates.values()]

@@ -5,7 +5,7 @@ description: 检索、核验并撰写面向投资与产品决策者的中文 AI 
 
 # AI 投资周报
 
-生成高信噪比、可验证、附原始来源的中文 AI 投资周报。重点不是罗列一周新闻，而是判断三个核心维度本周发生的最重要变化、解释其后续影响，并说明哪些公司与赛道的研究优先级或既有投资假设发生变化。
+生成高信噪比、可验证、附原始来源的中文 AI 投资周报。重点不是罗列一周新闻，而是识别本周最重要的产业变化、解释其后续影响，并说明哪些公司与赛道的研究优先级或既有投资假设发生变化。
 
 ## 核心边界
 
@@ -35,10 +35,10 @@ description: 检索、核验并撰写面向投资与产品决策者的中文 AI 
    - 微信搜索先用 `build_wechat_search_plan.py` 生成不含日期词的规范名/别名/微信号多查询计划，合并结果后读取原文，再用 `verify_wechat_candidates.py` 按账号身份和自然周后过滤。搜索无结果不得写成 `no_update`。
    - 来源入口迭代时，先运行 `audit_source_endpoints.py` 生成 JSON/CSV 审计，再按 `source-rollout-plan.json` 运行 pilot 或 C2 cohort；两周结果使用 `compare_source_runs.py` 比较。C1 每周人工完整核对 5–10 个代表性账号，并用 `compare_wechat_ground_truth.py` 评估；没有完整 ground truth 时只报告发现覆盖率，不得称为真实召回率。
 3. 按 [数据管线](references/data-pipeline.md) 完成标准化、URL 结构检查、保守去重和采编前 QA。
-4. 进入内容生成中间层：`cluster_events.py → rank_events.py → build_theses.py → editorial_pass.py`，产出 `event_clusters`、`ranked_events`、`candidate_theses`、`weekly_editorial_plan`，并以 `final_weekly_report.json` 为唯一权威产物；Markdown 与 HTML 均从该 JSON 渲染。评分权重与判断证据门槛见 [编辑标准](references/editorial-policy.md)。
-5. 先运行来源注册表校验和来源覆盖审计，生成 `source-qa.json`；再按 [质量门](references/quality-gates.md) 执行发布前 QA（含内容层机械 QA）。硬性 Gate 失败时不得标记为正式版。
-6. 按 [周报模板](references/report-template.md) 从 `final_weekly_report.json` 渲染压缩版 Markdown 与最小 HTML；核心事件建议 5–7、Watchlist 3–5、可发布判断动态 0–3 条，不凑数。
-7. 运行 `scripts/audit_report_structure.py --json final_weekly_report.json [--md ... --html ...]` 生成 `report-structure-qa.json`；优先审计 JSON Schema，再核对 Markdown/HTML 是否完整呈现 JSON 核心字段。结构 FAIL 时修正后再交付。
+4. 进入内容中间层：`cluster_events.py → rank_events.py → editorial_pass.py prepare`。`rank_events.py` 只按 Agent 给出的 `S/A/B/noise` 稳定排序，不计算百分制；未评级保持 `unrated`。`prepare` 必须先把日期、身份、独立性、证据或评级不完整的事件放进 `human_review_queue`，再选正文，其他有效事件完整保留。
+5. **Agent 直接编辑 `final_weekly_report.json` 完成定稿**：核验事实与 claim 来源映射，补写事件内容和 `signal_reason`，形成 0–3 条产业判断，设置 `editor_reviewed=true`；脚本不得代写主张、补齐理由或覆盖 Agent 定稿。
+6. 对同一份权威 JSON 执行来源、内容、候选完整性和发布契约审核；审核通过后运行 `editorial_pass.py render` 纯渲染用户需要的 Markdown 和/或 HTML。渲染器不得重新生成或截断业务内容。
+7. `render` 必须同时接收 `ranked_events.json` 作为输入基线，并输出带 `json_sha256` 的审计结果；检查所有输入事件恰好有一个去向，以及实际生成的展示文件是否完整保留 JSON 的判断、正文、评级理由和来源链接。
 
 ### 基于已有材料撰写
 
@@ -55,9 +55,9 @@ description: 检索、核验并撰写面向投资与产品决策者的中文 AI 
 
 ## 数据与判断边界
 
-**诚实性说明（重要）**：`rank_events` 的 80/65/50 分档是**正则关键词启发式打分，未经历史标定**，只用于排序与分层，不代表事件真实重要性；`build_theses` 产出的 `statement`/`editorial_pass` 产出的事件卡是**编辑草稿**，不是结论。脚本负责格式、排序与证据门；**最终可发布的产业判断必须由人（或 LLM）复核主张、证据与反证后定稿**，不得把脚本生成的模板句直接当成品。
+`S/A/B/noise` 是 **Agent 在阅读全文、核验事实和投资影响后给出的编辑评级**，不是关键词或数值公式的替代品。脚本只检查评级是否合法、理由是否存在并保持同级输入顺序；不得从金额、公司名称、热词、来源数量或旧百分制字段自动推导等级。未完成评级时保持 `unrated` 并进入 `human_review_queue`，不能自动降为 `noise`。
 
-脚本负责格式统一、URL 结构检查、保守去重、来源覆盖核对、字段统计和机械 QA。模型负责网页事实核验、来源独立性、claim 与来源绑定、投资相关性、假设影响、信号等级、关键判断和最终写作。
+Agent 负责网页事实核验、claim 与来源绑定、来源独立性、业务影响、评级理由、产业判断和最终写作。脚本负责格式、稳定排序、完整分流、候选去向核对、Schema、展示一致性和机械 QA。
 
 脚本返回 `PASS` 不代表事实真实；`WARN` 必须人工复核；硬性 Gate 返回 `FAIL` 时不得发布正式版。
 
@@ -68,21 +68,23 @@ WeRSS、RSSHub 与搜索只属于采集或发现基础设施，不构成新的�
 - 全程使用中文，必要的海外原文短句除外。
 - 报告主标题保持简洁，使用“AI 投资周报 · 日期区间”；不要添加“关键判断版”“趋势版”“扩展版”等版本型后缀。试跑、来源限制或质量状态应在正文说明，不写进主标题。
 - 核心新闻按新中间层产出：可发布判断动态 0–3 条（不凑数，正常周建议 1–3，证据不足允许 0 条并明示）、核心事件建议 5–7（宁缺毋滥，不足则明示）、Watchlist 3–5；正文较旧详版下降 30%–50%。
-- 可发布判断不强制按产品/组织/投融资各一条，也不要求每个后台板块都出判断；一条判断可跨多个板块并带 `related_boards`。证据门槛未达到时明确写"本周未形成达到证据门槛的产业判断"。单事件不升格为判断。
+- 可发布判断不强制按产品/组织/投融资各一条，也不要求每个后台板块都出判断；一条判断可跨多个板块并带 `related_boards`。证据门槛未达到时明确写“本周未形成达到证据门槛的产业判断”。
 - 周度判断允许由一件高材料性事件主导，不要求凑足两个事件；但核心事实必须充分核验，并写明核心变化、为什么重要、Investment Readthrough、反方证据或推翻条件、判断置信度。
 - 只有经过连续 2–3 周证据验证的判断才可升级为中期趋势；不得把单周判断直接表述为长期趋势。
 - 产品与模型、组织与人事、投融资，以及政策、算力、安全、人才等只作为检索标签、事件分类标签、来源覆盖审计维度和事件关联分析维度，不再是前台强制栏目。
-- 候选池分层保留供人判断：65+ 进核心候选、50–64 进 Watchlist 候选、<50 留 Appendix；日期未知/独立性未知进 `human_review_queue`，不静默删除。
+- 核心事件建议 5–7 条，通常优先 S/A；Watchlist 建议 3–5 条，通常为尚需继续验证的 A/B；`noise` 只进来源池。数量不足时披露原因，不凑数。
+- 候选池完整保留：待复核项先分流；正文额度外的 S/A/B 进入 `editorial_candidate_pool`；`noise` 进入 `appendix_events`；明确排除项记录原因。每个 `input_event_id` 必须恰好有一个去向。
 - 每条核心事件附原始链接或明确的 URL 降级说明。
 - 默认输出“研究优先级/假设变化”，不输出“最值得买入”排名。
-- 先完成 Markdown 与发布前 QA，再执行可视化或外部发布。
+- 先完成权威 JSON 的 Agent 定稿和发布前 QA，再按用户要求渲染 Markdown/HTML，之后才执行可视化或外部发布。
 
 ## 完成条件
 
 - 周期、时区、来源覆盖、失败项和执行轨迹有记录；
 - C1/C2 的已配置 endpoint 均留有 attempt evidence；未配置 C1 已作为硬性配置缺口披露；
 - 候选已完成标准化、URL 检查、去重与采编前 QA；
-- 入选内容已完成人工核验、信号评级、claim 来源映射和投资假设判断；
-- 发布前 Gate 0–5 已执行，硬性失败已处理；
-- 结构化权威产物 `final_weekly_report.json` 已生成并通过结构审计（动态 0–3 条判断、每条字段完整、独立性门通过、Markdown/HTML 与 JSON 数量与标题一致）；
+- 入选内容已由 Agent 完成事实核验、S/A/B 评级与理由、claim 来源映射和投资假设判断；
+- `final_weekly_report.json` 是 Agent 编辑后的权威定稿，`quality_status.editor_reviewed=true`；来源审核 FAIL 不得发布，WARN 已披露；
+- 权威 JSON 已通过 v4 Schema、输入事件保留和发布契约审核；
+- 仅渲染用户需要的 Markdown/HTML 格式，实际交付文件已与同一 JSON 核对内容、标题与来源链接；
 - 最终产物符合用户要求，未擅自生成或发布额外产物。

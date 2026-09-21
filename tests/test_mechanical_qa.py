@@ -1,111 +1,56 @@
-#!/usr/bin/env python3
-"""Mechanical QA gates for the rewritten content layer (requirement #9).
-
-These are deterministic structural checks, independent of model judgment.
-"""
-
-from __future__ import annotations
-
-import sys
+"""S/A/B/noise 与候选去向的机械回归。"""
+import json
 import unittest
-from pathlib import Path
-
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "scripts"))
-
-import editorial_pass as EP  # noqa: E402
-import rank_events as RE  # noqa: E402
-import build_theses as BT  # noqa: E402
-
-
-def _ev(cid, score, groups=None, title="事件", board="产品与模型"):
-    # Distribute the requested score across the 6 dimensions so sum == score.
-    weights = [25, 25, 20, 15, 10, 5]
-    keys = ["industry_competitive", "long_term_direction", "commercial_capital",
-            "lasting_impact", "source_credibility", "incremental"]
-    bd = {k: int(round(score * w / 100.0)) for k, w in zip(keys, weights)}
-    # absorb rounding drift into the largest dimension
-    drift = score - sum(bd.values())
-    bd[keys[0]] += drift
-    return {
-        "cluster_id": cid, "representative_title": title, "companies": [title],
-        "board": board, "article_ids": [cid], "dates": ["2026-09-08"],
-        "independence_groups": groups or [f"g_{cid}"], "source_ids": [f"s_{cid}"],
-        "source_urls": ["https://x.example.com"], "sources": [{"url": "https://x.example.com"}],
-        "summary": "摘要", "all_titles": [title], "related_events": [],
-        "earliest_date": "2026-09-08", "latest_date": "2026-09-08",
-        "score_breakdown": bd, "score_reasons": {k: "r" for k in bd},
-        "importance_score": score, "tier": RE.tier_for(score),
-    }
+from report_fixtures import event, final_report, thesis
+import rank_events as RE
+import build_theses as BT
+import editorial_pass as EP
+import audit_report_structure as AR
+from _report_contract import LAYERS, event_id, week_meta
 
 
 class MechanicalQATests(unittest.TestCase):
-    def test_score_weights_sum_to_total(self) -> None:
-        ev = _ev("c1", 85)
-        self.assertEqual(sum(ev["score_breakdown"].values()), ev["importance_score"])
-
-    def test_below_50_never_in_body(self) -> None:
-        ranked = [_ev("core", 90), _ev("noise", 30)]
-        plan, report = EP.editorial_pass(ranked, [], [], "week")
-        body = {c["cluster_id"] for c in report["core_event_cards"]}
-        body |= {w["event_cluster_id"] for w in report["watchlist"]}
-        self.assertIn("core", body)
-        self.assertNotIn("noise", body)
-
-    def test_50to64_never_in_core(self) -> None:
-        ranked = [_ev("watch", 55), _ev("watch2", 60)]
-        plan, report = EP.editorial_pass(ranked, [], [], "week")
-        core_ids = {c["cluster_id"] for c in report["core_event_cards"]}
-        self.assertNotIn("watch", core_ids)
-        self.assertNotIn("watch2", core_ids)
-
-    def test_watchlist_count_3to5_or_note(self) -> None:
-        ranked = [_ev(f"w{i}", 50 + i) for i in range(10)]
-        plan, _ = EP.editorial_pass(ranked, [], [], "week")
-        self.assertGreaterEqual(plan["watchlist_count"], 3)
-        self.assertLessEqual(plan["watchlist_count"], 5)
-
-    def test_same_cluster_single_card(self) -> None:
-        ranked = [_ev("core", 90)]
-        _, report = EP.editorial_pass(ranked, [], [], "week")
-        ids = [c["cluster_id"] for c in report["core_event_cards"]]
-        self.assertEqual(len(ids), len(set(ids)))
-
-    def test_core_event_linked_to_thesis_or_standalone(self) -> None:
-        # Core event absorbed into a thesis must be referenced by that thesis.
-        ev1 = _ev("a", 85, groups=["g1"], title="OpenAI 模型突破")
-        ev2 = _ev("b", 70, groups=["g2"], title="DeepSeek 新模型")
-        theses, _ = BT.build_theses([ev1, ev2])
-        thesis_evidence = {e["cluster_id"] for t in theses for e in t["key_evidence"]}
-        for t in theses:
-            for e in t["key_evidence"]:
-                self.assertIn(e["cluster_id"], thesis_evidence)
-
-    def test_thesis_evidence_passes_gate(self) -> None:
-        ev1 = _ev("a", 85, groups=["g1"])
-        ev2 = _ev("b", 70, groups=["g2"])
-        theses, _ = BT.build_theses([ev1, ev2])
-        for t in theses:
-            n = len(t["key_evidence"])
-            groups = [set(e["independence_groups"]) for e in t["key_evidence"]]
-            pairwise_ok = not any(g1 & g2 for i, g1 in enumerate(groups) for g2 in groups[i + 1:])
-            self.assertTrue(n >= 2 and pairwise_ok)
-
-    def test_thesis_title_differs_from_event_title(self) -> None:
-        ev1 = _ev("a", 85, groups=["g1"], title="OpenAI 发布模型")
-        ev2 = _ev("b", 70, groups=["g2"], title="DeepSeek 发布模型")
-        theses, _ = BT.build_theses([ev1, ev2])
-        for t in theses:
-            for e in t["key_evidence"]:
-                self.assertNotEqual(t["statement"].strip(), e["title"].strip())
-
-    def test_compression_reduces_body(self) -> None:
-        # editorial output must be shorter than rendering every event verbosely.
-        ranked = [_ev(f"c{i}", 50 + i) for i in range(10)]
-        plan, report = EP.editorial_pass(ranked, [], [], "week")
-        verbose = sum(len(c["card"]) for c in report["core_event_cards"] + []) * 10
-        self.assertLessEqual(plan["core_count"], 7)
+    def test_no_percent_score_fields(self):
+        ranked=RE.rank_clusters([event("c")])
+        self.assertFalse(any(k in ranked[0] for k in RE.LEGACY_FIELDS))
+    def test_noise_never_body(self):
+        final=EP.prepare_report([event("s","S"),event("n","noise")],week_meta("2026-09-14","2026-09-20"))
+        self.assertEqual([e["cluster_id"] for e in final["core_events"]],["s"])
+        self.assertEqual([e["cluster_id"] for e in final["appendix_events"]],["n"])
+    def test_b_watch_not_core(self):
+        final=EP.prepare_report([event("b","B")],week_meta("2026-09-14","2026-09-20"))
+        self.assertEqual(final["core_events"],[])
+        self.assertEqual(final["watchlist"][0]["cluster_id"],"b")
+    def test_watch_overflow_retained(self):
+        final=EP.prepare_report([event(f"b{i}","B") for i in range(10)],week_meta("2026-09-14","2026-09-20"))
+        self.assertEqual(len(final["watchlist"]),5)
+        self.assertEqual(len(final["editorial_candidate_pool"]),5)
+    def test_core_overflow_retained(self):
+        final=EP.prepare_report([event(f"s{i}","S") for i in range(10)],week_meta("2026-09-14","2026-09-20"))
+        self.assertEqual(len(final["core_events"]),7)
+        self.assertEqual(len(final["editorial_candidate_pool"]),3)
+    def test_every_candidate_one_destination(self):
+        events=[event(f"x{i}", level) for i,level in enumerate(["S","A","B","noise","unrated"])]
+        final=EP.prepare_report(events,week_meta("2026-09-14","2026-09-20"))
+        ids=[event_id(e) for layer in LAYERS for e in final[layer]]
+        self.assertEqual(len(ids),len(events)); self.assertEqual(len(set(ids)),len(events))
+    def test_thesis_requires_agent_proposal(self):
+        self.assertEqual(BT.build_theses([event("c")])[0],[])
+    def test_thesis_can_use_one_reviewed_event(self):
+        self.assertEqual(len(BT.build_theses([event("c0","S")],[thesis()])[0]),1)
+    def test_renderer_keeps_sources_in_both_formats(self):
+        final,_=final_report()
+        for text in [EP.render_markdown(final),EP.render_html(final)]: self.assertIn("https://example.com/c0",text)
+    def test_display_audit_matches_same_json(self):
+        final,events=final_report()
+        self.assertEqual(AR.audit_report(final,events,EP.render_markdown(final),EP.render_html(final))["overall_status"],"PASS")
+    def test_json_hash_changes_with_agent_edit(self):
+        final,events=final_report(); first=AR.audit_report(final,events)["json_sha256"]
+        final["weekly_lead"] += "修改"
+        self.assertNotEqual(first,AR.audit_report(final,events)["json_sha256"])
+    def test_original_event_ids_are_not_invented(self):
+        final,events=final_report(); final["input_event_ids"].append("invented")
+        self.assertIn("INPUT_BASELINE_CHANGED",{i["code"] for i in AR.audit_report(final,events)["issues"]})
 
 
-if __name__ == "__main__":
-    unittest.main()
+if __name__=="__main__": unittest.main()

@@ -15,7 +15,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from _candidate_io import first_value, as_list, text_value
+from _candidate_io import first_value, as_list, text_value, stable_id
 
 
 def _read_items(path: Path) -> tuple[list[dict[str, Any]], dict[str, Any]]:
@@ -96,6 +96,7 @@ def _norm_sources(raw_sources: Any) -> list[dict[str, Any]]:
             url = text_value(s.get("url", ""))
             ig = text_value(s.get("independence_group", "")) or _domain_from_url(url) or f"src{i}"
             out.append({
+                **s,
                 "source_id": text_value(s.get("source_id", "")) or f"s{i}",
                 "name": text_value(s.get("name", "")),
                 "url": url,
@@ -160,7 +161,8 @@ def canonicalize_article(raw: dict[str, Any]) -> dict[str, Any]:
     summary = text_value(raw.get("summary", ""))
 
     return {
-        "id": text_value(raw.get("id", "")) or f"art-{abs(hash(title+url)) % 10**8:08d}",
+        **raw,
+        "id": text_value(raw.get("id", "")) or stable_id(title, url),
         "title": title,
         "url": url,
         "board": board,

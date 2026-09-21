@@ -1,115 +1,88 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ai-investing-weekly-report/schemas/final_weekly_report.schema.json",
-  "title": "final_weekly_report",
-  "description": "唯一权威周报产物。Markdown 与 HTML 均由本 JSON 渲染，不得各自重新生成内容。",
+  "title": "AI 投资周报权威定稿契约",
+  "description": "v4：Agent S/A/B/noise 评级、完整候选分流、同一 JSON 审核后纯渲染。prepare 草稿不要求通过发布契约。",
   "type": "object",
-  "required": ["report_meta", "weekly_lead", "theses", "core_events", "watchlist",
-               "editorial_candidate_pool", "human_review_queue", "appendix_events",
-               "excluded_events", "source_audit", "quality_status"],
   "additionalProperties": false,
+  "required": ["schema_version", "report_meta", "weekly_lead", "input_event_ids", "theses", "core_events", "watchlist", "editorial_candidate_pool", "human_review_queue", "appendix_events", "excluded_events", "source_audit", "quality_status"],
   "properties": {
-    "schema_version": {"type": "string", "const": "3.0"},
+    "schema_version": {"const": "4.0"},
     "report_meta": {
       "type": "object",
       "required": ["week_label", "week_start", "week_end", "timezone", "generated_at"],
-      "additionalProperties": true,
       "properties": {
-        "week_label": {"type": "string"},
+        "week_label": {"$ref": "#/$defs/text"},
         "week_start": {"type": "string", "format": "date"},
         "week_end": {"type": "string", "format": "date"},
-        "timezone": {"type": "string", "const": "Asia/Shanghai"},
-        "generated_at": {"type": "string"},
-        "trial_run": {"type": "boolean"},
-        "profile": {"type": "string"}
+        "timezone": {"const": "Asia/Shanghai"},
+        "generated_at": {"type": "string", "format": "date-time"}
       }
     },
-    "weekly_lead": {"type": "string", "maxLength": 240},
-    "theses": {
-      "type": "array",
-      "maxItems": 3,
-      "items": {
-        "type": "object",
-        "required": ["thesis_id", "theme", "statement", "structural_change",
-                     "key_evidence", "why_it_matters", "investment_readthrough",
-                     "counter_evidence", "falsification_conditions", "confidence",
-                     "related_boards"],
-        "additionalProperties": true,
-        "properties": {
-          "thesis_id": {"type": "string"},
-          "theme": {"type": "string"},
-          "statement": {"type": "string", "minLength": 10},
-          "structural_change": {"type": "string"},
-          "key_evidence": {
-            "type": "array",
-            "minItems": 0,
-            "maxItems": 4,
-            "items": {
-              "type": "object",
-              "required": ["cluster_id", "title"],
-              "additionalProperties": true
-            }
-          },
-          "why_it_matters": {"type": "string"},
-          "investment_readthrough": {"type": "string"},
-          "counter_evidence": {"type": "string"},
-          "falsification_conditions": {"type": "string"},
-          "confidence": {"type": "string", "enum": ["low", "medium", "high"]},
-          "related_boards": {"type": "array", "items": {"type": "string"}, "default": []},
-          "editorial_override": {"type": "boolean", "default": false},
-          "override_reason": {"type": "string", "default": ""}
-        }
-      }
+    "weekly_lead": {"$ref": "#/$defs/text"},
+    "input_event_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+    "theses": {"type": "array", "maxItems": 3, "items": {"$ref": "#/$defs/thesis"}},
+    "core_events": {"type": "array", "maxItems": 7, "items": {"$ref": "#/$defs/published_event"}},
+    "watchlist": {"type": "array", "maxItems": 5, "items": {"$ref": "#/$defs/published_event"}},
+    "editorial_candidate_pool": {"type": "array", "items": {"$ref": "#/$defs/event"}},
+    "human_review_queue": {"type": "array", "items": {"allOf": [{"$ref": "#/$defs/event"}], "required": ["review_reasons"], "properties": {"review_reasons": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}}}}},
+    "appendix_events": {"type": "array", "items": {"$ref": "#/$defs/event"}},
+    "excluded_events": {"type": "array", "items": {"allOf": [{"$ref": "#/$defs/event"}], "required": ["reason"], "properties": {"reason": {"$ref": "#/$defs/text"}}}},
+    "source_audit": {
+      "type": "object", "required": ["overall_status", "scope", "limitations"],
+      "properties": {"overall_status": {"enum": ["PASS", "WARN", "FAIL"]}, "scope": {"$ref": "#/$defs/text"}, "limitations": {"type": "array", "items": {"$ref": "#/$defs/text"}}}
     },
-    "core_events": {
-      "type": "array",
-      "description": "最终正文核心事件，建议 5-7，不足时在 quality_status 注明证据不足",
-      "items": {"type": "object", "required": ["cluster_id", "title"], "additionalProperties": true}
-    },
-    "watchlist": {
-      "type": "array",
-      "maxItems": 5,
-      "items": {"type": "object", "required": ["event_cluster_id", "title"], "additionalProperties": true}
-    },
-    "editorial_candidate_pool": {
-      "type": "array",
-      "description": "65 分以上、未进入最终正文的事件，完整保留供人工判断",
-      "items": {"type": "object", "additionalProperties": true}
-    },
-    "human_review_queue": {
-      "type": "array",
-      "description": "日期未知、独立性未知或证据不足，未静默删除的条目",
-      "items": {"type": "object", "required": ["cluster_id"], "additionalProperties": true}
-    },
-    "appendix_events": {
-      "type": "array",
-      "description": "低于观察门槛(<50)，保留在 Source Pool",
-      "items": {"type": "object", "additionalProperties": true}
-    },
-    "excluded_events": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["event_id", "reason", "score"],
-        "additionalProperties": false,
-        "properties": {
-          "event_id": {"type": "string"},
-          "reason": {"type": "string"},
-          "score": {"type": "number"}
-        }
-      }
-    },
-    "source_audit": {"type": "object", "additionalProperties": true},
     "quality_status": {
-      "type": "object",
-      "required": ["thesis_count", "core_count", "watchlist_count", "status"],
-      "additionalProperties": true,
+      "type": "object", "additionalProperties": false,
+      "required": ["editor_reviewed", "reviewed_at", "sparse_note", "zero_thesis_reason", "disclosures"],
       "properties": {
-        "thesis_count": {"type": "integer", "minimum": 0, "maximum": 3},
-        "core_count": {"type": "integer", "minimum": 0},
-        "watchlist_count": {"type": "integer", "minimum": 0},
-        "status": {"type": "string", "enum": ["PASS", "WARN", "FAIL"]},
-        "core_note": {"type": "string"}
+        "editor_reviewed": {"const": true}, "reviewed_at": {"type": "string", "format": "date-time"},
+        "sparse_note": {"type": "string"}, "zero_thesis_reason": {"type": "string"},
+        "disclosures": {"type": "array", "items": {"$ref": "#/$defs/text"}}
+      }
+    }
+  },
+  "$defs": {
+    "text": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "source": {
+      "type": "object", "required": ["source_id"],
+      "anyOf": [
+        {"required": ["original_url"], "properties": {"original_url": {"$ref": "#/$defs/text"}}},
+        {"required": ["url"], "properties": {"url": {"$ref": "#/$defs/text"}}}
+      ],
+      "properties": {"source_id": {"$ref": "#/$defs/text"}, "url": {"type": "string"}, "original_url": {"type": "string"}}
+    },
+    "event": {
+      "type": "object", "required": ["cluster_id", "title", "signal_level", "signal_reason", "sources"],
+      "properties": {
+        "cluster_id": {"$ref": "#/$defs/text"}, "title": {"$ref": "#/$defs/text"},
+        "signal_level": {"enum": ["S", "A", "B", "noise", "unrated"]}, "signal_reason": {"type": "string"},
+        "sources": {"type": "array", "items": {"type": "object"}}
+      }
+    },
+    "published_event": {
+      "allOf": [{"$ref": "#/$defs/event"}],
+      "required": ["what_happened", "what_is_new", "why_it_matters", "verification_status", "editor_reviewed", "claims"],
+      "properties": {
+        "signal_level": {"enum": ["S", "A", "B"]}, "signal_reason": {"$ref": "#/$defs/text"},
+        "what_happened": {"$ref": "#/$defs/text"}, "what_is_new": {"$ref": "#/$defs/text"}, "why_it_matters": {"$ref": "#/$defs/text"},
+        "verification_status": {"$ref": "#/$defs/text"}, "editor_reviewed": {"const": true},
+        "sources": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/source"}},
+        "claims": {"type": "array", "minItems": 1, "items": {
+          "type": "object", "required": ["claim", "source_ids", "verified"],
+          "properties": {"claim": {"$ref": "#/$defs/text"}, "source_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/text"}}, "verified": {"const": true}}
+        }}
+      }
+    },
+    "thesis": {
+      "type": "object",
+      "required": ["thesis_id", "theme", "statement", "structural_change", "key_evidence", "why_it_matters", "investment_readthrough", "counter_evidence", "falsification_conditions", "confidence", "related_boards", "editor_reviewed"],
+      "properties": {
+        "thesis_id": {"$ref": "#/$defs/text"}, "theme": {"$ref": "#/$defs/text"}, "statement": {"$ref": "#/$defs/text"},
+        "structural_change": {"$ref": "#/$defs/text"}, "why_it_matters": {"$ref": "#/$defs/text"},
+        "investment_readthrough": {"$ref": "#/$defs/text"}, "counter_evidence": {"$ref": "#/$defs/text"}, "falsification_conditions": {"$ref": "#/$defs/text"},
+        "confidence": {"enum": ["low", "medium", "high"]}, "editor_reviewed": {"const": true},
+        "related_boards": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}},
+        "key_evidence": {"type": "array", "minItems": 1, "maxItems": 4, "items": {"type": "object", "required": ["cluster_id"], "properties": {"cluster_id": {"$ref": "#/$defs/text"}}}}
       }
     }
   }

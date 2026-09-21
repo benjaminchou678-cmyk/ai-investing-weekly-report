@@ -84,11 +84,13 @@ def _make_cluster(cluster_id: str, art: dict[str, Any]) -> dict[str, Any]:
         "independence_groups": list(art["independence_groups"]),
         "summaries": [s for s in [art["summary"]] if s],
         "representative_summary": art["summary"],
+        "records": [art],
     }
 
 
 def _merge_into(cl: dict[str, Any], art: dict[str, Any]) -> None:
     cl["articles"].append(art["id"])
+    cl["records"].append(art)
     cl["all_titles"].append(art["title"])
     cl["companies"] = sorted(set(cl["companies"]) | set(art["companies"]))
     for s in art["sources"]:
@@ -188,7 +190,29 @@ def cluster_articles(articles: list[dict[str, Any]], window_days: int = 2) -> li
     out: list[dict[str, Any]] = []
     for cl in clusters:
         related = sorted({rid for c in cl["companies"] for rid in by_company.get(c, []) if rid != cl["cluster_id"]})
-        sources = [{"url": u} for u in cl["source_urls"]]
+        sources = []
+        for record in cl["records"]:
+            for source in record["sources"]:
+                if source not in sources:
+                    sources.append(source)
+        levels = {r.get("signal_level") for r in cl["records"] if r.get("signal_level") not in (None, "", "unrated")}
+        review_reasons = list(dict.fromkeys(reason for r in cl["records"] for reason in r.get("review_reasons", [])))
+        if len(levels) > 1:
+            review_reasons.append("signal_conflict")
+        for record in cl["records"]:
+            if not record.get("event_date") or record.get("date_status") == "unknown":
+                review_reasons.append("date_unknown")
+            if record.get("independence_status") == "unknown":
+                review_reasons.append("independence_unknown")
+            if record.get("identity_status") in {"unknown", "mismatch", "unverified"}:
+                review_reasons.append("identity_unverified")
+        statuses = {r.get("independence_status") for r in cl["records"] if r.get("independence_status") in {"verified", "inferred", "unknown"}}
+        if "unknown" in statuses or not cl["independence_groups"]:
+            independence_status = "unknown"
+        elif statuses == {"verified"}:
+            independence_status = "verified"
+        else:
+            independence_status = "inferred"
         summary = cl["representative_summary"] or "；".join(cl["summaries"])[:200]
         out.append({
             "cluster_id": cl["cluster_id"],
@@ -208,6 +232,13 @@ def cluster_articles(articles: list[dict[str, Any]], window_days: int = 2) -> li
             "why_it_matters": "",  # filled by editorial pass / model
             "sources": sources,
             "related_events": related,
+            "signal_level": next(iter(levels)) if len(levels) == 1 else "unrated",
+            "signal_reason": "；".join(dict.fromkeys(r.get("signal_reason", "") for r in cl["records"] if r.get("signal_reason"))),
+            "review_reasons": sorted(set(review_reasons)),
+            "verification_status": "unverified" if any(r.get("verification_status") in {None, "", "unverified", "conflicting"} for r in cl["records"]) else cl["records"][0]["verification_status"],
+            "independence_status": independence_status,
+            "provenance_records": [r.get("provenance", {}) for r in cl["records"]],
+            "source_records": cl["records"],
         })
     return out
 

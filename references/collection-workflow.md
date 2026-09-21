@@ -8,7 +8,7 @@
 - 区分 `published_at`、`event_date`、`first_seen_at` 和 `last_seen_at`。
 - 可保留周期前48小时内、但在本周产生新增事实的候选；必须标出新增事实。
 - **日期无法解析的内容进入 `date_unknown_review_queue`，不自动进入当周事实池**；endpoint 抓取失败不等于"本周无更新"。
-- 读取上一期 `selected-items.json` 或周报，识别重复事件、待验证项和假设变化。首期明确无历史基线。
+- 读取上一期 `final_weekly_report.json`，识别重复事件、待验证项和假设变化。首期明确无历史基线。
 
 ## 四条采集轨道
 
@@ -83,7 +83,7 @@ WeRSS、RSSHub 与搜索仅用于采集或 discovery；同一主体通过多个 
 
 - 原始条目写入独立 JSON/JSONL；
 - 标准化后进行 URL 检查和去重；
-- 对照上期 `event_id` 与观察项；
+- 对照上期 `final_weekly_report.json` 中的 `input_event_ids`、事件 ID、判断和观察项；
 - 补搜财报/资本开支、融资并购、组织调整、客户与定价、监管与供应链；
 - 保留 `discovered_via` 与 claim 来源，不把不同观点合成不存在的共同事实。
 

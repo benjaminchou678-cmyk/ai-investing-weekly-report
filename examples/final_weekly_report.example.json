@@ -1,0 +1,111 @@
+{
+  "schema_version": "4.0",
+  "report_meta": {
+    "week_label": "2026-09-14—2026-09-20",
+    "week_start": "2026-09-14",
+    "week_end": "2026-09-20",
+    "timezone": "Asia/Shanghai",
+    "generated_at": "2026-09-20T20:00:00+08:00"
+  },
+  "weekly_lead": "本周示例信号显示企业 Agent 开始进入生产审批流程，但商业化持续性仍需验证。",
+  "input_event_ids": ["example-core", "example-watch", "example-review", "example-noise"],
+  "theses": [
+    {
+      "thesis_id": "example-workflow-entry",
+      "theme": "企业 Agent 的竞争重心向生产工作流迁移",
+      "statement": "若企业 Agent 持续进入带权限和审计要求的生产流程，工作流控制力将比单次模型能力更影响采购。",
+      "structural_change": "产品从试点工具进入企业生产审批流程。",
+      "key_evidence": [{"cluster_id": "example-core"}],
+      "why_it_matters": "工作流入口决定权限、数据和续费关系。",
+      "investment_readthrough": "具备企业治理与分发能力的平台研究优先级上升。",
+      "counter_evidence": "目前只有单个示例，尚无续费、留存和交付成本数据。",
+      "falsification_conditions": "若一个季度内没有新增生产客户或续费证据，该判断被削弱。",
+      "confidence": "medium",
+      "related_boards": ["产品与模型"],
+      "editor_reviewed": true
+    }
+  ],
+  "core_events": [
+    {
+      "cluster_id": "example-core",
+      "title": "示例：企业 Agent 进入生产审批流程",
+      "representative_title": "示例：企业 Agent 进入生产审批流程",
+      "dates": ["2026-09-15"],
+      "signal_level": "A",
+      "signal_reason": "已核验产品进入生产工作流，直接影响企业采购与权限治理",
+      "verification_status": "verified_primary",
+      "independence_status": "verified",
+      "independence_groups": ["example-company"],
+      "sources": [{"source_id": "example-company", "name": "示例公司公告", "url": "https://example.com/company/agent-workflow"}],
+      "what_happened": "示例公司宣布企业 Agent 已进入生产审批流程。",
+      "what_is_new": "新增事实是从试点工具进入带权限和审计要求的生产流程。",
+      "why_it_matters": "工作流入口和治理能力开始直接影响企业采购。",
+      "editor_reviewed": true,
+      "claims": [{"claim": "产品进入企业生产审批流程", "source_ids": ["example-company"], "verified": true}]
+    }
+  ],
+  "watchlist": [
+    {
+      "cluster_id": "example-watch",
+      "title": "示例：基础设施供应商披露新客户试点",
+      "representative_title": "示例：基础设施供应商披露新客户试点",
+      "dates": ["2026-09-16"],
+      "signal_level": "B",
+      "signal_reason": "客户试点有增量意义，但尚无订单规模和复购数据",
+      "verification_status": "company_disclosure",
+      "independence_status": "verified",
+      "independence_groups": ["example-infra"],
+      "sources": [{"source_id": "example-infra", "name": "示例供应商公告", "url": "https://example.com/infrastructure/pilot"}],
+      "what_happened": "示例供应商披露一项客户试点。",
+      "what_is_new": "首次公开客户试点，但未披露合同金额。",
+      "why_it_matters": "它提供了需求验证线索，但不足以证明规模化收入。",
+      "editor_reviewed": true,
+      "claims": [{"claim": "公司披露客户试点", "source_ids": ["example-infra"], "verified": true}]
+    }
+  ],
+  "editorial_candidate_pool": [],
+  "human_review_queue": [
+    {
+      "cluster_id": "example-review",
+      "title": "示例：发布时间尚待核验的组织变动",
+      "representative_title": "示例：发布时间尚待核验的组织变动",
+      "dates": [],
+      "date_status": "unknown",
+      "signal_level": "unrated",
+      "signal_reason": "",
+      "verification_status": "unverified",
+      "independence_status": "unknown",
+      "independence_groups": [],
+      "review_reasons": ["date_unknown", "independence_unknown", "evidence_requires_review", "signal_unrated"],
+      "sources": [{"source_id": "example-tip", "name": "示例线索", "url": "https://example.com/tip"}]
+    }
+  ],
+  "appendix_events": [
+    {
+      "cluster_id": "example-noise",
+      "title": "示例：重复营销预告",
+      "representative_title": "示例：重复营销预告",
+      "dates": ["2026-09-17"],
+      "signal_level": "noise",
+      "signal_reason": "没有新增事实，仅重复既有营销表述",
+      "verification_status": "single_source",
+      "independence_status": "verified",
+      "independence_groups": ["example-marketing"],
+      "sources": [{"source_id": "example-marketing", "name": "示例营销页面", "url": "https://example.com/marketing"}],
+      "disposition_reason": "noise，不进入正文；保留来源池"
+    }
+  ],
+  "excluded_events": [],
+  "source_audit": {
+    "overall_status": "WARN",
+    "scope": "仅演示 v4 结构，不代表真实来源覆盖",
+    "limitations": ["所有事件与链接均为占位示例"]
+  },
+  "quality_status": {
+    "editor_reviewed": true,
+    "reviewed_at": "2026-09-20T20:00:00+08:00",
+    "sparse_note": "示例仅保留 1 条核心事件和 1 条 Watchlist，不为展示数量补入事件。",
+    "zero_thesis_reason": "",
+    "disclosures": ["本文件仅演示结构，所有事件和链接均为占位内容。"]
+  }
+}
