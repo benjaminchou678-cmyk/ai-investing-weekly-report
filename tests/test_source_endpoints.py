@@ -25,6 +25,7 @@ class EndpointCollectorTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.collector = load("collect_source_endpoints")
         cls.migrator = load("migrate_source_registry_v3")
+        cls.endpoint_helpers = load("source_endpoints")
 
     def test_parse_rss_and_atom(self) -> None:
         rss = b"<rss><channel><item><title>A</title><link>https://e.test/a</link><pubDate>Fri, 18 Sep 2026 10:00:00 GMT</pubDate></item></channel></rss>"
@@ -35,6 +36,39 @@ class EndpointCollectorTests(unittest.TestCase):
     def test_parse_nested_werss_json(self) -> None:
         data = json.dumps({"data": {"list": [{"title": "A", "article_url": "https://mp.weixin.qq.com/s/a"}]}}).encode()
         self.assertEqual(self.collector.parse_json_items(data)[0]["url"], "https://mp.weixin.qq.com/s/a")
+
+    def test_parse_mpscraper_snapshot_by_account(self) -> None:
+        payload = {"accounts": {
+            "量子位": {"articles": [{
+                "title": "A", "article_url": "https://mp.weixin.qq.com/s/a",
+                "publish_time": "2026-09-18 09:00:00",
+            }]},
+            "其他账号": {"articles": [{"title": "B", "article_url": "https://mp.weixin.qq.com/s/b"}]},
+        }}
+        items = self.collector.parse_mpscraper_snapshot(payload, "量子位")
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0]["url"], "https://mp.weixin.qq.com/s/a")
+        self.assertEqual(items[0]["published_at"], "2026-09-18 09:00:00")
+        with self.assertRaisesRegex(RuntimeError, "mpscraper_account_missing"):
+            self.collector.parse_mpscraper_snapshot(payload, "未导入账号")
+
+    def test_wechat_resolver_prefers_web_then_mpscraper_then_rss(self) -> None:
+        common = {"status": "candidate", "purpose": ["discovery"], "officiality": "third_party"}
+        source = {"channel": "wechat_official_account", "endpoints": [
+            {**common, "endpoint_id": "rss", "type": "official_rss", "url": "https://e.test/rss"},
+            {**common, "endpoint_id": "mp", "type": "mpscraper_mcp", "url": "http://127.0.0.1:8082/mcp", "account_name": "账号"},
+            {**common, "endpoint_id": "web", "type": "official_html_list", "url": "https://e.test/news"},
+        ]}
+        ordered = self.endpoint_helpers.configured_endpoints(source)
+        self.assertEqual([endpoint["endpoint_id"] for endpoint in ordered], ["web", "mp", "rss"])
+
+    def test_non_wechat_keeps_official_rss_ahead_of_web(self) -> None:
+        source = {"channel": "feed", "endpoints": [
+            {"endpoint_id": "web", "type": "official_html_list", "status": "candidate", "url": "https://e.test/news"},
+            {"endpoint_id": "rss", "type": "official_rss", "status": "candidate", "url": "https://e.test/rss"},
+        ]}
+        ordered = self.endpoint_helpers.configured_endpoints(source)
+        self.assertEqual([endpoint["endpoint_id"] for endpoint in ordered], ["rss", "web"])
 
     def test_parse_builder_x_and_podcast_json(self) -> None:
         x_data = json.dumps({"x": [{"name": "A", "handle": "a", "tweets": [
@@ -68,6 +102,14 @@ class EndpointCollectorTests(unittest.TestCase):
         self.assertEqual(schedule["summary"]["pilot"], 20)
         self.assertEqual(schedule["summary"]["c2"], 50)
         self.assertEqual(schedule["summary"]["c3"], 94)
+
+    def test_every_wechat_source_has_mpscraper_placeholder(self) -> None:
+        registry = json.loads((ROOT / "references/source-registry.json").read_text(encoding="utf-8"))
+        wechat = [source for source in registry["sources"] if source.get("channel") == "wechat_official_account"]
+        self.assertEqual(len(wechat), 173)
+        for source in wechat:
+            endpoints = [endpoint for endpoint in source["endpoints"] if endpoint.get("type") == "mpscraper_mcp"]
+            self.assertEqual(len(endpoints), 1, source["source_id"])
 
     def test_migration_json_feed_is_api_and_empty_is_unconfigured(self) -> None:
         payload = {"schema_version": "2.0", "sources": [

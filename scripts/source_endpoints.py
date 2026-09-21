@@ -9,7 +9,8 @@ from urllib.parse import urlparse
 
 ENDPOINT_TYPES = {
     "official_rss", "official_atom", "official_api", "official_html_list",
-    "werss_api", "werss_rss", "rsshub", "wechat_article", "wechat_machine",
+    "mpscraper_mcp", "werss_api", "werss_rss", "rsshub",
+    "wechat_article", "wechat_machine",
     "search", "manual",
 }
 ENDPOINT_STATUSES = {"stable", "candidate", "fallback", "unconfigured", "blocked", "inactive"}
@@ -39,6 +40,8 @@ def endpoint_address_ready(endpoint: dict[str, Any]) -> bool:
         return valid_http_url(endpoint.get("url")) and bool(
             endpoint.get("account_id") or endpoint.get("feed_id")
         )
+    if endpoint_type == "mpscraper_mcp":
+        return valid_http_url(endpoint.get("url")) and bool(endpoint.get("account_name"))
     return valid_http_url(endpoint.get("url"))
 
 
@@ -46,11 +49,55 @@ def is_configured_endpoint(endpoint: dict[str, Any]) -> bool:
     return endpoint.get("status") in {"stable", "candidate", "fallback"} and endpoint_address_ready(endpoint)
 
 
+def endpoint_priority(endpoint: dict[str, Any], channel: str = "") -> int:
+    """Return resolver order; lower values run first.
+
+    微信来源优先官网，其次是本地 mpScraper。RSS/WeRSS/RSSHub 仅作备用。
+    非微信来源仍优先官方结构化入口，不受微信反爬策略影响。
+    """
+    endpoint_type = str(endpoint.get("type") or "")
+    if channel == "wechat_official_account":
+        order = {
+            "official_api": 10,
+            "official_html_list": 20,
+            "mpscraper_mcp": 30,
+            "wechat_article": 40,
+            "official_rss": 50,
+            "official_atom": 50,
+            "werss_api": 60,
+            "werss_rss": 60,
+            "rsshub": 70,
+            "search": 80,
+            "manual": 90,
+            "wechat_machine": 95,
+        }
+    else:
+        order = {
+            "official_api": 10,
+            "official_rss": 20,
+            "official_atom": 20,
+            "official_html_list": 30,
+            "mpscraper_mcp": 40,
+            "werss_api": 50,
+            "werss_rss": 50,
+            "rsshub": 60,
+            "search": 70,
+            "manual": 80,
+            "wechat_article": 90,
+            "wechat_machine": 95,
+        }
+    return order.get(endpoint_type, 999)
+
+
 def configured_endpoints(source: dict[str, Any]) -> list[dict[str, Any]]:
     endpoints = source.get("endpoints")
     if not isinstance(endpoints, list):
         return []
-    return [endpoint for endpoint in endpoints if isinstance(endpoint, dict) and is_configured_endpoint(endpoint)]
+    configured = [
+        endpoint for endpoint in endpoints
+        if isinstance(endpoint, dict) and is_configured_endpoint(endpoint)
+    ]
+    return sorted(configured, key=lambda endpoint: endpoint_priority(endpoint, str(source.get("channel") or "")))
 
 
 def provider_group(endpoint: dict[str, Any]) -> str:

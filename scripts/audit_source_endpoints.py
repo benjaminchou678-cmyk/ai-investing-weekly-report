@@ -62,8 +62,9 @@ def main() -> int:
         endpoints = source.get("endpoints", [])
         for endpoint in endpoints:
             address_ready = endpoint_address_ready(endpoint)
-            result = probe(str(endpoint.get("url") or ""), args.timeout) if args.probe and address_ready else {
-                "result": "not_probed" if address_ready else "unconfigured", "http_status": None,
+            enabled = endpoint.get("status") in {"stable", "candidate", "fallback"}
+            result = probe(str(endpoint.get("url") or ""), args.timeout) if args.probe and address_ready and enabled else {
+                "result": "not_probed" if address_ready and enabled else "unconfigured", "http_status": None,
                 "final_url": "", "content_type": "", "error": "",
             }
             rows.append({
@@ -96,7 +97,7 @@ def main() -> int:
     csv_path.parent.mkdir(parents=True, exist_ok=True)
     json_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     with csv_path.open("w", encoding="utf-8-sig", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0]) if rows else [])
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0]) if rows else [], lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
     if source_counts != expected:

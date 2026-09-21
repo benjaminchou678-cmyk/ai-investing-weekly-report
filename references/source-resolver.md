@@ -6,19 +6,20 @@
 
 | 层级 | 入口 | 用途 |
 |---|---|---|
-| P1 | 官方 RSS、Atom、API | 发现与证据 |
-| P2 | 官方可枚举 HTML 列表 | 发现与证据 |
-| P3 | 私有 WeRSS API/RSS | 微信原生内容持续发现 |
-| P4 | 已验证 RSSHub 路由 | 备用发现 |
-| P5 | 搜索 | 查漏与反查 |
-| P6 | 人工输入 | 封闭来源降级 |
+| P1 | 微信来源的官方网页/API | 发现与证据 |
+| P2 | 本地 mpScraper MCP | 微信原生内容持续发现 |
+| P3 | RSS、WeRSS、RSSHub | 备用发现 |
+| P4 | 搜索 | 查漏与反查 |
+| P5 | 人工输入 | 封闭来源降级 |
+
+上述层级针对微信公众号。非微信来源仍按官方 API/RSS/Atom → 官方网页 → 其他降级路径执行。
 
 ## Resolver 决策
 
 1. 只调度 `stable`、`candidate`、`fallback` 且地址完整的 endpoint。
-2. 同一来源先尝试官方结构化入口，再尝试官方网页。
-3. WeRSS 成功时保留原始 `mp.weixin.qq.com` 链接；WeRSS URL 只记录为 `mirror_url`。
-4. RSSHub 与搜索不能提升来源独立性。
+2. 微信来源先尝试官网网页/API，再尝试 mpScraper；RSS、WeRSS、RSSHub 只作备用。
+3. mpScraper 或 WeRSS 成功时保留原始 `mp.weixin.qq.com` 链接；采集服务地址只记录为 `mirror_url`。
+4. mpScraper、RSSHub 与搜索不能提升来源独立性。
 5. primary 路径成功发现有效条目后可停止；零条目只有在时间窗完整时才可停止，否则继续 fallback。
 6. 登录、验证码、凭据缺失分别记录 `blocked` 或具体失败码，不无限重试。
 
@@ -41,9 +42,18 @@
 - `last_success_at`、连续成功/失败次数和发现延迟属于运行状态，应写入运行产物，不要频繁改写静态注册表；
 - `provider_group` 用于识别基础设施单点故障，`independence_group` 用于判断内容证据是否独立，二者不可混用。
 
-## WeRSS 边界
+## mpScraper 边界
 
-- 推荐私有部署、认证访问、摘要或元数据模式；
+- 仅使用本地部署与用户主动完成的微信鉴权；不得将登录密码、Cookie、令牌、证书或本地数据目录提交到仓库；
+- 注册表中的 `mpscraper_mcp` 保存 MCP 地址和 `account_name`，实时工具名通过 MCP 能力发现，不臆造固定接口；
+- 主采集器通过 `--mpscraper-snapshot` 接收 MCP 查询结果，以便审计、重跑和测试；
+- 账号未导入、心跳不可用、需要验证码或限流时分别记录 `unconfigured`、`blocked`、`captcha_required` 或 `rate_limited`，不得写成“无更新”；
+- 即使本地运行成功，也需连续两轮完整枚举目标时间窗后才能人工提升为 `stable`；
+- 详细部署与快照格式见 [mpScraper 接入](mpscraper-integration.md)。
+
+## RSS / WeRSS 边界
+
+- RSS 类入口在微信公众号链路中作为备用；WeRSS 如仍使用，推荐私有部署、认证访问、摘要或元数据模式；
 - 注册表只保存 `credential_ref`，不保存 API Key、Cookie 或登录凭据；
 - 未配置 `url + account_id/feed_id` 的 WeRSS endpoint 必须是 `unconfigured`；
 - WeRSS 只负责发现和历史留存，最终证据仍回到原始微信文章或主体官网；

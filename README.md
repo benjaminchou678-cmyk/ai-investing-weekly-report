@@ -36,7 +36,7 @@ $ai-investing-weekly-report
 
 ```text
 采集与覆盖记录
-→ RSS / 网页 / WeRSS / RSSHub endpoint 解析
+→ 官网网页/API → mpScraper → RSS/WeRSS/RSSHub 备用 endpoint 解析
 → 来源注册表校验与 Source QA
 → 标准化与 URL 审计
 → 保守去重
@@ -75,7 +75,7 @@ python3 scripts/migrate_source_registry_v3.py \
   --output references/source-registry.json
 ```
 
-配置好官方 RSS/API、网页列表、私有 WeRSS 或 RSSHub 路由后，执行机器采集并生成逐入口覆盖证据：
+配置好官网网页/API、mpScraper 本地 MCP，或备用 RSS/WeRSS/RSSHub 路由后，执行机器采集并生成逐入口覆盖证据：
 
 ```bash
 python3 scripts/collect_source_endpoints.py \
@@ -84,6 +84,8 @@ python3 scripts/collect_source_endpoints.py \
   --output reports/current/raw/machine-endpoints.json \
   --coverage-output reports/current/coverage.json
 ```
+
+微信公众号解析顺序为官网网页/API优先、mpScraper其次、RSS/WeRSS/RSSHub备用。mpScraper 的实时登录与查询由本地 MCP 适配层完成；采集脚本通过 `--mpscraper-snapshot` 接收可审计的 JSON 快照。详见 [mpScraper 接入说明](references/mpscraper-integration.md)。
 
 密钥只通过 endpoint 的 `credential_ref` 指向环境变量，不写入仓库。空 URL、公众号 ID 或 Feed ID 会保持 `unconfigured`，不会被误记为“本周无更新”。
 

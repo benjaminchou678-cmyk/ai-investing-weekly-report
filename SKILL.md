@@ -30,7 +30,7 @@ description: 检索、核验并撰写面向投资与产品决策者的中文 AI 
 
 ### 完整周报
 
-1. 读取 [采集流程](references/collection-workflow.md)、[来源清单](references/source-registry.md)、[机器来源策略](references/source-registry-schema.md) 与 [来源入口解析器](references/source-resolver.md)。来源主体与采集 endpoint 分离；来源调度与质量门分别由 `source-registry.json` 和 `source-policy.json` 驱动，C1+C2 全部做 discovery，C3 事件驱动。
+1. 读取 [采集流程](references/collection-workflow.md)、[来源清单](references/source-registry.md)、[机器来源策略](references/source-registry-schema.md) 与 [来源入口解析器](references/source-resolver.md)。涉及微信公众号批量采集时再读取 [mpScraper 接入](references/mpscraper-integration.md)。来源主体与采集 endpoint 分离；来源调度与质量门分别由 `source-registry.json` 和 `source-policy.json` 驱动，C1+C2 全部做 discovery，C3 事件驱动。
 2. 先运行注册表校验；对已配置 endpoint 使用 `collect_source_endpoints.py` 采集，将结果保存为结构化候选，并在 `coverage.json` 中记录逐 endpoint attempt、时间窗完整性与 provider group。未配置入口不得伪装成已检查。
    - 来源入口迭代时，先运行 `audit_source_endpoints.py` 生成 JSON/CSV 审计，再按 `source-rollout-plan.json` 运行 pilot 或 C2 cohort；两周结果使用 `compare_source_runs.py` 比较。没有人工 ground truth 时只报告发现覆盖率，不得称为真实召回率。
 3. 按 [数据管线](references/data-pipeline.md) 完成标准化、URL 结构检查、保守去重和采编前 QA。
@@ -60,7 +60,7 @@ description: 检索、核验并撰写面向投资与产品决策者的中文 AI 
 
 脚本返回 `PASS` 不代表事实真实；`WARN` 必须人工复核；硬性 Gate 返回 `FAIL` 时不得发布正式版。
 
-WeRSS、RSSHub 与搜索只属于发现渠道，不构成新的独立信源。候选必须同时保留发布主体、采集 endpoint、原始 URL 与镜像 URL；正式 claim 优先引用原始文章或主体官网。
+mpScraper、WeRSS、RSSHub 与搜索只属于采集或发现基础设施，不构成新的独立信源。微信公众号优先检查官网网页，其次使用已验证的本地 mpScraper；RSS 类入口作为备用。候选必须同时保留发布主体、采集 endpoint、原始 URL 与镜像 URL；正式 claim 优先引用原始文章或主体官网。
 
 ## 默认输出
 

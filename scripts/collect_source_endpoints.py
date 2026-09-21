@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Collect RSS/Atom, HTML-list and WeRSS endpoints into common candidate JSON.
+"""Collect web, mpScraper snapshots and fallback feeds into common candidate JSON.
 
 This collector is intentionally conservative: it never invents account IDs,
 does not bypass authentication or access controls, and records incomplete
@@ -163,6 +163,44 @@ def parse_json_items(data: bytes) -> list[dict[str, str]]:
     return [item for item in result if item["title"] or item["url"]]
 
 
+def parse_mpscraper_snapshot(payload: Any, account_name: str) -> list[dict[str, str]]:
+    """Read an account from an MCP-exported snapshot without assuming tool names.
+
+    Supported shapes are ``{"accounts": {name: {"articles": [...]}}}`` and a
+    flat list whose rows carry ``account_name``/``mp_name``/``author``. The MCP
+    adapter owns live authentication; this collector only ingests its local,
+    auditable output.
+    """
+    selected: Any = None
+    if isinstance(payload, dict) and isinstance(payload.get("accounts"), dict):
+        if account_name not in payload["accounts"]:
+            raise RuntimeError(f"mpscraper_account_missing:{account_name}")
+        selected = payload["accounts"][account_name]
+    elif isinstance(payload, dict):
+        for key in ("items", "articles", "results", "data"):
+            if isinstance(payload.get(key), list):
+                selected = payload[key]
+                break
+    elif isinstance(payload, list):
+        selected = payload
+    if isinstance(selected, list):
+        account_fields = ("account_name", "mp_name", "author", "source_name")
+        named_rows = [
+            row for row in selected if isinstance(row, dict)
+            and any(str(row.get(field) or "") == account_name for field in account_fields)
+        ]
+        if named_rows:
+            selected = named_rows
+        elif any(
+            isinstance(row, dict) and any(row.get(field) for field in account_fields)
+            for row in selected
+        ):
+            raise RuntimeError(f"mpscraper_account_missing:{account_name}")
+    if selected is None:
+        raise RuntimeError(f"mpscraper_account_missing:{account_name}")
+    return parse_json_items(json.dumps(selected, ensure_ascii=False).encode("utf-8"))
+
+
 def parse_item_date(value: str) -> datetime | None:
     raw = value.strip()
     if not raw:
@@ -228,8 +266,16 @@ def endpoint_url(endpoint: dict[str, Any], week_start: str, week_end: str) -> st
     return str(endpoint.get("url") or "")
 
 
-def collect_endpoint(endpoint: dict[str, Any], week_start: str, week_end: str, timeout: int) -> tuple[list[dict[str, str]], bool]:
+def collect_endpoint(
+    endpoint: dict[str, Any], week_start: str, week_end: str, timeout: int,
+    mpscraper_snapshot: Any = None,
+) -> tuple[list[dict[str, str]], bool]:
     endpoint_type = endpoint.get("type")
+    if endpoint_type == "mpscraper_mcp":
+        if mpscraper_snapshot is None:
+            raise RuntimeError("mpscraper_snapshot_missing:use --mpscraper-snapshot")
+        items = parse_mpscraper_snapshot(mpscraper_snapshot, str(endpoint.get("account_name") or ""))
+        return items, bool(endpoint.get("date_filterable") and endpoint.get("list_enumerable"))
     url = endpoint_url(endpoint, week_start, week_end)
     data = fetch_bytes(url, timeout, str(endpoint.get("credential_ref") or ""))
     if endpoint_type in {"official_rss", "official_atom", "werss_rss", "rsshub"}:
@@ -251,9 +297,17 @@ def main() -> int:
     parser.add_argument("--cohort", choices=["pilot", "c2_weekly"], help="从 plan 读取来源集合")
     parser.add_argument("--output", required=True)
     parser.add_argument("--coverage-output", required=True)
+    parser.add_argument(
+        "--mpscraper-snapshot",
+        help="mpScraper MCP 查询结果的本地 JSON；实时登录与鉴权由 MCP 适配层负责",
+    )
     parser.add_argument("--timeout", type=int, default=20)
     args = parser.parse_args()
     registry = json.loads(Path(args.registry).read_text(encoding="utf-8"))
+    mpscraper_snapshot = (
+        json.loads(Path(args.mpscraper_snapshot).read_text(encoding="utf-8"))
+        if args.mpscraper_snapshot else None
+    )
     selected = set(args.source_id)
     if args.cohort:
         if not args.plan:
@@ -280,7 +334,9 @@ def main() -> int:
         for endpoint in endpoints:
             checked_at = now_iso()
             try:
-                items, endpoint_complete = collect_endpoint(endpoint, args.week_start, args.week_end, args.timeout)
+                items, endpoint_complete = collect_endpoint(
+                    endpoint, args.week_start, args.week_end, args.timeout, mpscraper_snapshot
+                )
                 items = filter_week(items, args.week_start, args.week_end)
                 in_window = [i for i in items if i.get("date_status") == "in_window"]
                 for i in items:
@@ -311,7 +367,10 @@ def main() -> int:
                 code = str(exc).split(":", 1)[0][:80]
                 attempts.append({
                     "endpoint_id": endpoint.get("endpoint_id", ""), "provider_group": endpoint.get("provider_group", "unknown"),
-                    "checked_at": checked_at, "status": "blocked" if code == "credential_missing" else "failed",
+                    "checked_at": checked_at,
+                    "status": "blocked" if code in {
+                        "credential_missing", "mpscraper_snapshot_missing", "mpscraper_account_missing"
+                    } else "failed",
                     "items_found": 0, "window_complete": False, "failure_code": code,
                 })
         any_success = any(attempt.get("status") == "ok" for attempt in attempts)
